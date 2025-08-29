@@ -1,0 +1,100 @@
+/* Line Discounts Module Styles */
+
+.line-discount-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+}
+
+.discount-input-group {
+    display: flex;
+    min-width: 100px;
+    width: 120px;
+}
+
+.discount-input-group .line-discount-rate {
+    border-radius: 3px 0 0 3px;
+    border-right: none;
+    width: 70px;
+    padding: 4px 6px;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    text-align: center;
+}
+
+.discount-input-group .input-group-addon {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-radius: 0 3px 3px 0;
+    padding: 4px 6px;
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    min-width: 20px;
+    justify-content: center;
+}
+
+.line-discount-amount {
+    font-size: 11px;
+    color: #28a745;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+}
+
+.line-item-discount-cell {
+    min-width: 100px;
+    text-align: center;
+}
+
+.total-discounts-row {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.total-discounts-row td {
+    border-top: 2px solid #28a745;
+    padding: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .line-discount-container {
+        gap: 2px;
+    }
+
+    .discount-input-group {
+        width: 90px;
+    }
+
+    .discount-input-group .line-discount-rate {
+        width: 50px;
+        font-size: 11px;
+    }
+
+    .line-discount-amount {
+        font-size: 10px;
+    }
+}
+
+/* Integration with existing Perfex styles */
+.line-discount-rate:focus {
+    border-color: #84c529;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(132, 197, 41, 0.2);
+}
+
+/* Discount highlight */
+.has-discount {
+    /*background-color: #fff3cd !important;*/
+}
+
+.discount-savings {
+    color: #28a745;
+    font-size: 11px;
+    font-style: italic;
+}
