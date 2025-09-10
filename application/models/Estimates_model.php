@@ -575,6 +575,9 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         if (isset($data['item_discount_percent'])) {
             unset($data['item_discount_percent']);
         }
+ if (isset($data['discount_fixed'])) {
+            unset($data['discount_fixed']);
+        }
 
         if (isset($data['customer_group_id'])) {
             unset($data['customer_group_id']);
@@ -793,7 +796,9 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         if (isset($data['customer_group_id'])) {
             unset($data['customer_group_id']);
         }
-
+    if (isset($data['discount_fixed'])) {
+            unset($data['discount_fixed']);
+        }
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
@@ -900,15 +905,30 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
             }
         }
 
-        foreach ($newitems as $key => $item) {
-            if ($new_item_added = add_new_sales_item_post($item, $id, 'estimate')) {
-                _maybe_insert_post_item_tax($new_item_added, $item, $id, 'estimate');
-                $this->log_estimate_activity($id, 'invoice_estimate_activity_added_item', false, serialize([
-                    $item['description'],
-                ]));
-                $affectedRows++;
-            }
-        }
+       foreach ($newitems as $key => $item) {
+    // Log what is being attempted
+    log_message('debug', 'Attempting to add new sales item: ' . print_r($item, true));
+
+    if ($new_item_added = add_new_sales_item_post($item, $id, 'estimate')) {
+        _maybe_insert_post_item_tax($new_item_added, $item, $id, 'estimate');
+
+        $this->log_estimate_activity(
+            $id,
+            'invoice_estimate_activity_added_item',
+            false,
+            serialize([$item['description']])
+        );
+
+        $affectedRows++;
+
+        // Log success
+        log_message('info', 'Successfully added new sales item ID: ' . $new_item_added . ' for Estimate ID: ' . $id);
+    } else {
+        // Log failure
+        log_message('error', 'Failed to add new sales item for Estimate ID: ' . $id . ' | Item Data: ' . print_r($item, true));
+    }
+}
+
 
         if ($affectedRows > 0) {
             update_sales_total_tax_column($id, 'estimate', db_prefix() . 'estimates');

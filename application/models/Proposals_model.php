@@ -95,7 +95,12 @@ class Proposals_model extends App_Model
         if (isset($data['rel_id'], $data['rel_type']) && $data['rel_type'] !== 'customer') {
             $data['project_id'] = null;
         }
-
+ if (isset($data['item_discount_percent'])) {
+            unset($data['item_discount_percent']);
+        }
+if (isset($data['discount_fixed'])) {
+            unset($data['discount_fixed']);
+        }
         $hook = hooks()->apply_filters('before_create_proposal', [
             'data'  => $data,
             'items' => $items,
@@ -226,7 +231,12 @@ class Proposals_model extends App_Model
                 $affectedRows++;
             }
         }
-
+if (isset($data['item_discount_percent'])) {
+            unset($data['item_discount_percent']);
+        }
+if (isset($data['discount_fixed'])) {
+            unset($data['discount_fixed']);
+        }
         $data['address'] = trim($data['address']);
         $data['address'] = nl2br($data['address']);
 

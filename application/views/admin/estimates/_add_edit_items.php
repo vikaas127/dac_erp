@@ -1,4 +1,9 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<style>
+    .d-done{
+        display: none;
+    }
+</style>
 <div class="panel-body">
     <div class="row">
         <div class="col-md-4">
@@ -59,7 +64,7 @@
             <!-- New Discount column -->
             <th width="10%" align="right"><?php echo _l('discount'); ?></th>
 
-            <th width="20%" align="right" class="d-none"><?php echo _l('estimate_table_tax_heading'); ?></th>
+            <th width="20%" align="right" class="hidden"><?php echo _l('estimate_table_tax_heading'); ?></th>
             <th width="10%" align="right"><?php echo _l('estimate_table_amount_heading'); ?></th>
             <th align="center"><i class="fa fa-cog"></i></th>
         </tr>
@@ -96,7 +101,7 @@
                     placeholder="<?php echo _l('discount'); ?>" value="0" readonly>
             </td>
 
-            <td class="d-none">
+            <td class="hidden">
                 <?php
                  $default_tax = unserialize(get_option('default_tax'));
                  $select      = '<select class="selectpicker display-block tax main-tax" data-width="100%" name="taxname" multiple data-none-selected-text="' . _l('no_tax') . '">';
@@ -193,7 +198,7 @@
                     >
                 </td>';
 
-                 $table_row .= '<td class="taxrate d-none">' . $this->misc_model->get_taxes_dropdown_template($items_indicator . '[' . $i . '][taxname][]', $estimate_item_taxes, (isset($is_proposal) ? 'proposal' : 'estimate'), $item['id'], true, $manual) . '</td>';
+                 $table_row .= '<td class="taxrate hidden">' . $this->misc_model->get_taxes_dropdown_template($items_indicator . '[' . $i . '][taxname][]', $estimate_item_taxes, (isset($is_proposal) ? 'proposal' : 'estimate'), $item['id'], true, $manual) . '</td>';
                  $table_row .= '<td class="amount" align="right">' . $amount . '</td>';
                  $table_row .= '<td><a href="#" class="btn btn-danger pull-left" onclick="delete_item(this,' . $item['id'] . '); return false;"><i class="fa fa-times"></i></a></td>';
                  $table_row .= '</tr>';
@@ -226,11 +231,11 @@
 
                                     <input type="number"
                                         value="<?php echo(isset($estimate) ? $estimate->basic_discount_percent : 0); ?>"
-                                        class="form-control pull-left input-discount-percent d-none" min="0" max="100" id="basic_discount_percent" name="basic_discount_percent">
+                                        class="form-control pull-left input-discount-percent hide" min="0" max="100" id="basic_discount_percent" name="basic_discount_percent">
 
                                     <input type="number"
                                         value="<?php echo(isset($estimate) ? $estimate->basic_discount_total : 0); ?>"
-                                        class="form-control pull-left input-discount-percent d-none" min="0" max="100" id="basic_discount_total" name="basic_discount_total">
+                                        class="form-control pull-left input-discount-percent  hide" min="0" max="100" id="basic_discount_total" name="basic_discount_total">
                                         
 
                                     <input type="number"
@@ -243,7 +248,7 @@
                                         data-title="<?php echo _l('numbers_not_formatted_while_editing'); ?>"
                                         value="<?php echo(isset($estimate) ? $estimate->discount_total : 0); ?>" class="form-control pull-left input-discount-fixed<?php if (!isset($estimate) || (isset($estimate) && !is_sale_discount($estimate, 'fixed'))) {
                    echo ' hide';
-               } ?>" min="0" name="discount_total">
+               } ?>" min="0" name="discount_fixed">
 
                                     <div class="input-group-addon">
                                         <div class="dropdown">
@@ -280,22 +285,23 @@
                             </div>
                         </div>
                     </td>
-                    <td class="discount-total"></td>
+                    <td class="discount-total "></td>
                 </tr>
-                <tr id="quantity_discount_area" class="d-none">
+                 <tr id="quantity_discount_area" class="hide">
                     <td>
                         <div class="row">
                         <div class="col-md-7">
                             <span class="bold tw-text-neutral-700"><?php echo _l('quantity_discount'); ?></span>
                         </div>
             
+                        <div class="col-md-5">
                         <input type="number"
                             value="<?php echo(isset($estimate) ? $estimate->quantity_discount_percent : 0); ?>"
                             class="form-control pull-left input-discount-percent d-none" min="0" max="100" id="quantity_discount_percent" name="quantity_discount_percent">
-            
+                                </div>
                         <input type="number"
                             value="<?php echo(isset($estimate) ? $estimate->quantity_discount_total : 0); ?>"
-                            class="form-control pull-left input-discount-percent d-none" min="0" max="100" id="quantity_discount_total" name="quantity_discount_total">
+                            class="form-control pull-left input-discount-percent hidden" min="0" max="100" id="quantity_discount_total" name="quantity_discount_total">
                         </div>
                     </td>
                     <td class="discount-total"></td>
@@ -318,11 +324,11 @@
             
                         <input type="number"
                             value="<?php echo(isset($estimate) ? $estimate->special_discount_total : 0); ?>"
-                            class="form-control pull-left input-discount-percent d-none" min="0" max="100" id="special_discount_total" name="special_discount_total">
+                            class="form-control pull-left input-discount-percent hidden" min="0" max="100" id="special_discount_total" name="special_discount_total">
                         </div>
                     </td>
                     <td class="discount-total"></td>
-                </tr>
+                </tr> 
                 <tr id="offer_discount_area">
                 <td>
                     <div class="row">
@@ -340,7 +346,7 @@
                     </div>
                     <input type="number"
                             value="<?php echo(isset($estimate) ? $estimate->offer_discount_total : 0); ?>"
-                            class="form-control pull-left input-discount-percent d-none" min="0" max="100" id="offer_discount_total" name="offer_discount_total">
+                            class="form-control pull-left input-discount-percent hide" min="0" max="100" id="offer_discount_total" name="offer_discount_total">
                     </div>
                 </td>
                 <td class="discount-total"></td>
@@ -348,21 +354,7 @@
 
              <!--   <tr id="promo_code_area">
     <td colspan="2">
-       <?php
-$sales_object_type = $estimate->type;
-$sales_object_id   = isset($estimate) ? $estimate->id : 0;
-$promo_view = module_dir_path('promo_codes', 'views/hooks/promo_codes_add_input_field.php');
-
-if (file_exists($promo_view)) {
-    // Make your variables available to the included file
-    $data = [
-        'sales_object_type' => $sales_object_type,
-        'sales_object_id'   => $sales_object_id,
-    ];
-    extract($data);
-    include $promo_view;
-}
-?>
+      
 
     </td>
 </tr>
@@ -475,61 +467,3 @@ if (file_exists($promo_view)) {
     </div>
     <div id="removed-items"></div>
 </div>
-<script>
-(function($) {
-    const originalCalculateTotal = window.calculate_total;
-
-    window.calculate_total = function() {
-        if (typeof originalCalculateTotal === 'function') {
-            originalCalculateTotal();
-        }
-
-        // --- Subtotal ---
-        const subtotalText = $('.subtotal').text().replace(/[₹,]/g, '') || '0';
-        const subtotal = parseFloat(subtotalText) || 0;
-
-        // --- 1. Basic Discount ---
-        const basicRate = parseFloat($('#basic_discount_percent').val()) || 0;
-        const basicType = $('#basic_discount_type').val();
-        let basicAmount = (basicType === 'percent') ? (subtotal * basicRate / 100) : basicRate;
-
-        // --- 2. Quantity Discount ---
-        const afterBasic = subtotal - basicAmount;
-        let qtyRate = 0;
-
-        if (afterBasic > 400000) qtyRate = 4;
-        else if (afterBasic > 300000) qtyRate = 3;
-        else if (afterBasic > 200000) qtyRate = 2;
-        else qtyRate = 0;
-
-        const qtyAmount = afterBasic * qtyRate / 100;
-        $('#quantity_discount_display').text(qtyRate + '%');
-
-        // --- 3. Special Discount ---
-        const specialRate = parseFloat($('#special_discount_percent').val()) || 0;
-        const specialAmount = (afterBasic - qtyAmount) * specialRate / 100;
-
-        // --- 4. Offer Discount ---
-        const offerRate = parseFloat($('#offer_discount_percent').val()) || 0;
-        const offerAmount = (afterBasic - qtyAmount) * offerRate / 100;
-
-        // --- Total Discount ---
-        const totalDiscount = basicAmount + qtyAmount + specialAmount + offerAmount;
-        $('.basic-discount-amount').text('-' + format_money(totalDiscount));
-
-        // --- Update Final Total ---
-        const totalText = $('.total').text().replace(/[₹,]/g, '') || '0';
-        let total = parseFloat(totalText) || 0;
-        total = total - totalDiscount;
-        $('.total').text(format_money(total));
-    };
-
-    // --- Trigger on change ---
-    $('#basic_discount_percent, #basic_discount_type, #special_discount_percent, #offer_discount_percent').on('input change', function () {
-        if (typeof calculate_total === 'function') {
-            calculate_total();
-        }
-    });
-
-})(jQuery);
-</script>

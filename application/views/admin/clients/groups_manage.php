@@ -14,9 +14,14 @@
                 <div class="panel_s">
                     <div class="panel-body panel-table-full">
                         <?php render_datatable([
-                        _l('customer_group_name'),
-                        _l('options'),
-                        ], 'customer-groups'); ?>
+    _l('customer_group_name'),
+    _l('default_discount'),
+    _l('default_profit_margin'),
+    _l('allow_item_level_override'),
+    _l('allow_quantity_discount'),
+    _l('options'),
+], 'customer-groups'); ?>
+
                     </div>
                 </div>
             </div>
@@ -27,7 +32,7 @@
 <?php init_tail(); ?>
 <script>
 $(function() {
-    initDataTable('.table-customer-groups', window.location.href, [1], [1]);
+    initDataTable('.table-customer-groups', window.location.href, [5], [5]);
 });
 </script>
 </body>

@@ -42,10 +42,15 @@ class Misc extends AdminController
         echo json_encode($georequest);
     }
 
-    public function get_currency($id)
-    {
-        echo json_encode(get_currency($id));
+   public function get_currency($id = null)
+{
+    if ($id === null) {
+        echo json_encode(['error' => 'Currency ID is required']);
+        return;
     }
+    echo json_encode(get_currency($id));
+}
+
 
     public function get_taxes_dropdown_template()
     {

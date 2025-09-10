@@ -856,14 +856,16 @@ function add_new_sales_item_post($item, $rel_id, $rel_type)
         'rel_type'              => $rel_type,
         'item_order'            => $item['order'],
         'unit'                  => $item['unit'],
-        'item_discount_percent' => $item['item_discount_percent']
+       // 'item_discount_percent' => $item['item_discount_percent']
     ];
 
     // Include item_id if provided
-    if (!empty($item['item_id'])) {
+    if (!empty($item['item_discount_percent'])) {
+        $insert_data['item_discount_percent'] = $item['item_discount_percent'];
+    }
+ if (!empty($item['item_id'])) {
         $insert_data['item_id'] = $item['item_id'];
     }
-
     // Log what is being inserted
     log_message('debug', 'Itemable Columns: ' . implode(', ', array_keys($insert_data)));
     log_message('debug', 'Itemable Data: ' . print_r($insert_data, true));

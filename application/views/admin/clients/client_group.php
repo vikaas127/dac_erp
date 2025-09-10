@@ -17,11 +17,19 @@
                         <?php echo render_input('default_discount', 'default_discount','','number', ['step' => '0.01', 'min' => '0', 'max' => '99.99']); ?>
 
                         <?php echo render_input('default_profit_margin', 'default_profit_margin','', 'number', ['step' => '0.01', 'min' => '0', 'max' => '99.99']); ?>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <div class="checkbox checkbox-primary">
                                     <input type="checkbox" id="override_allowed" name="override_allowed" value="1" <?= (isset($group) && $group->override_allowed == 1) ? 'checked' : '' ?>>
                                     <label for="override_allowed"><?php echo _l('allow_item_level_override'); ?></label>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" id="quantity_discount_allowed" name="quantity_discount_allowed" value="1" <?= (isset($group) && $group->quantity_discount_allowed == 1) ? 'checked' : '' ?>>
+                                    <label for="quantity_discount_allowed"><?php echo _l('allow_quantity_discount'); ?></label>
                                 </div>
                             </div>
                         </div>
@@ -46,29 +54,33 @@
         name: 'required'
     }, manage_customer_groups);
 
-       $('#customer_group_modal').on('show.bs.modal', function(e) {
-        var invoker = $(e.relatedTarget);
-        var group_id = $(invoker).data('id');
-        $('#customer_group_modal .add-title').removeClass('hide');
-        $('#customer_group_modal .edit-title').addClass('hide');
-        $('#customer_group_modal input[name="id"]').val('');
-        $('#customer_group_modal input[name="name"]').val('');
-        $('#customer_group_modal input[name="default_discount"]').val('');
-        $('#customer_group_modal input[name="default_profit_margin"]').val('');
-        $('#customer_group_modal input[name="override_allowed"]').prop('checked', false);
-        // is from the edit button
-        if (typeof(group_id) !== 'undefined') {
-            $('#customer_group_modal input[name="id"]').val(group_id);
-            $('#customer_group_modal .add-title').addClass('hide');
-            $('#customer_group_modal .edit-title').removeClass('hide');
-            $('#customer_group_modal input[name="name"]').val($(invoker).parents('tr').find('td').eq(0).text());
-            $('#customer_group_modal input[name="default_discount"]').val($(invoker).data('discount'));
-            $('#customer_group_modal input[name="default_profit_margin"]').val($(invoker).data('margin'));
+      $('#customer_group_modal').on('show.bs.modal', function(e) {
+    var invoker = $(e.relatedTarget);
+    var group_id = $(invoker).data('id');
 
-            var overrideAllowed = $(invoker).data('override');
-            $('#customer_group_modal input[name="override_allowed"]').prop('checked', overrideAllowed == 1);
-        }
-    });
+    // Reset modal
+    $('#customer_group_modal .add-title').removeClass('hide');
+    $('#customer_group_modal .edit-title').addClass('hide');
+    $('#customer_group_modal input[name="id"]').val('');
+    $('#customer_group_modal input[name="name"]').val('');
+    $('#customer_group_modal input[name="default_discount"]').val('');
+    $('#customer_group_modal input[name="default_profit_margin"]').val('');
+    $('#customer_group_modal input[name="override_allowed"]').prop('checked', false);
+    $('#customer_group_modal input[name="quantity_discount_allowed"]').prop('checked', false);
+
+    if (typeof group_id !== 'undefined') {
+        $('#customer_group_modal input[name="id"]').val(group_id);
+        $('#customer_group_modal .add-title').addClass('hide');
+        $('#customer_group_modal .edit-title').removeClass('hide');
+
+        $('#customer_group_modal input[name="name"]').val(invoker.data('name'));
+        $('#customer_group_modal input[name="default_discount"]').val(invoker.data('discount'));
+        $('#customer_group_modal input[name="default_profit_margin"]').val(invoker.data('margin'));
+        $('#customer_group_modal input[name="override_allowed"]').prop('checked', invoker.data('override') == 1);
+        $('#customer_group_modal input[name="quantity_discount_allowed"]').prop('checked', invoker.data('quantity_discount_allowed') == 1);
+    }
+});
+
    });
     function manage_customer_groups(form) {
         var data = $(form).serialize();

@@ -330,7 +330,7 @@ $(function() {
     init_currency();
     // Maybe items ajax search
     init_ajax_search('items', '#item_select.ajax-search', undefined, admin_url + 'items/search');
-    validate_proposal_form();
+   // validate_proposal_form();
     $('body').on('change', '#rel_id', function() {
         if ($(this).val() != '') {
             $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type

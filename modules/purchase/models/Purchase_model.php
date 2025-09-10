@@ -1650,7 +1650,9 @@ class Purchase_model extends App_Model
         if(isset($data['tax_select'])){
             unset($data['tax_select']);
         }
-
+ if (isset($data['item_discount_percent'])) {
+            unset($data['item_discount_percent']);
+        }
         $check_appr = $this->get_approve_setting('pur_quotation');
         $data['status'] = 1;
         if($check_appr && $check_appr != false){
@@ -1794,6 +1796,173 @@ class Purchase_model extends App_Model
         return false;
     }
 
+/*
+public function add_estimate($data)
+{
+    $t0 = microtime(true);
+    $staffId   = function_exists('get_staff_user_id') ? get_staff_user_id() : null;
+    $ip        = isset($this->input) ? $this->input->ip_address() : 'n/a';
+    $userAgent = isset($this->input) ? $this->input->user_agent() : 'n/a';
+
+    log_message('info', '[PUR_EST][START] add_estimate called by staff_id=' . $staffId . ' ip=' . $ip . ' ua=' . $userAgent);
+    log_message('debug', '[PUR_EST][INPUT_RAW] ' . safe_json($data));
+
+    // Strip UI-only fields (log what we are removing for traceability)
+    $keysToUnset = [
+        'item_select','item_name','total','quantity','unit_price','unit_name','item_code','unit_id',
+        'discount','into_money','tax_rate','tax_name','discount_money','total_money','additional_discount',
+        'tax_value','tax_select','item_discount_percent'
+    ];
+    foreach ($keysToUnset as $k) {
+        if (isset($data[$k])) { unset($data[$k]); }
+    }
+
+    $check_appr = $this->get_approve_setting('pur_quotation');
+    $data['status'] = ($check_appr && $check_appr != false) ? 1 : 2;
+
+    $data['to_currency'] = $data['currency'];
+    $data['date']        = to_sql_date($data['date']);
+    $data['expirydate']  = to_sql_date($data['expirydate']);
+    $data['datecreated'] = date('Y-m-d H:i:s');
+    $data['addedfrom']   = $staffId;
+    $data['prefix']      = get_option('estimate_prefix');
+    $data['number_format'] = get_option('estimate_number_format');
+
+    // Peel out line items early so they don’t get inserted into master table
+    $es_detail = [];
+    if (isset($data['newitems'])) {
+        $es_detail = $data['newitems'];
+        unset($data['newitems']);
+    }
+    log_message('debug', '[PUR_EST] Items received: count=' . count($es_detail));
+
+    // Normalize shipping street
+    if (isset($data['shipping_street'])) {
+        $data['shipping_street'] = nl2br(trim($data['shipping_street']));
+    }
+
+    // Discounts & totals mapping from frontend
+    if (isset($data['dc_total']))    { $data['discount_total']   = $data['dc_total'];    unset($data['dc_total']); }
+    if (isset($data['dc_percent']))  { $data['discount_percent'] = $data['dc_percent'];  unset($data['dc_percent']); }
+    if (isset($data['total_mn']))    { $data['subtotal']         = $data['total_mn'];    unset($data['total_mn']); }
+    if (isset($data['grand_total'])) { $data['total']            = $data['grand_total']; unset($data['grand_total']); }
+
+    // Hash & mapped columns
+    $data['hash'] = app_generate_hash();
+    $data = $this->map_shipping_columns($data);
+
+    // Ensure unique number (log attempts)
+    $attempts = 0;
+    $this->db->where('prefix', $data['prefix']);
+    $this->db->where('number', $data['number']);
+    $check_exist_number = $this->db->get(db_prefix().'pur_estimates')->row();
+    while ($check_exist_number) {
+        $old = $data['number'];
+        $data['number'] = $data['number'] + 1;
+        $attempts++;
+        log_message('debug', "[PUR_EST] Duplicate estimate number {$old}, bumped to {$data['number']} (attempt {$attempts})");
+
+        $this->db->where('prefix', $data['prefix']);
+        $this->db->where('number', $data['number']);
+        $check_exist_number = $this->db->get(db_prefix().'pur_estimates')->row();
+        if ($attempts > 25) { // just in case
+            log_message('error', '[PUR_EST][ABORT] Too many estimate number collisions.');
+            return false;
+        }
+    }
+
+    // Begin Transaction
+    $this->db->trans_start();
+
+    $save_and_send = isset($data['save_and_send']); // preserved if you use later
+    $this->db->insert(db_prefix() . 'pur_estimates', $data);
+    $insert_id = $this->db->insert_id();
+    log_message('info', '[PUR_EST] Inserted estimate header id=' . $insert_id);
+
+    if ($insert_id) {
+        $total = ['total_tax' => 0];
+
+        if (count($es_detail) > 0) {
+            foreach ($es_detail as $idx => $rqd) {
+                // Guard array access
+                $quantity   = (!empty($rqd['quantity'])) ? $rqd['quantity'] : 0;
+                $unit_id    = isset($rqd['unit_id']) ? $rqd['unit_id'] : null;
+
+                $tax_rate_value = 0;
+                $tax_rate = null; $tax_id = null; $tax_name = null;
+
+                if (isset($rqd['tax_select'])) {
+                    $tax_rate_data  = $this->pur_get_tax_rate($rqd['tax_select']);
+                    $tax_rate_value = isset($tax_rate_data['tax_rate']) ? $tax_rate_data['tax_rate'] : 0;
+                    $tax_rate       = isset($tax_rate_data['tax_rate_str']) ? $tax_rate_data['tax_rate_str'] : null;
+                    $tax_id         = isset($tax_rate_data['tax_id_str']) ? $tax_rate_data['tax_id_str'] : null;
+                    $tax_name       = isset($tax_rate_data['tax_name_str']) ? $tax_rate_data['tax_name_str'] : null;
+                }
+
+                $dt_data = [
+                    'pur_estimate'     => $insert_id,
+                    'item_code'        => isset($rqd['item_code']) ? $rqd['item_code'] : null,
+                    'unit_id'          => $unit_id,
+                    'unit_price'       => isset($rqd['unit_price']) ? $rqd['unit_price'] : 0,
+                    'into_money'       => isset($rqd['into_money']) ? $rqd['into_money'] : 0,
+                    'total'            => isset($rqd['total']) ? $rqd['total'] : 0,
+                    'tax_value'        => isset($rqd['tax_value']) ? $rqd['tax_value'] : 0,
+                    'item_name'        => isset($rqd['item_name']) ? $rqd['item_name'] : null,
+                    'total_money'      => isset($rqd['total_money']) ? $rqd['total_money'] : 0,
+                    'discount_money'   => isset($rqd['discount_money']) ? $rqd['discount_money'] : 0,
+                    'discount_%'       => isset($rqd['discount']) ? $rqd['discount'] : 0,
+                    'tax'              => $tax_id,
+                    'tax_rate'         => $tax_rate,
+                    'tax_name'         => $tax_name,
+                    'quantity'         => $quantity,
+                ];
+
+                $this->db->insert(db_prefix().'pur_estimate_detail', $dt_data);
+
+                // Per-row log (concise)
+                log_message('debug', "[PUR_EST][ROW {$idx}] " . safe_json($dt_data, 800));
+
+                $total['total_tax'] += (float)$dt_data['tax_value'];
+            }
+        }
+
+        // Update header totals
+        $this->db->where('id', $insert_id);
+        $this->db->update(db_prefix().'pur_estimates', $total);
+        log_message('info', '[PUR_EST] Updated header totals for id=' . $insert_id . ' totals=' . safe_json($total));
+    }
+
+    $this->db->trans_complete();
+
+    if ($this->db->trans_status() === false) {
+        $dbErr = $this->db->error();
+        log_message('error', '[PUR_EST][ROLLBACK] id=' . ($insert_id ?: 'n/a') . ' code=' . ($dbErr['code'] ?? 'n/a') . ' msg=' . ($dbErr['message'] ?? 'n/a'));
+        return false;
+    }
+
+    // Post-insert notification
+    if ($insert_id && is_numeric($data['buyer']) && $data['buyer'] > 0) {
+        $notifOk = add_notification([
+            'description'     => _l('purchase_quotation_added', format_pur_estimate_number($insert_id)),
+            'touserid'        => $data['buyer'],
+            'link'            => 'purchase/quotations/'.$insert_id,
+            'additional_data' => serialize([ format_pur_estimate_number($insert_id) ]),
+        ]);
+
+        log_message('info', '[PUR_EST] Notification for buyer=' . $data['buyer'] . ' result=' . var_export($notifOk, true));
+
+        if ($notifOk) {
+            pusher_trigger_notification([$data['buyer']]);
+            log_message('debug', '[PUR_EST] Pusher notification triggered for buyer=' . $data['buyer']);
+        }
+    }
+
+    $elapsed = round((microtime(true) - $t0) * 1000, 2);
+    log_message('info', '[PUR_EST][END] id=' . ($insert_id ?: 'n/a') . ' elapsed_ms=' . $elapsed);
+
+    return $insert_id ?: false;
+}
+*/
     /**
      * { update estimate }
      *
