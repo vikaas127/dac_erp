@@ -587,6 +587,10 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
             unset($data['quantity_discount_allowed']);
         }
 
+        if (isset($data['item_price'])) {
+            unset($data['item_price']);
+        }
+
         $this->db->insert(db_prefix() . 'estimates', $data);
         $insert_id = $this->db->insert_id();
         log_message('info', ' before Estimate created successfully with ID: ' . $insert_id);
@@ -796,11 +800,15 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         if (isset($data['customer_group_id'])) {
             unset($data['customer_group_id']);
         }
-    if (isset($data['discount_fixed'])) {
+        if (isset($data['discount_fixed'])) {
             unset($data['discount_fixed']);
         }
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
+        }
+
+        if (isset($data['item_price'])) {
+            unset($data['item_price']);
         }
 
         $this->db->where('id', $id);

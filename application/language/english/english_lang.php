@@ -1096,6 +1096,7 @@ $lang['estimate_table_quantity_heading'] = 'Qty';
 $lang['estimate_table_rate_heading']     = 'Rate';
 $lang['estimate_table_discount_heading']    = 'Discount';
 $lang['estimate_table_tax_heading']      = 'Tax';
+$lang['estimate_table_price_heading']    = 'Item Price';
 $lang['estimate_table_amount_heading']   = 'Amount';
 $lang['estimate_subtotal']               = 'Sub Total';
 $lang['estimate_adjustment']             = 'Adjustment';

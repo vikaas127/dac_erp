@@ -284,7 +284,7 @@
                                 echo render_select('sale_agent', $staff, ['staffid', ['firstname', 'lastname']], 'sale_agent_string', $selected);
                             ?>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 hide">
                             <div class="form-group select-placeholder">
                                 <label for="discount_type"
                                     class="control-label"><?php echo _l('discount_type'); ?></label>
