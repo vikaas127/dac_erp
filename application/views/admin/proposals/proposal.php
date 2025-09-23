@@ -76,6 +76,12 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div id="customer_group_info" class="tw-mt-2 hide">
+                                    <p><strong>Group:</strong> <span id="customer_group_name">—</span></p>
+                                    <p><strong>Discount:</strong> <span id="customer_group_discount">0%</span></p>
+                                    <input type="hidden" id="customer_group_id" name="customer_group_id" value="">
+                                    <input type="hidden" id="quantity_discount_allowed" name="quantity_discount_allowed" value="">
+                                </div>
                                 <div
                                     class="form-group select-placeholder projects-wrapper <?php echo ((!isset($proposal)) || (isset($proposal) && $proposal->rel_type !== 'customer')) ? 'hide' : '' ?>">
                                     <label for="project_id"><?php echo _l('project'); ?></label>
@@ -303,6 +309,7 @@ var _rel_id = $('#rel_id'),
     _rel_id_wrapper = $('#rel_id_wrapper'),
     _project_wrapper = $('.projects-wrapper'),
     data = {};
+var globalCustomerGroupDiscount = 0;
 
 $(function() {
     <?php if (isset($proposal) && $proposal->rel_type === 'customer') { ?>
@@ -311,6 +318,16 @@ $(function() {
     $('body').on('change', '#rel_type', function() {
         if (_rel_type.val() != 'customer') {
             _project_wrapper.addClass('hide')
+            $('#customer_group_info').addClass('hide');
+        } else {
+            $('#customer_group_info').removeClass('hide');
+
+            $('#customer_group_name').text('-');
+            $('#customer_group_discount').text('0%');
+            globalCustomerGroupDiscount = 0;
+            $('#basic_discount_percent').val(0).trigger('input');
+            $('#customer_group_id').val('');
+            $('#quantity_discount_allowed').val(0);
         }
     });
 
@@ -324,6 +341,7 @@ $(function() {
             $('#project_ajax_search_wrapper').append(clonedProjectsAjaxSearchSelect);
             init_proposal_project_select(projectAjax);
             _project_wrapper.removeClass('hide')
+            $('#customer_group_info').removeClass('hide');
         }
     });
 
@@ -332,6 +350,7 @@ $(function() {
     init_ajax_search('items', '#item_select.ajax-search', undefined, admin_url + 'items/search');
    // validate_proposal_form();
     $('body').on('change', '#rel_id', function() {
+
         if ($(this).val() != '') {
             $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type
                 .val(),
@@ -349,6 +368,13 @@ $(function() {
                         if (typeof(currency_selector.attr('multi-currency')) == 'undefined') {
                             currency_selector.attr('disabled', true);
                         }
+
+                        $('#customer_group_name').text(response.group_name || '-');
+                        $('#customer_group_discount').text((response.default_discount || 0) + '%');
+                        globalCustomerGroupDiscount = parseFloat(response.default_discount) || 0;
+                        $('#basic_discount_percent').val(globalCustomerGroupDiscount).trigger('input');
+                        $('#customer_group_id').val(response.group_id || '');
+                        $('#quantity_discount_allowed').val(response.quantity_discount_allowed || 0);
 
                     } else {
                         currency_selector.attr('disabled', false);

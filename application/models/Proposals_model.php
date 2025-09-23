@@ -899,8 +899,13 @@ if (isset($data['discount_fixed'])) {
     {
         $data = new StdClass();
         if ($rel_type == 'customer') {
-            $this->db->where('userid', $rel_id);
-            $_data = $this->db->get(db_prefix() . 'clients')->row();
+            $this->db->select('c.*, g.name as group_name, g.default_discount, g.override_allowed, g.id as group_id, g.quantity_discount_allowed');
+            $this->db->from(db_prefix() . 'clients c');
+            $this->db->join(db_prefix() . 'customer_groups cg', 'c.userid = cg.customer_id', 'left');
+            $this->db->join(db_prefix() . 'customers_groups g', 'cg.groupid = g.id', 'left');
+            $this->db->where('c.userid', $rel_id);
+
+            $_data = $this->db->get()->row();
 
             $primary_contact_id = get_primary_contact_user_id($rel_id);
 
@@ -911,6 +916,7 @@ if (isset($data['discount_fixed'])) {
 
             $data->phone            = $_data->phonenumber;
             $data->is_using_company = false;
+
             if (isset($contact)) {
                 $data->to = $contact->firstname . ' ' . $contact->lastname;
             } else {
@@ -930,6 +936,13 @@ if (isset($data['discount_fixed'])) {
             if ($default_currency != 0) {
                 $data->currency = $default_currency;
             }
+
+            $data->group_name                = $_data->group_name ?: 'No Group';
+            $data->default_discount          = $_data->default_discount ?: 0;
+            $data->override_allowed          = $_data->override_allowed ?? 1;
+            $data->group_id                  = $_data->group_id;
+            $data->quantity_discount_allowed = $_data->quantity_discount_allowed ?: 0;
+
         } elseif ($rel_type = 'lead') {
             $this->db->where('id', $rel_id);
             $_data       = $this->db->get(db_prefix() . 'leads')->row();
