@@ -75,6 +75,7 @@
         <tr class="main">
             <td>
                 <input type="hidden" name="item_id" value="">
+                <input type="hidden" name="item_type" value="">
             </td>
             <td>
                 <textarea name="description" rows="4" class="form-control"
@@ -166,6 +167,7 @@
                  }
                  $table_row .= form_hidden($items_indicator . '[' . $i . '][itemid]', $item['id']);
                  $table_row .= form_hidden($items_indicator . '[' . $i . '][item_id]', $item['id']);
+                 $table_row .= form_hidden($items_indicator . '[' . $i . '][item_type]', $item['item_type']);
 
                  // amount BEFORE discount
                  $amount = $item['rate'] * $item['qty'];

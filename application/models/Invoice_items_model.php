@@ -89,6 +89,7 @@ class Invoice_items_model extends App_Model
         $rateCurrencyColumns
         . db_prefix() . 'items.id as itemid,'
         . 'rate,'
+        . 'item_type,'
         . 't1.taxrate as taxrate,t1.id as taxid,t1.name as taxname,'
         . 't2.taxrate as taxrate_2,t2.id as taxid_2,t2.name as taxname_2,'
         . 'description,long_description, items.group_id,'
