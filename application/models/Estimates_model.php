@@ -575,7 +575,7 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         if (isset($data['item_discount_percent'])) {
             unset($data['item_discount_percent']);
         }
- if (isset($data['discount_fixed'])) {
+       if (isset($data['discount_fixed'])) {
             unset($data['discount_fixed']);
         }
 

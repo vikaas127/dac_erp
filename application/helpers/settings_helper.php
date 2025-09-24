@@ -154,7 +154,12 @@ function app_init_settings_tabs()
         'position' => 20,
         'icon'     => 'fa-regular fa-envelope',
     ]);
-
+$CI->app_tabs->add_settings_tab('wNotification', [
+     'name'     => _l('W Notification'),
+     'view'     => 'admin/settings/includes/wnotification',
+     'position' => 6,
+     'icon'     => 'fa fa-whatsapp',
+ ]);
     $CI->app_tabs->add_settings_tab('sales', [
         'name'     => _l('settings_group_sales'),
         'view'     => 'admin/settings/includes/sales',
