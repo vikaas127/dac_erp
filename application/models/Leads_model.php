@@ -18,7 +18,7 @@ class Leads_model extends App_Model
      */
     public function get($id = '', $where = [])
     {
-        $this->db->select('leads.*, leads_status.name as status_name, leads_sources.name as source_name, leads_nature_of_work.name as nature_of_work_name');
+        $this->db->select('leads.*, leads_status.name as status_name, leads_status.color as color,leads_sources.name as source_name, leads_nature_of_work.name as nature_of_work_name');
         $this->db->join(db_prefix() . 'leads_status', db_prefix() . 'leads_status.id=' . db_prefix() . 'leads.status', 'left');
         $this->db->join(db_prefix() . 'leads_sources', db_prefix() . 'leads_sources.id=' . db_prefix() . 'leads.source', 'left');
         $this->db->join(db_prefix() . 'leads_nature_of_work', db_prefix() . 'leads_nature_of_work.id=' . db_prefix() . 'leads.nature_of_work_id', 'left');

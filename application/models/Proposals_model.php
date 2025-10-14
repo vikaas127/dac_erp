@@ -108,7 +108,25 @@ if (isset($data['discount_fixed'])) {
 
         $data  = $hook['data'];
         $items = $hook['items'];
-
+ if (isset($data['item_discount_percent'])) {
+     unset($data['item_discount_percent']);
+ }
+if(isset($data['discount_fixed'])) {
+     unset($data['discount_fixed']);
+ }
+ if (isset($data['customer_group_id'])) {
+     unset($data['customer_group_id']);
+ }
+ if (isset($data['quantity_discount_allowed'])) {
+     unset($data['quantity_discount_allowed']);
+ }
+ if (isset($data['item_price'])) {
+     unset($data['item_price']);
+ }
+  if (isset($data['item_type'])) {
+     unset($data['item_type']);
+ }
+ 
         $this->db->insert(db_prefix() . 'proposals', $data);
         $insert_id = $this->db->insert_id();
 
@@ -237,6 +255,9 @@ if (isset($data['item_discount_percent'])) {
 if (isset($data['discount_fixed'])) {
             unset($data['discount_fixed']);
         }
+         if (isset($data['item_type'])) {
+     unset($data['item_type']);
+ }
         $data['address'] = trim($data['address']);
         $data['address'] = nl2br($data['address']);
 
@@ -262,6 +283,21 @@ if (isset($data['discount_fixed'])) {
         unset($data['removed_items']);
 
         $this->db->where('id', $id);
+         if (isset($data['item_discount_percent'])) {
+     unset($data['item_discount_percent']);
+ }
+ if(isset($data['discount_fixed'])) {
+     unset($data['discount_fixed']);
+ }
+ if (isset($data['customer_group_id'])) {
+     unset($data['customer_group_id']);
+ }
+ if (isset($data['quantity_discount_allowed'])) {
+     unset($data['quantity_discount_allowed']);
+ }
+ if (isset($data['item_price'])) {
+     unset($data['item_price']);
+ }
         $this->db->update(db_prefix() . 'proposals', $data);
         if ($this->db->affected_rows() > 0) {
             $affectedRows++;

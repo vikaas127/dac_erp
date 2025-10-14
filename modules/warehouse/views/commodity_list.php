@@ -512,10 +512,22 @@
                         </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                              <div class="col-md-4">
+                                <?php
+$options = [
+    ['id' => 'standard', 'name' => 'Standard'],
+    ['id' => 'customizable', 'name' => 'Customizable']
+];
+
+// Assuming $selected contains the current value, e.g., 'standard'
+echo render_select('item_type', $options, ['id', 'name'], 'Item Type', $selected);
+?>
+
+                              </div>
+                                <div class="col-md-4">
                                     <?php echo render_input('commodity_code', 'commodity_code'); ?>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                   <?php echo render_input('description', 'commodity_name'); ?>
                                 </div>
                                 

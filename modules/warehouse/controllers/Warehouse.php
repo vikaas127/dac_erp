@@ -2540,6 +2540,7 @@ class warehouse extends AdminController {
 
 						//Writer file
 						$writer_header = array(
+							"(*)" ._l('item_type')          =>'string',
 							"(*)" ._l('commodity_code')          =>'string',
 							"(*)" ._l('commodity_name')          =>'string',
 							_l('commodity_barcode')          =>'string',
@@ -2573,7 +2574,7 @@ class warehouse extends AdminController {
 
                         $writer = new XLSXWriter();
 
-                        $col_style1 =[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+                        $col_style1 =[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
                         $style1 = ['widths'=> $widths_arr, 'fill' => '#ff9800',  'font-style'=>'bold', 'color' => '#0a0a0a', 'border'=>'left,right,top,bottom', 'border-color' => '#0a0a0a', 'font-size' => 13 ];
 
                         $writer->writeSheetHeader_v2('Sheet1', $writer_header,  $col_options = ['widths'=> $widths_arr, 'fill' => '#f44336',  'font-style'=>'bold', 'color' => '#0a0a0a', 'border'=>'left,right,top,bottom', 'border-color' => '#0a0a0a', 'font-size' => 13 ], $col_style1, $style1);
@@ -2605,6 +2606,7 @@ class warehouse extends AdminController {
 								$flag_contract_form = 0;
 
 								$flag_id_commodity_type;
+								$flag_id_item_type;
 								$flag_id_unit_id = 0;
 								$flag_id_commodity_group;
 								$flag_id_sub_group;
@@ -2617,30 +2619,31 @@ class warehouse extends AdminController {
 								$flag_id_color_id;
 
 
+								$value_cell_item_type = isset($data[$row][0]) ? $data[$row][0] : '';
+								$value_cell_commodity_code = isset($data[$row][1]) ? $data[$row][1] : null; //A
+								$value_cell_description = isset($data[$row][2]) ? $data[$row][2] : null; //B
+								$value_cell_commodity_barcode = isset($data[$row][3]) ? $data[$row][3] : ''; //A
+								$value_cell_sku_code = isset($data[$row][4]) ? $data[$row][4] : ''; //A
+								$value_cell_sku_name = isset($data[$row][5]) ? $data[$row][5] : ''; //A
+								$value_cell_tag = isset($data[$row][6]) ? $data[$row][6] : ''; //A
+								$value_cell_long_description = isset($data[$row][7]) ? $data[$row][7] : ''; //A
+								$value_cell_commodity_type = isset($data[$row][8]) ? $data[$row][8] : '';
+								$value_cell_unit_id = isset($data[$row][9]) ? $data[$row][9] : '';
+								$value_cell_commodity_group = isset($data[$row][10]) ? $data[$row][10] : null;
+								$value_cell_sub_group = isset($data[$row][11]) ? $data[$row][11] : '';
+								$value_cell_profit_rate = isset($data[$row][12]) ? $data[$row][12] : '';
+								$value_cell_purchase_price = isset($data[$row][13]) ? $data[$row][13] : '';
+								$value_cell_rate = isset($data[$row][14]) ? $data[$row][14] : '';
+								$value_cell_tax = isset($data[$row][15]) ? $data[$row][15] : '';
+								$value_cell_tax2 = isset($data[$row][16]) ? $data[$row][16] : '';
+								$value_cell_origin = isset($data[$row][17]) ? $data[$row][17] : '';
+								$value_cell_style_id = isset($data[$row][18]) ? $data[$row][18] : '';
+								$value_cell_model_id = isset($data[$row][19]) ? $data[$row][19] : '';
+								$value_cell_size_id = isset($data[$row][20]) ? $data[$row][20] : '';
+								$value_cell_color_id = isset($data[$row][21]) ? (int)$data[$row][21] : '';
+								$value_cell_warranty = isset($data[$row][22]) ? $data[$row][22] : null;
+								$value_cell_minimum_inventory = isset($data[$row][23]) ? $data[$row][23] : '';
 
-								$value_cell_commodity_code = isset($data[$row][0]) ? $data[$row][0] : null; //A
-								$value_cell_description = isset($data[$row][1]) ? $data[$row][1] : null; //B
-								$value_cell_commodity_barcode = isset($data[$row][2]) ? $data[$row][2] : ''; //A
-								$value_cell_sku_code = isset($data[$row][3]) ? $data[$row][3] : ''; //A
-								$value_cell_sku_name = isset($data[$row][4]) ? $data[$row][4] : ''; //A
-								$value_cell_tag = isset($data[$row][5]) ? $data[$row][5] : ''; //A
-								$value_cell_long_description = isset($data[$row][6]) ? $data[$row][6] : ''; //A
-								$value_cell_commodity_type = isset($data[$row][7]) ? $data[$row][7] : '';
-								$value_cell_unit_id = isset($data[$row][8]) ? $data[$row][8] : '';
-								$value_cell_commodity_group = isset($data[$row][9]) ? $data[$row][9] : null;
-								$value_cell_sub_group = isset($data[$row][10]) ? $data[$row][10] : '';
-								$value_cell_profit_rate = isset($data[$row][11]) ? $data[$row][11] : '';
-								$value_cell_purchase_price = isset($data[$row][12]) ? $data[$row][12] : '';
-								$value_cell_rate = isset($data[$row][13]) ? $data[$row][13] : '';
-								$value_cell_tax = isset($data[$row][14]) ? $data[$row][14] : '';
-								$value_cell_tax2 = isset($data[$row][15]) ? $data[$row][15] : '';
-								$value_cell_origin = isset($data[$row][16]) ? $data[$row][16] : '';
-								$value_cell_style_id = isset($data[$row][17]) ? $data[$row][17] : '';
-								$value_cell_model_id = isset($data[$row][18]) ? $data[$row][18] : '';
-								$value_cell_size_id = isset($data[$row][19]) ? $data[$row][19] : '';
-								$value_cell_color_id = isset($data[$row][20]) ? (int)$data[$row][20] : '';
-								$value_cell_warranty = isset($data[$row][21]) ? $data[$row][21] : null;
-								$value_cell_minimum_inventory = isset($data[$row][22]) ? $data[$row][22] : '';
 
 								$pattern = '#^[a-z][a-z0-9\._]{2,31}@[a-z0-9\-]{3,}(\.[a-z]{2,4}){1,2}$#';
 
@@ -2662,6 +2665,14 @@ class warehouse extends AdminController {
 									$string_error .= _l('commodity_name') . _l('not_yet_entered');
 									$flag = 1;
 								}
+							$allowed_item_types = ['standard', 'customizable'];
+						if (!in_array($value_cell_item_type, $allowed_item_types)) {
+							$string_error .= _l('item_type') . ' ' . _l('not_yet_entered_or_invalid');
+							$flag = 1;
+						} else {
+							$flag_id_item_type = $value_cell_item_type;
+						}
+
 
 								//check commodity_type exist  (input: id or name contract)
 								if (is_null($value_cell_commodity_type) != true && $value_cell_commodity_type != '0' && $value_cell_commodity_type != '') {
@@ -3041,36 +3052,37 @@ class warehouse extends AdminController {
 
 
 									/*staff id is HR_code, input is HR_CODE, insert => staffid*/
-									$rd['commodity_code'] = isset($data[$row][0]) ? $data[$row][0] : '';
-									$rd['commodity_barcode'] = isset($data[$row][2]) ? $data[$row][2] : '';
-									$rd['sku_code'] = isset($data[$row][3]) ? $data[$row][3] : '';
-									$rd['sku_name'] = isset($data[$row][4]) ? $data[$row][4] : '';
-									$rd['description'] = isset($data[$row][1]) ? $data[$row][1] : '';
-									$rd['tags'] = isset($data[$row][5]) ? $data[$row][5] : '';
-									$rd['long_description'] = isset($data[$row][6]) ? $data[$row][6] : '';
+									$rd['item_type']      = isset($flag_id_item_type) ? $flag_id_item_type : '';
 
-									$rd['commodity_type'] = isset($flag_id_commodity_type) ? $flag_id_commodity_type : '';
-									$rd['unit_id'] = isset($flag_id_unit_id) ? $flag_id_unit_id : '';
-									$rd['group_id'] = isset($flag_id_commodity_group) ? $flag_id_commodity_group : '';
-									$rd['sub_group'] = isset($flag_id_sub_group) ? $flag_id_sub_group : '';
-									$rd['guarantee'] = isset($data[$row][21]) ? $data[$row][21] : '';
-									$rd['tax'] = isset($flag_id_tax) ? $flag_id_tax : '';
-									$rd['tax2'] = isset($flag_id_tax2) ? $flag_id_tax2 : null;
+									$rd['commodity_code']      = isset($data[$row][1]) ? $data[$row][1] : '';
+$rd['description']         = isset($data[$row][2]) ? $data[$row][2] : '';
+$rd['commodity_barcode']   = isset($data[$row][3]) ? $data[$row][3] : '';
+$rd['sku_code']            = isset($data[$row][4]) ? $data[$row][4] : '';
+$rd['sku_name']            = isset($data[$row][5]) ? $data[$row][5] : '';
+$rd['tags']                = isset($data[$row][6]) ? $data[$row][6] : '';
+$rd['long_description']    = isset($data[$row][7]) ? $data[$row][7] : '';
 
-									$rd['origin'] = isset($data[$row][16]) ? $data[$row][16] : '';
+$rd['commodity_type']      = isset($flag_id_commodity_type) ? $flag_id_commodity_type : '';
+$rd['unit_id']             = isset($flag_id_unit_id) ? $flag_id_unit_id : '';
+$rd['group_id']            = isset($flag_id_commodity_group) ? $flag_id_commodity_group : '';
+$rd['sub_group']           = isset($flag_id_sub_group) ? $flag_id_sub_group : '';
+$rd['guarantee']           = isset($data[$row][22]) ? $data[$row][22] : '';
+$rd['tax']                 = isset($flag_id_tax) ? $flag_id_tax : '';
+$rd['tax2']                = isset($flag_id_tax2) ? $flag_id_tax2 : null;
 
-									$rd['style_id'] = isset($flag_id_style_id) ? $flag_id_style_id : '';
-									$rd['model_id'] = isset($flag_id_model_id) ? $flag_id_model_id : '';
-									$rd['size_id'] = isset($flag_id_size_id) ? $flag_id_size_id : '';
-									$rd['color'] = isset($flag_id_color_id) ? $flag_id_color_id : 0;
-									$rd['warehouse_id'] = 0;
+$rd['origin']              = isset($data[$row][17]) ? $data[$row][17] : '';
 
-									$rd['profif_ratio'] = isset($data[$row][11]) ? $data[$row][11] : null;
+$rd['style_id']            = isset($flag_id_style_id) ? $flag_id_style_id : '';
+$rd['model_id']            = isset($flag_id_model_id) ? $flag_id_model_id : '';
+$rd['size_id']             = isset($flag_id_size_id) ? $flag_id_size_id : '';
+$rd['color']               = isset($flag_id_color_id) ? $flag_id_color_id : 0;
+$rd['warehouse_id']        = 0;
 
-									$rd['rate'] = isset($data[$row][13]) ? $data[$row][13] : null;
-									$rd['purchase_price'] = isset($data[$row][12]) ? $data[$row][12] : null;
-									$rd['minimum_inventory'] = isset($value_cell_minimum_inventory) ? $value_cell_minimum_inventory : 0;
-									$rd['without_checking_warehouse'] =  0;
+$rd['profif_ratio']        = isset($data[$row][12]) ? $data[$row][12] : null;
+$rd['purchase_price']      = isset($data[$row][13]) ? $data[$row][13] : null;
+$rd['rate']                = isset($data[$row][14]) ? $data[$row][14] : null;
+$rd['minimum_inventory']   = isset($value_cell_minimum_inventory) ? $value_cell_minimum_inventory : 0;
+$rd['without_checking_warehouse'] = 0;
 
 								}
 
@@ -3097,6 +3109,7 @@ class warehouse extends AdminController {
 								if (($flag == 1) || ($flag2 == 1) || ($flag_insert == false)) {
 									//write error file
 									$writer->writeSheetRow('Sheet1', [
+										$value_cell_item_type,
 										$value_cell_commodity_code,
 										$value_cell_description,
 										$value_cell_commodity_barcode,

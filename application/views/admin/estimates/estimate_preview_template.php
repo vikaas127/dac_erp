@@ -403,7 +403,8 @@
                                                     <?php echo _l('estimate_subtotal'); ?>
                                                 </span>
                                             </td>
-                                            <td class="subtotal">
+                                            <td></td>
+                                            <td align="right" width="15%" class="subtotal ">
                                                 <?php echo e(app_format_money($estimate->subtotal, $estimate->currency_name)); ?>
                                             </td>
                                         </tr>
@@ -427,6 +428,34 @@
                                                 echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td>' . e(app_format_money($tax['total_tax'], $estimate->currency_name)) . '</td></tr>';
                                             }
                                         ?>
+                                        <?php
+if ((int)$estimate->quantity_discount_percent != 0) {
+    echo '<tr>
+        <td align="right" width="70%"><strong>' . _l('qty_discount') . '</strong></td>
+        <td align="right" width="15%">' . $estimate->quantity_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($estimate->quantity_discount_total, $estimate->currency_name) . '</td>
+    </tr>';
+}
+
+if ((int)$estimate->special_discount_percent != 0) {
+    echo '<tr>
+        <td align="right" width="70%"><strong>' . _l('special_discount') . '</strong></td>
+        <td align="right" width="15%">' . $estimate->special_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($estimate->special_discount_total, $estimate->currency_name) . '</td>
+    </tr>';
+}
+
+if ((int)$estimate->offer_discount_percent != 0) {
+    echo '<tr>
+        <td align="right" width="70%"><strong>' . _l('offer_discount') . '</strong></td>
+        <td align="right" width="15%">' . $estimate->offer_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($estimate->offer_discount_total, $estimate->currency_name) . '</td>
+    </tr>';
+}
+
+
+?>
+
                                         <?php if ((int)$estimate->adjustment != 0) { ?>
                                         <tr>
                                             <td>
@@ -434,18 +463,20 @@
                                                     <?php echo _l('estimate_adjustment'); ?>
                                                 </span>
                                             </td>
+                                            <td></td>
                                             <td class="adjustment">
                                                 <?php echo e(app_format_money($estimate->adjustment, $estimate->currency_name)); ?>
                                             </td>
                                         </tr>
                                         <?php } ?>
                                         <tr>
-                                            <td>
+                                            <td align="right" width="85%">
                                                 <span class="bold tw-text-neutral-700">
                                                     <?php echo _l('estimate_total'); ?>
                                                 </span>
                                             </td>
-                                            <td class="total">
+                                            <td></td>
+                                            <td align="right" width="15%" class="total">
                                                 <?php echo e(app_format_money($estimate->total, $estimate->currency_name)); ?>
                                             </td>
                                         </tr>

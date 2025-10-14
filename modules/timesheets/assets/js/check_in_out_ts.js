@@ -39,36 +39,76 @@ function setDate(hour, minute, second) {
   var hourDeg = ((hour / 12) * 360);
   $("#clock_attendance_modal #hourHand").css('transform', 'rotate(' + hourDeg + 'deg)');
 }
-$(function() {
-  FingerprintJS.load().then(fp => {
-    fp.get().then(result => {
-      const visitorId = result.visitorId;
-      console.log("Device ID:", visitorId);
-      $('input[name="device_fingerprint"]').val(visitorId);
-    });
-  });
-});
+// $(function() {
+//   FingerprintJS.load().then(fp => {
+//     fp.get().then(result => {
+//       const visitorId = result.visitorId;
+//       console.log("Device ID:", visitorId);
+//       $('input[name="device_fingerprint"]').val(visitorId);
+//     });
+//   });
+// });
 
 /**
  * open check in out
  */
+// function open_check_in_out() {
+//   "use strict";
+//   if ($('input[name="enable_get_location"]').val() == true) {
+//     getLocation();
+//   }
+//   $("#clock_attendance_modal .curr_date .form-group").slideUp(1);
+//   $('#clock_attendance_modal').modal('show');
+//   appValidateForm($('#timesheets-form-check-in'), {
+//     staff_id: 'required',
+//     date: 'required'
+//   })
+//   appValidateForm($('#timesheets-form-check-out'), {
+//     staff_id: 'required',
+//     date: 'required'
+//   })
+//   $(".btn-close-edit-datetime").click();
+// }
+
 function open_check_in_out() {
-  "use strict";
-  if ($('input[name="enable_get_location"]').val() == true) {
-    getLocation();
-  }
-  $("#clock_attendance_modal .curr_date .form-group").slideUp(1);
-  $('#clock_attendance_modal').modal('show');
-  appValidateForm($('#timesheets-form-check-in'), {
-    staff_id: 'required',
-    date: 'required'
-  })
-  appValidateForm($('#timesheets-form-check-out'), {
-    staff_id: 'required',
-    date: 'required'
-  })
-  $(".btn-close-edit-datetime").click();
+    $('#timesheets-form-check-in .check_in').attr('disabled', true);
+    $('#timesheets-form-check-out .check_out').attr('disabled', true);
+
+    $("#clock_attendance_modal .curr_date .form-group").slideUp(1);
+    $('#clock_attendance_modal').modal('show');
+
+    // If location is already fetched, enable buttons immediately
+    if ($('input[name="location_user"]').val()) {
+        $('#timesheets-form-check-in .check_in').removeAttr('disabled');
+        $('#timesheets-form-check-out .check_out').removeAttr('disabled');
+    } else {
+        // Otherwise, wait for getLocation callback
+        getLocation(() => {
+            $('#timesheets-form-check-in .check_in').removeAttr('disabled');
+            $('#timesheets-form-check-out .check_out').removeAttr('disabled');
+        });
+    }
 }
+
+// window.open_check_in_out = function() {
+//     "use strict";
+//     if ($('input[name="enable_get_location"]').val() == true) {
+//         getLocation();
+//     }
+//     $("#clock_attendance_modal .curr_date .form-group").slideUp(1);
+//     $('#clock_attendance_modal').modal('show');
+//     appValidateForm($('#timesheets-form-check-in'), {
+//         staff_id: 'required',
+//         date: 'required'
+//     })
+//     appValidateForm($('#timesheets-form-check-out'), {
+//         staff_id: 'required',
+//         date: 'required'
+//     })
+//     $(".btn-close-edit-datetime").click();
+// };
+
+
 /**
  * update Clock
  */
@@ -190,25 +230,122 @@ function get_data() {
   $('#timesheets-form-check-out .check_out').attr('disabled', 'disabled');
 }
 
-function getLocation() {
-  "use strict";
-  function success(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    $('#clock_attendance_modal input[name="location_user"]').val(latitude + ',' + longitude);
-    get_route_point();
-  }
+// function getLocation() {
+//   "use strict";
+//   function success(position) {
+//     const latitude = position.coords.latitude;
+//     const longitude = position.coords.longitude;
+//     $('#clock_attendance_modal input[name="location_user"]').val(latitude + ',' + longitude);
+//     get_route_point();
+//   }
 
-  function error() {
-    alert('Unable to retrieve your location');
-  }
+//   function error() {
+//     alert('Unable to retrieve your location');
+//   }
 
-  if (!navigator.geolocation) {
-    alert('Geolocation is not supported by your browser');
-  } else {
-    navigator.geolocation.getCurrentPosition(success, error);
-  }
+//   if (!navigator.geolocation) {
+//     alert('Geolocation is not supported by your browser');
+//   } else {
+//     navigator.geolocation.getCurrentPosition(success, error);
+//   }
+// }
+$(window).on('load', function () {
+    if ($('input[name="enable_get_location"]').val() == 'true') {
+        getLocation(); // call your getLocation function
+    }
+});
+
+// function getLocation(callback) {
+//     function success(position) {
+//         const latitude = position.coords.latitude;
+//         const longitude = position.coords.longitude;
+
+//         $('#clock_attendance_modal input[name="location_user"]').val(`${latitude},${longitude}`);
+//         get_route_point();
+
+//         if (typeof callback === "function") callback(latitude, longitude);
+//     }
+
+//     function error(err) {
+//         console.error('Unable to retrieve location', err);
+//         if (typeof callback === "function") callback(null, null);
+//     }
+
+//     if (!navigator.geolocation) {
+//         console.error('Geolocation not supported');
+//         if (typeof callback === "function") callback(null, null);
+//     } else {
+//         navigator.geolocation.getCurrentPosition(success, error, {
+//             enableHighAccuracy: true,
+//             timeout: 10000,
+//             maximumAge: 0
+//         });
+//     }
+// }
+
+function getLocation(callback) {
+    "use strict";
+
+    // Minimum acceptable accuracy (in meters)
+    const REQUIRED_ACCURACY = 100;
+
+    let attempts = 0;
+    let maxAttempts = 5;
+    let bestPosition = null;
+
+    function success(position) {
+        attempts++;
+
+        const accuracy = position.coords.accuracy; // in meters
+        console.log(`Attempt ${attempts}: accuracy = ${accuracy}m`);
+
+        // Save the best position if more accurate
+        if (!bestPosition || accuracy < bestPosition.coords.accuracy) {
+            bestPosition = position;
+        }
+
+        // Stop if accuracy is good enough or max attempts reached
+        if (accuracy <= REQUIRED_ACCURACY || attempts >= maxAttempts) {
+            const latitude = bestPosition.coords.latitude;
+            const longitude = bestPosition.coords.longitude;
+
+            $('#clock_attendance_modal input[name="location_user"]').val(`${latitude},${longitude}`);
+            get_route_point();
+
+            if (typeof callback === "function") callback(latitude, longitude);
+        } else {
+            // Retry after 1 second
+            setTimeout(() => {
+                navigator.geolocation.getCurrentPosition(success, error, {
+                    enableHighAccuracy: true,
+                    timeout: 20000,
+                    maximumAge: 0
+                });
+            }, 1000);
+        }
+    }
+
+    function error(err) {
+        console.error('Unable to retrieve location', err);
+        if (typeof callback === "function") callback(null, null);
+    }
+
+    if (!navigator.geolocation) {
+        console.error('Geolocation not supported');
+        if (typeof callback === "function") callback(null, null);
+        return;
+    }
+
+    // First request
+    navigator.geolocation.getCurrentPosition(success, error, {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 0
+    });
 }
+
+
+
 
 /**
 * open check in out

@@ -1036,25 +1036,35 @@ public function get_bill_of_material_for_pdf($id)
 		}
 
 	}
-	public function get_rawproduct($id = false)
-	{
+public function get_rawproduct($id = false)
+{
+    if (is_numeric($id)) {
+        // Fetch a single item by ID where group_id = 8
+        $this->db->where('id', $id);
+        $this->db->where('group_id', 8);
+        return $this->db->get(db_prefix() . 'items')->row();
+    }
 
-		if (is_numeric($id)) {
-    $this->db->where('id', $id);
-    $this->db->where('group_id !=', 3); // Filter for group_id not equal to 3
-    return $this->db->get(db_prefix() . 'items')->row();
+    if ($id == false) {
+        // Exclude items that are children
+        $sql_where = db_prefix().'items.id NOT IN (
+            SELECT DISTINCT parent_id 
+            FROM '.db_prefix().'items 
+            WHERE parent_id IS NOT NULL AND parent_id != "0"
+        )';
+
+        $this->db->select('*, CONCAT(commodity_code, "_", description) as description');
+        $this->db->where($sql_where);
+
+        // Must be manufacturable
+        $this->db->where('can_be_manufacturing', 'can_be_manufacturing');
+
+        // Only group_id = 8
+        $this->db->where('group_id', 8);
+
+        return $this->db->get(db_prefix() . 'items')->result_array();
+    }
 }
-
-if ($id == false) {
-    $sql_where = db_prefix().'items.id not in ( SELECT distinct parent_id from '.db_prefix().'items WHERE parent_id is not null AND parent_id != "0" )';
-    $this->db->select('*, CONCAT(commodity_code, "_", description) as description');
-    $this->db->where($sql_where);
-    $this->db->where('can_be_manufacturing', 'can_be_manufacturing');
-    $this->db->where('group_id !=', 3); // Filter for group_id not equal to 3
-    return $this->db->get(db_prefix() . 'items')->result_array();
-}
-
-	}
 
 
 	/**
@@ -1769,17 +1779,43 @@ public function get_bom_export_pdf_html($id)
      * get parent product
      * @return [type] 
      */
-    public function get_parent_product()
-    {
-    	$sql_where = ' ('  .db_prefix().'items.parent_id is null OR  '.db_prefix().'items.parent_id = 0 OR  '.db_prefix().'items.parent_id = "" )  ';
+    // public function get_parent_product()
+    // {
+    // 	$sql_where = ' ('  .db_prefix().'items.parent_id is null OR  '.db_prefix().'items.parent_id = 0 OR  '.db_prefix().'items.parent_id = "" )  ';
 
-    	$this->db->where($sql_where);
-    	$this->db->where('can_be_manufacturing', 'can_be_manufacturing');
-    	$products = $this->db->get(db_prefix().'items')->result_array();
+    // 	$this->db->where($sql_where);
+    // 	$this->db->where('can_be_manufacturing', 'can_be_manufacturing');
 
-    	return $products;
+    // 	$products = $this->db->get(db_prefix().'items')->result_array();
+
+    // 	return $products;
         
-    }
+    // }
+
+public function get_parent_product()
+{
+    // Only parent products
+    $sql_where = ' (' .db_prefix().'items.parent_id IS NULL 
+                    OR '.db_prefix().'items.parent_id = 0 
+                    OR '.db_prefix().'items.parent_id = "" )';
+
+    $this->db->where($sql_where);
+
+    // Must be manufacturable
+    $this->db->where('can_be_manufacturing', 'can_be_manufacturing');
+
+    // Group ID should be 7 or 9
+
+    // Exclude id = 8
+    $this->db->where(db_prefix().'items.group_id !=', 8);
+
+    // Fetch products
+    $products = $this->db->get(db_prefix().'items')->result_array();
+
+    return $products;
+}
+
+
 
 
     /**
@@ -1813,6 +1849,7 @@ public function get_bom_export_pdf_html($id)
 			return $this->db->query('select * from ' . db_prefix() . 'mrp_bill_of_materials')->result_array();
 		}
 	}
+
 
     /**
      * add bill of material

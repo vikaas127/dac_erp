@@ -345,7 +345,7 @@
             
                         <input type="number"
                             value="<?php echo(isset($estimate) ? $estimate->special_discount_total : 0); ?>"
-                            class="form-control pull-left input-discount-percent hidden" min="0" max="100" id="special_discount_total" name="special_discount_total">
+                            class="form-control pull-left input-discount-percent hidden"  id="special_discount_total" name="special_discount_total">
                         </div>
                     </td>
                     <td class="discount-total"></td>

@@ -89,6 +89,7 @@
 
       'unit_id': 'required',
       'rate': 'required',
+      'item_type':'required',
     },expenseSubmitHandler);
 
     $(".checkbox #filter_all_simple_variation").change(function() {
@@ -543,6 +544,7 @@ warehouse_type_value = warehouse_type;
     data.long_description = $('textarea[name="long_description"]').val();
 
     data.commodity_type = $('select[name="commodity_type"]').val();
+       data.item_type = $('select[name="item_type"]').val();
     data.unit_id = $('select[name="unit_id"]').val();
     data.group_id = $('select[name="group_id"]').val();
     data.sub_group = $('select[name="sub_group"]').val();
@@ -807,6 +809,13 @@ warehouse_type_value = warehouse_type;
       $('#commodity_list-add-edit select[name="commodity_type"]').val('').change();
     }
 
+     if($(invoker).data('item_type') != 0){
+      $('#commodity_list-add-edit select[name="item_type"]').val($(invoker).data('item_type')).change();
+
+    }else{
+
+      $('#commodity_list-add-edit select[name="item_type"]').val('').change();
+    }
     if($(invoker).data('sub_group') != 0){
       sub_group_value = $(invoker).data('sub_group');
     }
@@ -1112,6 +1121,8 @@ warehouse_type_value = warehouse_type;
 
     $('#commodity_list-add-edit select[name="unit_id"]').val('').change();
     $('#commodity_list-add-edit select[name="commodity_type"]').val('').change();
+        $('#commodity_list-add-edit select[name="item_type"]').val('').change();
+
     $('#commodity_list-add-edit select[name="group_id"]').val('').change();
     $('#commodity_list-add-edit select[name="warehouse_id"]').val('').change();
     $('#commodity_list-add-edit select[name="tax"]').val('').change();
@@ -1582,6 +1593,13 @@ $("body").on('change', 'select[name="parent_id"]', function () {
           }else{
 
             $('#commodity_list-add-edit select[name="commodity_type"]').val('').change();
+          }
+          if(response.parent_value.item_type != 0){
+          $('#commodity_list-add-edit select[name="item_type"]').val(response.parent_value.item_type).change();
+
+          }else{
+
+            $('#commodity_list-add-edit select[name="item_type"]').val('').change();
           }
 
           if(response.parent_value.sub_group != 0){

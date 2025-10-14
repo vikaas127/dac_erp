@@ -338,7 +338,18 @@ class Invoices_model extends App_Model
             $data['status'] = self::STATUS_DRAFT;
             unset($data['save_and_send_later']);
         }
-
+        if (isset($data['item_type'])) {
+            unset($data['item_type']);
+        }
+         if (isset($data['item_discount_percent'])) {
+            unset($data['item_discount_percent']);
+        }
+        if (isset($data['item_price'])) {
+            unset($data['item_price']);
+        }
+         if (isset($data['discount_fixed'])) {
+            unset($data['discount_fixed']);
+        }
         if (isset($data['recurring'])) {
             if ($data['recurring'] == 'custom') {
                 $data['recurring_type']   = $data['repeat_type_custom'];
@@ -502,6 +513,7 @@ class Invoices_model extends App_Model
                                 'item_id'  => $itemid,
                                 'rel_id'   => $_task_id,
                                 'rel_type' => 'task',
+                                   'item_discount_percent' => $item['item_discount_percent'],
                             ]);
                         }
                     } elseif (isset($billed_expenses[$key])) {
@@ -728,7 +740,18 @@ class Invoices_model extends App_Model
         if (isset($data['nubmer'])) {
             $data['number'] = trim($data['number']);
         }
-
+          if (isset($data['item_type'])) {
+            unset($data['item_type']);
+        }
+         if (isset($data['item_discount_percent'])) {
+            unset($data['item_discount_percent']);
+        }
+        if (isset($data['item_price'])) {
+            unset($data['item_price']);
+        }
+ if (isset($data['discount_fixed'])) {
+            unset($data['discount_fixed']);
+        }
         $original_number_formatted = format_invoice_number($id);
         $original_number           = $original_invoice->number;
         $save_and_send             = isset($data['save_and_send']);

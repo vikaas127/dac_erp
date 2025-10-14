@@ -68,6 +68,8 @@ jQuery(function($) {
                     globalCustomerGroupDiscount = parseFloat(data.default_discount) || 0;
                     $('#basic_discount_percent').val(globalCustomerGroupDiscount).trigger('input');
                     $('#customer_group_id').val(data.group_id);
+                    updateSpecialDiscountOptions(data.group_id);
+
                     $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
                 },
                 error: function() {
@@ -127,6 +129,38 @@ jQuery(function($) {
     // Trigger customer group fetch on load
     $('#clientid').trigger('change');
 });
+function updateSpecialDiscountOptions(groupId) {
+    const $dropdown = $('#special_discount_percent');
+    const selected = parseInt($dropdown.val()) || '';
+    let optionsHtml = '';
+
+    // Add first empty option
+    optionsHtml += `<option value="">— Select —</option>`;
+
+    // Default range
+    let start = 0, end = 5;
+
+    // For customer group 4 or 7 → 1–10
+    if (groupId == 4 || groupId == 7) {
+        start = 1;
+        end = 10;
+    }
+
+    // Build options dynamically
+    for (let i = start; i <= end; i++) {
+        optionsHtml += `<option value="${i}" ${i == selected ? 'selected' : ''}>${i}%</option>`;
+    }
+
+    // Update dropdown
+    $dropdown.html(optionsHtml);
+
+    // Trigger total recalculation
+    if (typeof calculate_total !== 'undefined') {
+        calculate_total();
+    }
+}
+
+
 </script>
 <!-- <script>
     (function($) {

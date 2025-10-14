@@ -320,8 +320,9 @@ function timesheets_load_js() {
 
 	$data_timekeeping_form = get_timesheets_option('timekeeping_form');
 	if ($data_timekeeping_form == 'timekeeping_manually') {
-		echo '<script src="' . base_url('modules/timesheets/assets/js/check_in_out_ts.js') . '?v=' . TIMESHEETS_REVISION . '"></script>';
-		require "modules/timesheets/views/includes/modals/check_in_out.php";
+	require "modules/timesheets/views/includes/modals/check_in_out.php";
+	echo '<script src="' . base_url('modules/timesheets/assets/js/check_in_out_ts.js') . '?v=' . time() . '"></script>';
+
 	}
 	if (!(strpos($viewuri, '/admin/timesheets/route_management?tab=route_point') === false)) {
 		echo '<script src="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/js/route_point.js') . '?v=' . TIMESHEETS_REVISION . '"></script>';

@@ -486,7 +486,7 @@
 
     <hr class="hr-panel-separator" />
 
-    <div class="panel-body">
+    <!-- <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
                 <?php $this->load->view('admin/invoice_items/item_select'); ?>
@@ -819,7 +819,8 @@
         <?php echo form_hidden('task_id'); ?>
         <?php echo form_hidden('expense_id'); ?>
 
-    </div>
+    </div> -->
+                    <?php $this->load->view('admin/estimates/_add_edit_items'); ?>
 
     <hr class="hr-panel-separator" />
 

@@ -2430,7 +2430,7 @@ public function add_scrap_modal($id = '') {
 
     // Fetch other required data
     $data['units'] = $this->manufacturing_model->mrp_get_unit();
-    $data['products'] = $this->manufacturing_model->get_product();
+    $data['products'] = $this->manufacturing_model->get_rawproduct();
     $data['product_variants'] = $this->manufacturing_model->get_product_variant();
 
     // Log data retrieval

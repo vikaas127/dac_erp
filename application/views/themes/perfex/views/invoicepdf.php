@@ -124,6 +124,29 @@ foreach ($items->taxes() as $tax) {
     <td align="right" width="15%">' . app_format_money($tax['total_tax'], $invoice->currency_name) . '</td>
 </tr>';
 }
+if ((int)$invoice->quantity_discount_percent != 0) {
+    $tbltotal .= '<tr>
+        <td align="right" width="70%"><strong>' . _l('qty_discount') . '</strong></td>
+        <td align="right" width="15%">' . $invoice->quantity_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($invoice->quantity_discount_total, $invoice->currency_name) . '</td>
+    </tr>';
+}
+
+if ((int)$invoice->special_discount_percent != 0) {
+    $tbltotal .= '<tr>
+        <td align="right" width="70%"><strong>' . _l('special_discount') . '</strong></td>
+        <td align="right" width="15%">' . $invoice->special_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($invoice->special_discount_total, $invoice->currency_name) . '</td>
+    </tr>';
+}
+
+if ((int)$invoice->offer_discount_percent != 0) {
+    $tbltotal .= '<tr>
+        <td align="right" width="70%"><strong>' . _l('offer_discount') . '</strong></td>
+        <td align="right" width="15%">' . $invoice->offer_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($invoice->offer_discount_total, $invoice->currency_name) . '</td>
+    </tr>';
+}
 
 if ((int) $invoice->adjustment != 0) {
     $tbltotal .= '<tr>

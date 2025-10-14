@@ -78,6 +78,8 @@ abstract class App_items_table_template
         'item'   => '',
         'qty'    => '',
         'rate'   => '',
+        'discount'=>'',
+        'after_discount_rate'=>'',
         'tax'    => '',
         'amount' => '',
     ];
@@ -441,6 +443,14 @@ abstract class App_items_table_template
     {
         return $this->headings['amount'];
     }
+     public function discount_heading()
+    {
+        return $this->headings['discount'];
+    }
+    public function after_discount_rate_heading()
+    {
+        return $this->headings['after_discount_rate'];
+    }
 
     /**
      * Set headings for the items
@@ -466,6 +476,9 @@ abstract class App_items_table_template
 
         $this->headings['qty']    = $qty_heading;
         $this->headings['rate']   = _l($langFrom . '_table_rate_heading', '', false);
+        $this->headings['discount']   = _l($langFrom . '_table_discount_heading', '', false);
+        $this->headings['after_discount_rate']   = _l($langFrom . '_table_after_discount_rate_heading', '', false);
+
         $this->headings['tax']    = _l($langFrom . '_table_tax_heading', '', false);
         $this->headings['amount'] = _l($langFrom . '_table_amount_heading', '', false);
 

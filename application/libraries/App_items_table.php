@@ -30,7 +30,7 @@ class App_items_table extends App_items_table_template
 
         $descriptionItemWidth = $this->get_description_item_width();
 
-        $regularItemWidth  = $this->get_regular_items_width(6);
+        $regularItemWidth  = $this->get_regular_items_width();
         $customFieldsItems = $this->get_custom_fields_for_table();
 
         if ($this->for == 'html') {
@@ -104,6 +104,11 @@ class App_items_table extends App_items_table_template
             );
 
             $itemHTML .= '<td align="right" width="' . $regularItemWidth . '%">' . e($rate) . '</td>';
+$itemHTML .= '<td align="right" width="' . $regularItemWidth . '%">' . e($item['item_discount_percent']) . '%</td>';
+
+
+            $rate_after_discount_per_unit = $item['rate'] - ($item['rate'] * ($item['item_discount_percent'] / 100));
+            $itemHTML .= '<td align="right" width="' . $regularItemWidth . '%">' . e($rate_after_discount_per_unit) . '</td>';
 
             /**
              * Items table taxes HTML custom function because it's too general for all features/options
@@ -115,13 +120,25 @@ class App_items_table extends App_items_table_template
              * Possible action hook user to include tax in item total amount calculated with the quantiy
              * eq Rate * QTY + TAXES APPLIED
              */
+            // $item_amount_with_quantity = hooks()->apply_filters(
+            //     'item_preview_amount_with_currency',
+            //     app_format_money(($item['qty'] * $item['rate']), $this->transaction->currency_name, $this->exclude_currency()),
+            //     $item,
+            //     $this->transaction,
+            //     $this->exclude_currency()
+            // );
             $item_amount_with_quantity = hooks()->apply_filters(
                 'item_preview_amount_with_currency',
-                app_format_money(($item['qty'] * $item['rate']), $this->transaction->currency_name, $this->exclude_currency()),
+                app_format_money(
+                    ($item['qty'] * $rate_after_discount_per_unit), // Use discounted rate per unit
+                    $this->transaction->currency_name,
+                    $this->exclude_currency()
+                ),
                 $item,
                 $this->transaction,
                 $this->exclude_currency()
             );
+
 
             $itemHTML .= '<td class="amount" align="right" width="' . $regularItemWidth . '%">' . e($item_amount_with_quantity) . '</td>';
 
@@ -153,6 +170,9 @@ class App_items_table extends App_items_table_template
 
         $html .= '<th align="right">' . $this->qty_heading() . '</th>';
         $html .= '<th align="right">' . $this->rate_heading() . '</th>';
+        $html.='<th align="right">' . $this->discount_heading() . '</th>';
+        $html .= '<th align="right">' . $this->after_discount_rate_heading() . '</th>';
+
         if ($this->show_tax_per_item()) {
             $html .= '<th align="right" class="d-none">' . $this->tax_heading() . '</th>';
         }
@@ -183,6 +203,11 @@ class App_items_table extends App_items_table_template
 
         $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->qty_heading() . '</th>';
         $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->rate_heading() . '</th>';
+        $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->discount_heading() . '</th>';
+        $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->after_discount_rate_heading() . '</th>';
+
+
+
 
         if ($this->show_tax_per_item()) {
             $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->tax_heading() . '</th>';
@@ -233,20 +258,43 @@ class App_items_table extends App_items_table_template
 
     protected function get_description_item_width()
     {
-        $item_width = hooks()->apply_filters('item_description_td_width', 38);
+        $item_width = hooks()->apply_filters('item_description_td_width', 18);
 
         // If show item taxes is disabled in PDF we should increase the item width table heading
         return $this->show_tax_per_item() == 0 ? $item_width + 15 : $item_width;
     }
 
-    protected function get_regular_items_width($adjustment)
+//     protected function get_regular_items_width($adjustment)
+//     {
+//         $descriptionItemWidth = $this->get_description_item_width();
+//         $customFieldsItems    = $this->get_custom_fields_for_table();
+//         // Calculate headings width, in case there are custom fields for items
+//         $totalheadings = $this->show_tax_per_item() == 1 ? 5 : 3;
+//         $totalheadings += count($customFieldsItems);
+
+//         return (100 - ($descriptionItemWidth + $adjustment)) / $totalheadings;
+//     }
+    protected function get_regular_items_width($adjustment = 6)
     {
         $descriptionItemWidth = $this->get_description_item_width();
         $customFieldsItems    = $this->get_custom_fields_for_table();
-        // Calculate headings width, in case there are custom fields for items
-        $totalheadings = $this->show_tax_per_item() == 1 ? 4 : 3;
+
+        // Count your columns
+        $totalheadings = 0;
+
+        // Regular columns in PDF: Qty, Rate, Discount %, After Discount Rate, Amount
+        $totalheadings += 5;  
+
+        // Add tax column if applicable
+        if ($this->show_tax_per_item()) {
+            $totalheadings += 1;
+        }
+
+        // Add custom fields
         $totalheadings += count($customFieldsItems);
 
+        // Calculate width for each regular column
         return (100 - ($descriptionItemWidth + $adjustment)) / $totalheadings;
     }
+
 }

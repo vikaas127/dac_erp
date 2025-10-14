@@ -413,6 +413,7 @@
                                                     <?php echo _l('proposal_subtotal'); ?>
                                                 </span>
                                             </td>
+                                            <td></td>
                                             <td class="subtotal">
                                                 <?php echo e(app_format_money($proposal->subtotal, $proposal->currency_name)); ?>
                                             </td>
@@ -436,7 +437,34 @@
                                             foreach ($items->taxes() as $tax) {
                                                 echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td>' . e(app_format_money($tax['total_tax'], $proposal->currency_name)) . '</td></tr>';
                                             }
-                                        ?>
+                                        ?><?php
+if ((int)$proposal->quantity_discount_percent != 0) {
+    echo '<tr>
+        <td align="right" width="70%"><strong>' . _l('qty_discount') . '</strong></td>
+        <td align="right" width="15%">' . $proposal->quantity_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($proposal->quantity_discount_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
+
+if ((int)$proposal->special_discount_percent != 0) {
+    echo '<tr>
+        <td align="right" width="70%"><strong>' . _l('special_discount') . '</strong></td>
+        <td align="right" width="15%">' . $proposal->special_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($proposal->special_discount_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
+
+if ((int)$proposal->offer_discount_percent != 0) {
+    echo '<tr>
+        <td align="right" width="70%"><strong>' . _l('offer_discount') . '</strong></td>
+        <td align="right" width="15%">' . $proposal->offer_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($proposal->offer_discount_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
+
+
+?>
+
                                         <?php if ((int)$proposal->adjustment != 0) { ?>
                                         <tr>
                                             <td>
@@ -444,6 +472,7 @@
                                                     <?php echo _l('proposal_adjustment'); ?>
                                                 </span>
                                             </td>
+                                            <td></td>
                                             <td class="adjustment">
                                                 <?php echo e(app_format_money($proposal->adjustment, $proposal->currency_name)); ?>
                                             </td>
@@ -455,6 +484,7 @@
                                                     <?php echo _l('proposal_total'); ?>
                                                 </span>
                                             </td>
+                                            <td></td>
                                             <td class="total">
                                                 <?php echo e(app_format_money($proposal->total, $proposal->currency_name)); ?>
                                             </td>

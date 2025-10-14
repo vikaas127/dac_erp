@@ -93,6 +93,11 @@
                         class="dropdown notifications-wrapper header-notifications tw-block ltr:tw-mr-1.5 rtl:tw-ml-1.5">
                         <?php $this->load->view('admin/includes/notifications'); ?>
                     </li>
+                    <li>
+                        <a href="#" class="check_in_out_timesheet" data-toggle="tooltip" title="" onclick="open_check_in_out();" data-placement="bottom" data-original-title="Check-in / Check out"><i class="fa fa-history fa-fw fa-lg"></i>
+			<span class="label bg-warning hide">0</span>
+			</a>
+                    </li>
                     <li class="header-timers ltr:tw-mr-1.5 rtl:tw-ml-1.5">
                         <a href="#" id="top-timers" class="dropdown-toggle top-timers tw-block tw-h-5 tw-w-5"
                             data-toggle="dropdown">

@@ -43,7 +43,7 @@
       fixedColumnsLeft: 2,
       contextMenu: true,
       multiColumnSorting: {
-        indicator: true
+        indicator: false
       },  
       hiddenColumns: {
         columns: [0],

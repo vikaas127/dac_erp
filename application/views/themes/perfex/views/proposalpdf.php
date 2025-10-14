@@ -84,6 +84,29 @@ foreach ($items->taxes() as $tax) {
     <td align="right" width="15%">' . app_format_money($tax['total_tax'], $proposal->currency_name) . '</td>
 </tr>';
 }
+if ((int)$proposal->quantity_discount_percent != 0) {
+    $items_html .= '<tr>
+        <td align="right" width="70%"><strong>' . _l('qty_discount') . '</strong></td>
+        <td align="right" width="15%">' . $proposal->quantity_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($proposal->quantity_discount_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
+
+if ((int)$proposal->special_discount_percent != 0) {
+    $items_html .= '<tr>
+        <td align="right" width="70%"><strong>' . _l('special_discount') . '</strong></td>
+        <td align="right" width="15%">' . $proposal->special_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($proposal->special_discount_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
+
+if ((int)$proposal->offer_discount_percent != 0) {
+    $items_html .= '<tr>
+        <td align="right" width="70%"><strong>' . _l('offer_discount') . '</strong></td>
+        <td align="right" width="15%">' . $proposal->offer_discount_percent . '%</td>
+        <td align="right" width="15%">' . app_format_money($proposal->offer_discount_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
 
 if ((int)$proposal->adjustment != 0) {
     $items_html .= '<tr>

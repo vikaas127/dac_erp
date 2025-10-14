@@ -1366,85 +1366,85 @@ function escapeHtml(value, doubleEncode = true) {
   return escapedValue;
 }
 
-function init_tinymce_inline_editor(options = {}, selector) {
-  selector = selector || 'div.editable'
+// function init_tinymce_inline_editor(options = {}, selector) {
+//   selector = selector || 'div.editable'
 
-  tinymce.remove(selector);
+//   tinymce.remove(selector);
   
-  function saveContent(manual) {
-    if(options.saveUsing) {
-      options.saveUsing(manual);
-    }
-  }
+//   function saveContent(manual) {
+//     if(options.saveUsing) {
+//       options.saveUsing(manual);
+//     }
+//   }
 
-  var settings = {
-    selector: selector,
-    inline: true,
-    toolbar: false,
-    menubar: false,
-    branding: false,
-    cache_suffix: '?v='+app.version,
-    language: app.tinymce_lang || 'en',
-    relative_urls: false,
-    remove_script_host: false,
-    paste_block_drop: true,
-    entity_encoding: "raw",
-    apply_source_formatting: false,
-    valid_elements: "+*[*]",
-    valid_children: "+body[style], +style[type]",
-    file_picker_callback: elFinderBrowser,
-    table_default_styles: {
-      width: "100%",
-    },
-    font_size_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
-    pagebreak_separator: '<p pagebreak="true"></p>',
-    pagebreak_split_block: true,
-    plugins: [
-      "quickbars", "advlist", "autolink", "lists", "link", "image",
-      "visualblocks", "code", "pagebreak", "searchreplace", "media", "table"
-    ],
-    autoresize_bottom_margin: 50,
-    quickbars_insert_toolbar: 'image media quicktable | bullist numlist | h2 h3 | pagebreak | hr',
-    quickbars_selection_toolbar:
-    "bold italic underline superscript | forecolor backcolor link | alignleft aligncenter alignright alignjustify | fontfamily fontsize | h2 h3",
-    contextmenu: "paste pastetext searchreplace | visualblocks pagebreak | code",
-    setup: function (editor) {
-      if(options.onSetup) {
-        options.onSetup(editor)
-      }
+//   var settings = {
+//     selector: selector,
+//     inline: true,
+//     toolbar: false,
+//     menubar: false,
+//     branding: false,
+//     cache_suffix: '?v='+app.version,
+//     language: app.tinymce_lang || 'en',
+//     relative_urls: false,
+//     remove_script_host: false,
+//     paste_block_drop: true,
+//     entity_encoding: "raw",
+//     apply_source_formatting: false,
+//     valid_elements: "+*[*]",
+//     valid_children: "+body[style], +style[type]",
+//     file_picker_callback: elFinderBrowser,
+//     table_default_styles: {
+//       width: "100%",
+//     },
+//     font_size_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
+//     pagebreak_separator: '<p pagebreak="true"></p>',
+//     pagebreak_split_block: true,
+//     plugins: [
+//       "quickbars", "advlist", "autolink", "lists", "link", "image",
+//       "visualblocks", "code", "pagebreak", "searchreplace", "media", "table"
+//     ],
+//     autoresize_bottom_margin: 50,
+//     quickbars_insert_toolbar: 'image media quicktable | bullist numlist | h2 h3 | pagebreak | hr',
+//     quickbars_selection_toolbar:
+//     "bold italic underline superscript | forecolor backcolor link | alignleft aligncenter alignright alignjustify | fontfamily fontsize | h2 h3",
+//     contextmenu: "paste pastetext searchreplace | visualblocks pagebreak | code",
+//     setup: function (editor) {
+//       if(options.onSetup) {
+//         options.onSetup(editor)
+//       }
 
-      editor.addCommand("mceSave", function () {
-        saveContent(true);
-      });
+//       editor.addCommand("mceSave", function () {
+//         saveContent(true);
+//       });
       
-      editor.addShortcut("Meta+S", "", "mceSave");
+//       editor.addShortcut("Meta+S", "", "mceSave");
       
-      editor.on("MouseLeave blur", function () {
-        if (tinymce.activeEditor.isDirty()) {
-          saveContent();
-        }
-      });
+//       editor.on("MouseLeave blur", function () {
+//         if (tinymce.activeEditor.isDirty()) {
+//           saveContent();
+//         }
+//       });
 
-      editor.on("blur", function () {
-        $.Shortcuts.start();
-      });
+//       editor.on("blur", function () {
+//         $.Shortcuts.start();
+//       });
 
-      editor.on("focus", function () {
-        $.Shortcuts.stop();
-      });
-    },
-  };
+//       editor.on("focus", function () {
+//         $.Shortcuts.stop();
+//       });
+//     },
+//   };
 
-  if (is_mobile()) {
-    window.addEventListener("beforeunload", function (event) {
-      if (tinymce.activeEditor.isDirty()) {
-        saveContent();
-      }
-    });
-  }
+//   if (is_mobile()) {
+//     window.addEventListener("beforeunload", function (event) {
+//       if (tinymce.activeEditor.isDirty()) {
+//         saveContent();
+//       }
+//     });
+//   }
   
-  tinymce.init(settings);
-}
+//   tinymce.init(settings);
+// }
 
 /**
  * @deprecated

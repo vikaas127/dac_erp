@@ -2802,11 +2802,15 @@ public	function getAddressFromLatLong($lat, $long)
 
 	public function check_in($data)
 {
-//	log_message('info', '[CHECK_IN] Attendance check initiated for data: ' . json_encode($data));
-if (empty($data['location_user'])) {
-    $data['location_user'] = '26.7495187,83.2272604';
-    log_message('info', '[CHECK_IN] location_user was empty. Default location set: ' . $data['location_user']);
-}
+	// if (empty($data['location_user'])) {
+	// 	$data['location_user'] = '26.7495187,83.2272604';
+	// 	log_message('info', '[CHECK_IN] location_user was empty. Default location set: ' . $data['location_user']);
+	// }
+	if (empty($data['location_user'])) {
+		log_message('error', '[CHECK_IN] No location provided by client!');
+		return 3; // or handle gracefully
+	}
+
     log_message('info', '[CHECK_IN] Attendance check initiated for data: ' . json_encode($data));
 	$enable_check_valid_ip = get_timesheets_option('timekeeping_enable_valid_ip');
 	if ($enable_check_valid_ip && $enable_check_valid_ip == 1) {
