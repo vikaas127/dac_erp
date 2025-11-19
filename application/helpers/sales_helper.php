@@ -863,13 +863,15 @@ function add_new_sales_item_post($item, $rel_id, $rel_type)
     if (!empty($item['item_discount_percent'])) {
         $insert_data['item_discount_percent'] = $item['item_discount_percent'];
     }
-    if (!empty($item['item_discount_percent'])) {
+
+    if (isset($item['item_basic_discount_percent']) || isset($item['item_special_discount_percent']) || isset($item['item_quantity_discount_percent']) || isset($item['item_offer_discount_percent'])) {
         $discountPrice = [
-            'basic_discount_percent' => 10,
-            'special_discount_percent' => 10,
-            'quantity_discount_percent' => 10,
-            'offer_discount_percent' => 10,
+            'basic_discount_percent' => $item['item_basic_discount_percent'] ?? 0,
+            'special_discount_percent' => $item['item_special_discount_percent'] ?? 0,
+            'quantity_discount_percent' => $item['item_quantity_discount_percent'] ?? 0,
+            'offer_discount_percent' => $item['item_offer_discount_percent'] ?? 0,
         ];
+
         $discountPriceData = json_encode($discountPrice);
         $insert_data['item_discount_variable'] = $discountPriceData;
     }
@@ -907,13 +909,14 @@ function add_new_sales_item_post($item, $rel_id, $rel_type)
 function update_sales_item_post($item_id, $data, $field = '')
 {
 
-    if (!empty($data['item_discount_percent'])) {
+    if (isset($data['item_basic_discount_percent']) || isset($data['item_special_discount_percent']) || isset($data['item_quantity_discount_percent']) || isset($data['item_offer_discount_percent'])) {
         $discountPrice = [
-            'basic_discount_percent' => 10,
-            'special_discount_percent' => 10,
-            'quantity_discount_percent' => 10,
-            'offer_discount_percent' => 10,
+            'basic_discount_percent' => $data['item_basic_discount_percent'] ?? 0,
+            'special_discount_percent' => $data['item_special_discount_percent'] ?? 0,
+            'quantity_discount_percent' => $data['item_quantity_discount_percent'] ?? 0,
+            'offer_discount_percent' => $data['item_offer_discount_percent'] ?? 0,
         ];
+
         $discountPriceData = json_encode($discountPrice);
     }
     $update = [];

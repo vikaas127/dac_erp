@@ -102,6 +102,15 @@
             <td>
                 <input type="number" name="item_discount_percent" class="form-control"
                     placeholder="<?php echo _l('discount'); ?>" value="0" readonly>
+
+                <input type="number" name="item_basic_discount_percent" class="form-control"
+                    placeholder="<?php echo _l('item_basic_discount_percent'); ?>" value="0" readonly>
+                <input type="number" name="item_quantity_discount_percent" class="form-control"
+                    placeholder="<?php echo _l('item_quantity_discount_percent'); ?>" value="0" readonly>
+                <input type="number" name="item_offer_discount_percent" class="form-control"
+                    placeholder="<?php echo _l('item_offer_discount_percent'); ?>" value="0" readonly>
+                <input type="number" name="item_special_discount_percent" class="form-control"
+                    placeholder="<?php echo _l('item_special_discount_percent'); ?>" value="0" readonly>
             </td>
 
             <td>
@@ -150,6 +159,8 @@
             }
 
             foreach ($add_items as $item) {
+
+                 $item_discount_variable = json_decode($item['item_discount_variable']);
                  $manual    = false;
                  $table_row = '<tr class="sortable item">';
                  $table_row .= '<td class="dragger">';
@@ -204,8 +215,16 @@
                         ' . ($item['item_discount_percent'] && trim($item['item_discount_percent']) != '' 
                             ? 'data-default-discount="1" data-original-discount="'.$item['item_discount_percent'].'"' 
                             : 'data-default-discount="0" data-original-discount="0"') . '
-                    >
-                </td>';
+                    >'.
+                    '<input type="number" name="item_basic_discount_percent" class="form-control"
+                        placeholder="'._l('item_basic_discount_percent').'" value="'.$item_discount_variable->basic_discount_percent.'" readonly>
+                    <input type="number" name="item_quantity_discount_percent" class="form-control"
+                        placeholder="'. _l('item_quantity_discount_percent') .'" value="'.$item_discount_variable->quantity_discount_percent.'" readonly>
+                    <input type="number" name="item_offer_discount_percent" class="form-control"
+                        placeholder="'. _l('item_offer_discount_percent') .'" value="'.$item_discount_variable->offer_discount_percent.'" readonly>
+                    <input type="number" name="item_special_discount_percent" class="form-control"
+                        placeholder="'. _l('item_special_discount_percent') .'" value="'.$item_discount_variable->special_discount_percent.'" readonly>'
+                .'</td>';
 
                 $table_row .= '<td class="item_price"><input type="number" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][item_price]" value="' . ($item['qty'] > 0 ? $amount / $item['qty'] : $amount) . '" class="form-control" readonly></td>';
 

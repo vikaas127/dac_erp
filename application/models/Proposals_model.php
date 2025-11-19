@@ -126,6 +126,18 @@ class Proposals_model extends App_Model
         if (isset($data['item_type'])) {
             unset($data['item_type']);
         }
+        if (isset($data['item_basic_discount_percent'])) {
+            unset($data['item_basic_discount_percent']);
+        }
+        if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+        if (isset($data['item_offer_discount_percent'])) {
+            unset($data['item_offer_discount_percent']);
+        }
+        if (isset($data['item_special_discount_percent'])) {
+            unset($data['item_special_discount_percent']);
+        }
         
         $this->db->insert(db_prefix() . 'proposals', $data);
         $insert_id = $this->db->insert_id();
@@ -258,6 +270,19 @@ if (isset($data['discount_fixed'])) {
          if (isset($data['item_type'])) {
      unset($data['item_type']);
  }
+         if (isset($data['item_basic_discount_percent'])) {
+            unset($data['item_basic_discount_percent']);
+        }
+        if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+        if (isset($data['item_offer_discount_percent'])) {
+            unset($data['item_offer_discount_percent']);
+        }
+        if (isset($data['item_special_discount_percent'])) {
+            unset($data['item_special_discount_percent']);
+        }
+
         $data['address'] = trim($data['address']);
         $data['address'] = nl2br($data['address']);
 
