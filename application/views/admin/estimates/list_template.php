@@ -7,12 +7,87 @@
         <?php echo _l('create_new_estimate'); ?>
     </a>
     <?php } ?>
+<!-- Estimate Number -->
+<div class="col-md-2">
+    <?php echo render_select(
+        'filter_number',              // FIXED NAME
+        $estimate_numbers,
+        ['id', 'id'],
+        'Estimate Number',
+        [],
+        [
+            'id' => 'filter_number',
+            'multiple' => true,
+            'data-actions-box' => true,
+            'data-live-search' => true,
+            'data-action' => 'filter_estimates'
+        ]
+    ); ?>
+</div>
+
+<!-- Production Assigned To -->
+<div class="col-md-2">
+    <?php echo render_select(
+        'filter_production_assigned',    // FIXED NAME
+        $production_staff,
+        ['value','label'],
+        'Production Assigned To',
+        [],
+        [
+            'id' => 'filter_production_assigned',
+            'multiple' => true,
+            'data-actions-box' => true,
+            'data-live-search' => true,
+            'data-action' => 'filter_estimates'
+        ]
+    ); ?>
+</div>
+
+<!-- Status -->
+<div class="col-md-2">
+    <?php echo render_select(
+        'filter_status',                  // FIXED NAME
+        $estimate_status_render,
+        ['value','label'],
+        'Status',
+        [],
+        [
+            'id' => 'filter_status',
+            'multiple' => true,
+            'data-actions-box' => true,
+            'data-live-search' => true,
+            'data-action' => 'filter_estimates'
+        ]
+    ); ?>
+</div>
+
+<!-- Client -->
+<div class="col-md-2">
+    <?php echo render_select(
+        'filter_client',                // FIXED NAME
+        $clients_list,
+        ['value','label'],
+        'Client',
+        [],
+        [
+            'id' => 'filter_client',
+            'multiple' => true,
+            'data-actions-box' => true,
+            'data-live-search' => true,
+            'data-action' => 'filter_estimates'
+        ]
+    ); ?>
+</div>
+
+
     <a href="<?php echo admin_url('estimates/pipeline/' . $switch_pipeline); ?>"
         class="btn btn-default mleft5 pull-left switch-pipeline hidden-xs" data-toggle="tooltip" data-placement="top"
         data-title="<?php echo _l('switch_to_pipeline'); ?>">
         <i class="fa-solid fa-grip-vertical"></i>
     </a>
+
     <div class="display-block pull-right tw-space-x-0 sm:tw-space-x-1.5">
+         <div id="vueApp" class="tw-inline ">
         <a href="#" class="btn btn-default btn-with-tooltip toggle-small-view hidden-xs"
             onclick="toggle_small_view('.table-estimates','#estimate'); return false;" data-toggle="tooltip"
             title="<?php echo _l('estimates_toggle_table_tooltip'); ?>"><i class="fa fa-angle-double-left"></i></a>
@@ -27,6 +102,7 @@
                 :saved-filters="<?php echo $estimates_table->filtersJs(); ?>"
                 :available-rules="<?php echo $estimates_table->rulesJs(); ?>">
             </app-filters>
+                   </div>
     </div>
     <div class="clearfix"></div>
     <div class="row tw-mt-2 sm:tw-mt-4">
@@ -45,3 +121,5 @@
         </div>
     </div>
 </div>
+
+

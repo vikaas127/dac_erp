@@ -46,7 +46,20 @@ class Proposals extends AdminController
             if ($this->input->get('status') && $isPipeline) {
                 $this->pipeline(0, true);
             }
+            $data['proposal_ids'] = $this->db
+                ->select('id')
+                ->from(db_prefix().'proposals')
+                ->order_by('id', 'DESC')
+                ->get()
+                ->result_array();
 
+            $data['proposal_to_list'] = $this->db
+                ->select('proposal_to as value, proposal_to as label')
+                ->from(db_prefix().'proposals')
+                ->group_by('proposal_to')
+                ->get()
+                ->result_array();
+            $data['proposal_statuses']      = $this->proposals_model->get_statuses();
             $data['proposal_id']           = $proposal_id;
             $data['switch_pipeline']       = true;
             $data['title']                 = _l('proposals');
@@ -189,6 +202,9 @@ class Proposals extends AdminController
             $data['items']     = [];
             $data['ajaxItems'] = true;
         }
+   
+
+
         $data['items_groups'] = $this->invoice_items_model->get_groups();
 
         $data['statuses']      = $this->proposals_model->get_statuses();

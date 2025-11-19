@@ -17,16 +17,53 @@ var hidden_columns = [4, 5, 6, 7, 8];
 <div id="convert_helper"></div>
 <script>
 var proposal_id;
+
 $(function() {
+
     var Proposals_ServerParams = {};
+
+    // Default Perfex hidden inputs
     $.each($('._hidden_inputs._filters input'), function() {
         Proposals_ServerParams[$(this).attr('name')] = '[name="' + $(this).attr('name') + '"]';
     });
-    initDataTable('.table-proposals', admin_url + 'proposals/table', ['undefined'], ['undefined'],
-        Proposals_ServerParams, [8, 'desc']);
+
+    // -----------------------------
+    //  Add your new filters here
+    // -----------------------------
+    Proposals_ServerParams['filter_id']            = '[name="filter_id[]"]';
+    Proposals_ServerParams['filter_proposal_to']   = '[name="filter_proposal_to[]"]';
+    Proposals_ServerParams['filter_status']        = '[name="filter_status[]"]';
+
+    // -----------------------------
+    //  Initialize DataTable
+    // -----------------------------
+    initDataTable(
+        '.table-proposals',
+        admin_url + 'proposals/table',
+        ['undefined'],
+        ['undefined'],
+        Proposals_ServerParams,
+        [8, 'desc']
+    );
+
     init_proposal();
+
+    // -----------------------------
+    //  Reload table on filter change
+    // -----------------------------
+    $('[data-action="filter_proposals"]').on('change', function() {
+        
+
+        $('.table-proposals').DataTable().ajax.reload();
+    });
+
 });
+
+
+
+
 </script>
+
 </body>
 
 </html>

@@ -49,6 +49,54 @@ return App_table::find('estimates')
             $where[] = $filtersWhere;
         }
 
+        // -----------------------------
+// Custom Filters Logging
+// -----------------------------
+$filter_numbers = $this->ci->input->post('filter_number');
+$filter_production = $this->ci->input->post('filter_production_assigned');
+$filter_status = $this->ci->input->post('filter_status');
+$filter_client = $this->ci->input->post('filter_client');
+
+log_message('debug', '[ESTIMATES FILTER] Numbers: ' . json_encode($filter_numbers));
+log_message('debug', '[ESTIMATES FILTER] Production: ' . json_encode($filter_production));
+log_message('debug', '[ESTIMATES FILTER] Status: ' . json_encode($filter_status));
+log_message('debug', '[ESTIMATES FILTER] Client: ' . json_encode($filter_client));
+
+// -----------------------------
+// Apply Filters
+// -----------------------------
+
+// 1️⃣ Estimate Number
+if (is_array($filter_numbers) && !empty($filter_numbers)) {
+    $ids = array_map('intval', $filter_numbers);
+    $where[] = "AND " . db_prefix() . "estimates.id IN (" . implode(',', $ids) . ")";
+    log_message('debug', '[WHERE] Number Filter Applied: ' . implode(',', $ids));
+}
+
+// 2️⃣ Production Assigned To
+if (is_array($filter_production) && !empty($filter_production)) {
+    $p = array_map('intval', $filter_production);
+    $where[] = "AND production_assigned_to IN (" . implode(',', $p) . ")";
+    log_message('debug', '[WHERE] Production Filter Applied: ' . implode(',', $p));
+}
+
+// 3️⃣ Status
+if (is_array($filter_status) && !empty($filter_status)) {
+    $s = array_map('intval', $filter_status);
+    $where[] = "AND " . db_prefix() . "estimates.status IN (" . implode(',', $s) . ")";
+    log_message('debug', '[WHERE] Status Filter Applied: ' . implode(',', $s));
+}
+
+// 4️⃣ Client
+if (is_array($filter_client) && !empty($filter_client)) {
+    $c = array_map('intval', $filter_client);
+    $where[] = "AND " . db_prefix() . "estimates.clientid IN (" . implode(',', $c) . ")";
+    log_message('debug', '[WHERE] Client Filter Applied: ' . implode(',', $c));
+}
+
+log_message('debug', '[FINAL WHERE CONDITIONS] ' . print_r($where, true));
+
+
         if ($clientid != '') {
             array_push($where, 'AND ' . db_prefix() . 'estimates.clientid=' . $this->ci->db->escape_str($clientid));
         }
@@ -56,6 +104,10 @@ return App_table::find('estimates')
         if ($project_id) {
             array_push($where, 'AND project_id=' . $this->ci->db->escape_str($project_id));
         }
+
+
+
+
 
         if (staff_cant('view', 'estimates')) {
             $userWhere = 'AND ' . get_estimates_where_sql_for_staff(get_staff_user_id());
@@ -149,6 +201,18 @@ return App_table::find('estimates')
         }
         return $output;
     })->setRules([
+        App_table_filter::new('filter_number', 'TextRule')
+        ->label('Filter Number')
+        ->raw(function ($value) {
+            $ci = &get_instance();
+            $value = $ci->db->escape_like_str($value);
+
+            return '('
+                . db_prefix() . 'estimates.id = ' . intval($value)
+                . ' OR ' . db_prefix() . 'estimates.number LIKE "%' . $value . '%"'
+            . ')';
+        }),
+
         App_table_filter::new('number', 'NumberRule')->label(_l('estimate_add_edit_number')),
         App_table_filter::new('production_assigned_to', 'SelectRule')
             ->label(_l('production_assigned_to'))

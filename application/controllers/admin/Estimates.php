@@ -35,6 +35,11 @@ public function get_customer_group_info($customer_id)
 
         $data['estimate_statuses'] = $this->estimates_model->get_statuses();
         $data['estimates_table'] = App_table::find('estimates');
+        $data['estimate_numbers'] = $this->db->select('id')
+            ->order_by('id', 'DESC')
+            ->get(db_prefix() . 'estimates')
+            ->result_array();
+
         
         if ($isPipeline && !$this->input->get('status') && !$this->input->get('filter')) {
             $data['title']           = _l('estimates_pipeline');
@@ -61,7 +66,20 @@ public function get_customer_group_info($customer_id)
             $data['bodyclass']             = 'estimates-total-manual';
             $data['estimates_years']       = $this->estimates_model->get_estimates_years();
             $data['estimates_sale_agents'] = $this->estimates_model->get_sale_agents();
-        
+       $data['clients_list'] = $this->db
+    ->select('userid as value, company as label')
+    ->from(db_prefix().'clients')
+    ->get()
+    ->result_array();
+
+$data['production_staff'] = array_map(function($s) {
+    return [
+        'value' => $s['staffid'],
+        'label' => get_staff_full_name($s['staffid']),
+    ];
+}, $this->staff_model->get());
+// For production_assigned_to
+
             $this->load->view('admin/estimates/manage', $data);
         }
     }

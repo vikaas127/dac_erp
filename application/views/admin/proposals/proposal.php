@@ -34,6 +34,8 @@
                         <?php echo e(isset($proposal) ? format_proposal_number($proposal->id) : _l('new_proposal')); ?>
                     </span>
                     <?php echo isset($proposal) ? format_proposal_status($proposal->status) : ''; ?>
+                  
+
                 </h4>
                 <div class="panel_s">
                     <div class="panel-body">
@@ -302,6 +304,9 @@
         <div class="btn-bottom-pusher"></div>
     </div>
 </div>
+
+
+
 <?php init_tail(); ?>
 <script>
 var _rel_id = $('#rel_id'),
@@ -348,7 +353,7 @@ $(function() {
     init_currency();
     // Maybe items ajax search
     init_ajax_search('items', '#item_select.ajax-search', undefined, admin_url + 'items/search');
-   // validate_proposal_form();
+    validate_proposal_form();
     $('body').on('change', '#rel_id', function() {
 
         if ($(this).val() != '') {

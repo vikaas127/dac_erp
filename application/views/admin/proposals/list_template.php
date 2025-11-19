@@ -11,19 +11,100 @@
         <div class="_buttons">
             <?php if (staff_can('create',  'proposals')) { ?>
             <a href="<?php echo admin_url('proposals/proposal'); ?>"
-                class="btn btn-primary pull-left display-block new-proposal-btn">
+                class="btn  tw-mt-6 btn-primary pull-left display-block new-proposal-btn">
                 <i class="fa-regular fa-plus tw-mr-1"></i>
                 <?php echo _l('new_proposal'); ?>
             </a>
             <?php } ?>
+            
             <a href="<?php echo admin_url('proposals/pipeline/' . $switch_pipeline); ?>"
-                class="btn btn-default mleft5 pull-left switch-pipeline hidden-xs" data-toggle="tooltip"
+                class="btn btn-default tw-mt-6 mleft5 pull-left switch-pipeline hidden-xs" data-toggle="tooltip"
                 data-placement="top" data-title="<?php echo _l('switch_to_pipeline'); ?>">
                 <i class="fa-solid fa-grip-vertical"></i>
             </a>
-            <div class="pull-right">
-                <div id="vueApp" class="tw-inline">
-                    <a href="#" class="btn btn-default btn-with-tooltip toggle-small-view hidden-xs tw-mr-0 sm:tw-mr-1.5"
+<?php
+$proposal_ids_render = array_map(function($row){
+    return [
+        'id'    => $row['id'],  // real numeric ID
+        'label' => format_proposal_number($row['id']), // formatted number
+    ];
+}, $proposal_ids);
+?>
+
+    <!-- Proposal ID -->
+<div class="col-md-2">
+    <?php echo render_select(
+        'filter_id[]',
+        $proposal_ids_render,
+        ['id', 'label'],  // <-- formatted number here
+        'Proposal ID',
+        [],
+        [
+            'multiple'         => true,
+            'data-actions-box' => true,
+            'data-live-search' => true,
+            'id'               => 'filter_id',
+            'data-action'      => 'filter_proposals'
+        ]
+    ); ?>
+</div>
+
+
+    <!-- Proposal To -->
+    <div class="col-md-2">
+        <?php echo render_select(
+            'filter_proposal_to[]',
+            $proposal_to_list,
+            ['value', 'label'],
+            'Proposal To',
+            [],
+            [
+                'multiple'         => true,
+                'data-actions-box' => true,
+                'data-live-search' => true,
+                'id'               => 'filter_proposal_to',
+                'data-action'      => 'filter_proposals'
+            ]
+        ); ?>
+    </div>
+
+    <!-- Status -->
+<?php
+// Convert plain status numbers into value/label pairs
+$proposal_statuses_render = array_map(function($status){
+    return [
+        'value' => (string)$status,
+        'label' => format_proposal_status($status, '', false),
+    ];
+}, $proposal_statuses);
+?>
+
+<div class="col-md-2">
+    <?php echo render_select(
+        'filter_status[]',
+        $proposal_statuses_render,   // transformed here
+        ['value', 'label'],          // keys now exist
+        _l('proposal_status'),
+        [],
+        [
+            'multiple'         => true,
+            'data-actions-box' => true,
+            'data-live-search' => true,
+            'id'               => 'filter_status',
+            'data-action'      => 'filter_proposals'
+        ]
+    ); ?>
+</div>
+
+
+
+
+
+
+
+            <div class="pull-right tw-mt-6">
+                <div id="vueApp" class="tw-inline ">
+                    <a href="#" class="btn btn-default  btn-with-tooltip toggle-small-view hidden-xs tw-mr-0 sm:tw-mr-1.5"
                     onclick="toggle_small_view('.table-proposals','#proposal'); return false;" data-toggle="tooltip"
                     title="<?php echo _l('invoices_toggle_table_tooltip'); ?>">
                         <i class="fa fa-angle-double-left"></i>

@@ -34,6 +34,45 @@ return App_table::find('proposals')
         if ($filtersWhere = $this->getWhereFromRules()) {
             $where[] = $filtersWhere;
         }
+        $proposal_ids = $this->ci->input->post('filter_id');
+$proposal_to_values = $this->ci->input->post('filter_proposal_to');
+$statuses = $this->ci->input->post('filter_status');
+
+      // -----------------------
+// MULTI-SELECT: PROPOSAL ID
+// -----------------------
+if (is_array($proposal_ids) && !empty($proposal_ids)) {
+    $ids = array_map('intval', $proposal_ids); // sanitize
+    $ids = implode(',', $ids);
+    $where[] = "AND " . db_prefix() . "proposals.id IN ($ids)";
+}
+
+// -----------------------
+// MULTI-SELECT: PROPOSAL TO (TEXT)
+// -----------------------
+if (is_array($proposal_to_values) && !empty($proposal_to_values)) {
+
+    $likeParts = [];
+    foreach ($proposal_to_values as $pt) {
+        $pt = $this->ci->db->escape_str($pt);
+        $likeParts[] = db_prefix() . "proposals.proposal_to LIKE '%{$pt}%'";
+    }
+
+    // combine: (... OR ... OR ...)
+    $where[] = "AND (" . implode(" OR ", $likeParts) . ")";
+}
+
+// -----------------------
+// MULTI-SELECT: STATUS
+// -----------------------
+if (is_array($statuses) && !empty($statuses)) {
+    $statuses = array_map('intval', $statuses);
+    $statuses = implode(',', $statuses);
+    $where[] = "AND " . db_prefix() . "proposals.status IN ($statuses)";
+}
+
+
+
 
         if (staff_cant('view', 'proposals')) {
             array_push($where, 'AND ' . get_proposals_sql_where_staff(get_staff_user_id()));

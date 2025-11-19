@@ -56,8 +56,91 @@
         init_ajax_project_search_by_customer_id('select#project_id')
     <?php } ?>
     // Trigger item select width fix
-    $('#convert_to_estimate').on('shown.bs.modal', function(){
-        $('#item_select').trigger('change')
-    })
+   $('#convert_to_estimate').on('shown.bs.modal', function(){
+
+    $('#item_select').trigger('change');
+
+    // ⭐ NEW CODE — fetch customer group info on modal load
+    setTimeout(function () {
+
+        var customerId = $('#clientid').val();
+
+        if (customerId) {
+
+            $.ajax({
+                url: admin_url + 'estimates/get_customer_group_info/' + customerId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#customer_group_name').text(data.group_name);
+                    $('#customer_group_discount').text(data.default_discount + '%');
+
+                    globalCustomerGroupDiscount = parseFloat(data.default_discount) || 0;
+                    $('#basic_discount_percent').val(globalCustomerGroupDiscount).trigger('input');
+
+                    $('#customer_group_id').val(data.group_id);
+
+                    updateSpecialDiscountOptions(data.group_id);
+
+                    $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
+                },
+                error: function() {
+                    $('#customer_group_name').text('—');
+                    $('#customer_group_discount').text('0%');
+                    globalCustomerGroupDiscount = 0;
+
+                    $('#basic_discount_percent').val(0).trigger('input');
+                    $('#customer_group_id').val(null);
+                    $('#quantity_discount_allowed').val(0);
+                }
+            });
+
+        }
+
+    }, 200); // delay so ajax-search/selectpicker is ready
+
+});
+
+function updateSpecialDiscountOptions(groupId) {
+
+    const $dropdown = $('#special_discount_percent');
+
+    // Get selected value:
+    // 1) From data-selected (proposal convert)
+    // 2) From existing dropdown (estimate edit)
+    let selected = $dropdown.data('selected');
+    if (selected === undefined || selected === null || selected === '') {
+        selected = $dropdown.val();
+    }
+    selected = parseInt(selected);
+
+    let optionsHtml = `<option value="">— Select —</option>`;
+
+    let start = 0, end = 5;
+
+    // Groups 4 and 7 allow 1–10
+    if (groupId == 4 || groupId == 7) {
+        start = 1;
+        end = 10;
+    }
+
+    for (let i = start; i <= end; i++) {
+        const isSelected = (i === selected) ? 'selected' : '';
+        optionsHtml += `<option value="${i}" ${isSelected}>${i}%</option>`;
+    }
+
+    $dropdown.html(optionsHtml);
+
+    // Restore selected value
+    if (selected >= start && selected <= end) {
+        $dropdown.val(selected);
+    }
+
+    // Recalculate totals
+    if (typeof calculate_total !== 'undefined') {
+        calculate_total();
+    }
+}
+
 
 </script>

@@ -95,12 +95,12 @@ class Proposals_model extends App_Model
         if (isset($data['rel_id'], $data['rel_type']) && $data['rel_type'] !== 'customer') {
             $data['project_id'] = null;
         }
- if (isset($data['item_discount_percent'])) {
-            unset($data['item_discount_percent']);
-        }
-if (isset($data['discount_fixed'])) {
-            unset($data['discount_fixed']);
-        }
+        if (isset($data['item_discount_percent'])) {
+                    unset($data['item_discount_percent']);
+                }
+        if (isset($data['discount_fixed'])) {
+                    unset($data['discount_fixed']);
+                }
         $hook = hooks()->apply_filters('before_create_proposal', [
             'data'  => $data,
             'items' => $items,
@@ -108,25 +108,25 @@ if (isset($data['discount_fixed'])) {
 
         $data  = $hook['data'];
         $items = $hook['items'];
- if (isset($data['item_discount_percent'])) {
-     unset($data['item_discount_percent']);
- }
-if(isset($data['discount_fixed'])) {
-     unset($data['discount_fixed']);
- }
- if (isset($data['customer_group_id'])) {
-     unset($data['customer_group_id']);
- }
- if (isset($data['quantity_discount_allowed'])) {
-     unset($data['quantity_discount_allowed']);
- }
- if (isset($data['item_price'])) {
-     unset($data['item_price']);
- }
-  if (isset($data['item_type'])) {
-     unset($data['item_type']);
- }
- 
+        if (isset($data['item_discount_percent'])) {
+            unset($data['item_discount_percent']);
+        }
+        if(isset($data['discount_fixed'])) {
+            unset($data['discount_fixed']);
+        }
+        if (isset($data['customer_group_id'])) {
+            unset($data['customer_group_id']);
+        }
+        if (isset($data['quantity_discount_allowed'])) {
+            unset($data['quantity_discount_allowed']);
+        }
+        if (isset($data['item_price'])) {
+            unset($data['item_price']);
+        }
+        if (isset($data['item_type'])) {
+            unset($data['item_type']);
+        }
+        
         $this->db->insert(db_prefix() . 'proposals', $data);
         $insert_id = $this->db->insert_id();
 
@@ -403,6 +403,8 @@ if (isset($data['discount_fixed'])) {
         if (is_numeric($id)) {
             $this->db->where(db_prefix() . 'proposals.id', $id);
             $proposal = $this->db->get()->row();
+                log_message('error', 'Proposal Data Fetched for ID ' . $id . ': ' . json_encode($proposal));
+
             if ($proposal) {
                 $proposal->attachments                           = $this->get_attachments($id);
                 $proposal->items                                 = get_items_by_type('proposal', $id);
@@ -1108,6 +1110,7 @@ if (isset($data['discount_fixed'])) {
         $new_invoice_data['subtotal']         = $proposal->subtotal;
         $new_invoice_data['total']            = $proposal->total;
         $new_invoice_data['adjustment']       = $proposal->adjustment;
+        $new_invoice_data['offer_discount_percent']=$proposal->offer_discount_percent;
         $new_invoice_data['discount_percent'] = $proposal->discount_percent;
         $new_invoice_data['discount_total']   = $proposal->discount_total;
         $new_invoice_data['discount_type']    = $proposal->discount_type;
