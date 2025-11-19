@@ -593,6 +593,18 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
             if (isset($data['item_type'])) {
                 unset($data['item_type']);
             }
+        if (isset($data['item_basic_discount_percent'])) {
+            unset($data['item_basic_discount_percent']);
+        }
+        if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+        if (isset($data['item_offer_discount_percent'])) {
+            unset($data['item_offer_discount_percent']);
+        }
+        if (isset($data['item_special_discount_percent'])) {
+            unset($data['item_special_discount_percent']);
+        }
                     $this->db->insert(db_prefix() . 'estimates', $data);
         $insert_id = $this->db->insert_id();
         log_message('info', ' before Estimate created successfully with ID: ' . $insert_id);
@@ -611,8 +623,20 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
             // ---------------------------------
 
             // --- Insert revision items ---
+            
             if (!empty($items)) {
+
                 foreach ($items as $key => $item) {
+                    if (isset($item['item_basic_discount_percent']) || isset($item['item_special_discount_percent']) || isset($item['item_quantity_discount_percent']) || isset($item['item_offer_discount_percent'])) {
+                        $discountPrice = [
+                            'basic_discount_percent' => $item['item_basic_discount_percent'] ?? 0,
+                            'special_discount_percent' => $item['item_special_discount_percent'] ?? 0,
+                            'quantity_discount_percent' => $item['item_quantity_discount_percent'] ?? 0,
+                            'offer_discount_percent' => $item['item_offer_discount_percent'] ?? 0,
+                        ];
+    
+                        $discountPriceData = json_encode($discountPrice);
+                    }
                     $revisionItem = [
                         'revision_id'           => $revision_id,
                         'description'           => $item['description'],
@@ -621,7 +645,8 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
                         'rate'                  => $item['rate'],
                         'unit'                  => isset($item['unit']) ? $item['unit'] : '',
                         'item_discount_percent' => $item['item_discount_percent'],
-                        'item_order'            => $key
+                        'item_order'            => $key,
+                        'item_discount_variable'    => $discountPriceData
                     ];
                     $this->db->insert(db_prefix() . 'estimate_revision_items', $revisionItem);
                     $revision_item_id = $this->db->insert_id();
@@ -815,7 +840,19 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
          if (isset($data['item_type'])) {
      unset($data['item_type']);
  }
-
+        if (isset($data['item_basic_discount_percent'])) {
+            unset($data['item_basic_discount_percent']);
+        }
+        if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+        if (isset($data['item_offer_discount_percent'])) {
+            unset($data['item_offer_discount_percent']);
+        }
+        if (isset($data['item_special_discount_percent'])) {
+            unset($data['item_special_discount_percent']);
+        }
+        
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'estimates', $data);
 

@@ -216,13 +216,13 @@
                             ? 'data-default-discount="1" data-original-discount="'.$item['item_discount_percent'].'"' 
                             : 'data-default-discount="0" data-original-discount="0"') . '
                     >'.
-                    '<input type="number" name="item_basic_discount_percent" class="form-control"
+                    '<input type="number" name="' . $items_indicator . '[' . $i . '][item_basic_discount_percent]" class="form-control"
                         placeholder="'._l('item_basic_discount_percent').'" value="'.$item_discount_variable->basic_discount_percent.'" readonly>
-                    <input type="number" name="item_quantity_discount_percent" class="form-control"
+                    <input type="number" name="' . $items_indicator . '[' . $i . '][item_quantity_discount_percent]" class="form-control"
                         placeholder="'. _l('item_quantity_discount_percent') .'" value="'.$item_discount_variable->quantity_discount_percent.'" readonly>
-                    <input type="number" name="item_offer_discount_percent" class="form-control"
+                    <input type="number" name="' . $items_indicator . '[' . $i . '][item_offer_discount_percent]" class="form-control"
                         placeholder="'. _l('item_offer_discount_percent') .'" value="'.$item_discount_variable->offer_discount_percent.'" readonly>
-                    <input type="number" name="item_special_discount_percent" class="form-control"
+                    <input type="number" name="' . $items_indicator . '[' . $i . '][item_special_discount_percent]" class="form-control"
                         placeholder="'. _l('item_special_discount_percent') .'" value="'.$item_discount_variable->special_discount_percent.'" readonly>'
                 .'</td>';
 
