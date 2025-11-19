@@ -863,6 +863,17 @@ function add_new_sales_item_post($item, $rel_id, $rel_type)
     if (!empty($item['item_discount_percent'])) {
         $insert_data['item_discount_percent'] = $item['item_discount_percent'];
     }
+    if (!empty($item['item_discount_percent'])) {
+        $discountPrice = [
+            'basic_discount_percent' => 10,
+            'special_discount_percent' => 10,
+            'quantity_discount_percent' => 10,
+            'offer_discount_percent' => 10,
+        ];
+        $discountPriceData = json_encode($discountPrice);
+        $insert_data['item_discount_variable'] = $discountPriceData;
+    }
+
  if (!empty($item['item_id'])) {
         $insert_data['item_id'] = $item['item_id'];
     }
