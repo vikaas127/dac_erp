@@ -149,12 +149,17 @@
             </td>
         </tr>
 
-        <?php if (isset($estimate) || isset($add_items)) {
+        <?php if (isset($estimate) || isset($invoice) || isset($add_items)) {
 
             $i               = 1;
             $items_indicator = 'newitems';
             if (isset($estimate)) {
                 $add_items       = $estimate->items;
+                $items_indicator = 'items';
+            }
+
+            if (isset($invoice)) {
+                $add_items       = $invoice->items;
                 $items_indicator = 'items';
             }
 

@@ -350,6 +350,18 @@ class Invoices_model extends App_Model
          if (isset($data['discount_fixed'])) {
             unset($data['discount_fixed']);
         }
+        if (isset($data['item_basic_discount_percent'])) {
+            unset($data['item_basic_discount_percent']);
+        }
+        if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+        if (isset($data['item_offer_discount_percent'])) {
+            unset($data['item_offer_discount_percent']);
+        }
+        if (isset($data['item_special_discount_percent'])) {
+            unset($data['item_special_discount_percent']);
+        }
         if (isset($data['recurring'])) {
             if ($data['recurring'] == 'custom') {
                 $data['recurring_type']   = $data['repeat_type_custom'];

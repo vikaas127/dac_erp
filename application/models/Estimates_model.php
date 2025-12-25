@@ -230,13 +230,19 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         $custom_fields_items                       = get_custom_fields('items');
         $key                                       = 1;
         foreach ($_estimate->items as $item) {
+            $item_discount_variable = json_decode($item['item_discount_variable']);
 
-            $new_invoice_data['newitems'][$key]['description']      = $item['description'];
-            $new_invoice_data['newitems'][$key]['long_description'] = clear_textarea_breaks($item['long_description']);
-            $new_invoice_data['newitems'][$key]['qty']              = $item['qty'];
-            $new_invoice_data['newitems'][$key]['unit']             = $item['unit'];
-            $new_invoice_data['newitems'][$key]['taxname']          = [];
-            $taxes                                                  = get_estimate_item_taxes($item['id']);
+            $new_invoice_data['newitems'][$key]['description']                      = $item['description'];
+            $new_invoice_data['newitems'][$key]['long_description']                 = clear_textarea_breaks($item['long_description']);
+            $new_invoice_data['newitems'][$key]['qty']                              = $item['qty'];
+            $new_invoice_data['newitems'][$key]['unit']                             = $item['unit'];
+            $new_invoice_data['newitems'][$key]['item_discount_percent']            = $item['item_discount_percent'];
+            $new_invoice_data['newitems'][$key]['item_basic_discount_percent']      = $item_discount_variable->basic_discount_percent;
+            $new_invoice_data['newitems'][$key]['item_special_discount_percent']    = $item_discount_variable->special_discount_percent;
+            $new_invoice_data['newitems'][$key]['item_quantity_discount_percent']   = $item_discount_variable->quantity_discount_percent;
+            $new_invoice_data['newitems'][$key]['item_offer_discount_percent']      = $item_discount_variable->offer_discount_percent;
+            $new_invoice_data['newitems'][$key]['taxname']                          = [];
+            $taxes                                                                  = get_estimate_item_taxes($item['id']);
             foreach ($taxes as $tax) {
                 // tax name is in format TAX1|10.00
                 array_push($new_invoice_data['newitems'][$key]['taxname'], $tax['taxname']);
