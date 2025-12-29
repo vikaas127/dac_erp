@@ -56,10 +56,21 @@ $items = get_items_table_data($proposal, 'proposal', 'pdf')
 $items_html = $items->table();
 
 $items_html .= '<br /><br />';
-$items_html .= '';
-$items_html .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
 
+$total_qty = 0;
+
+if (isset($proposal->items)) {
+    foreach ($proposal->items as $item) {
+        $total_qty += (float) $item['qty'];
+    }
+}
+
+$items_html .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
 $items_html .= '
+<tr>
+    <td align="right" width="85%"><strong>' . _l('total_products_qty') . '</strong></td>
+    <td align="right" width="15%">' . app_format_number($total_qty, true) . '</td>
+</tr>
 <tr>
     <td align="right" width="85%"><strong>' . _l('estimate_subtotal') . '</strong></td>
     <td align="right" width="15%">' . app_format_money($proposal->subtotal, $proposal->currency_name) . '</td>
@@ -108,7 +119,7 @@ if ((int)$proposal->offer_discount_percent != 0) {
     </tr>';
 }
 
-if ((int)$proposal->adjustment != 0) {
+if ($proposal->adjustment != 0) {
     $items_html .= '<tr>
     <td align="right" width="85%"><strong>' . _l('estimate_adjustment') . '</strong></td>
     <td align="right" width="15%">' . app_format_money($proposal->adjustment, $proposal->currency_name) . '</td>

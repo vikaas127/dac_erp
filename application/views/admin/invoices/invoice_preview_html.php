@@ -168,6 +168,26 @@ if (isset($invoice->scheduled_email) && $invoice->scheduled_email) { ?>
         <div class="col-md-5 col-md-offset-7">
             <table class="table text-right">
                 <tbody>
+                      <?php
+$total_qty = 0;
+
+if (isset($invoice->items)) {
+    foreach ($invoice->items as $item) {
+        $total_qty += (float)$item['qty'];
+    }
+}
+?>
+<tr id="product_total_qty">
+    <td>
+        <span class="bold tw-text-neutral-700">
+            Total Product Qty
+        </span>
+    </td>
+  
+    <td class="product_total_qty">
+        <?php echo $total_qty; ?>
+    </td>
+</tr>
                     <tr id="subtotal">
                         <td>
                             <span class="bold tw-text-neutral-700"><?php echo _l('invoice_subtotal'); ?></span>
@@ -223,7 +243,7 @@ if ((int)$invoice->offer_discount_percent != 0) {
 
 ?>
 
-                    <?php if ((int)$invoice->adjustment != 0) { ?>
+                    <?php if ($invoice->adjustment != 0) { ?>
                     <tr>
                         <td>
                             <span class="bold tw-text-neutral-700"><?php echo _l('invoice_adjustment'); ?></span>

@@ -394,9 +394,31 @@
                                     ?>
                                 </div>
                             </div>
-                            <div class="col-md-5 col-md-offset-7">
+                            <div class="row">
+                                <div class=" pull-right">
                                 <table class="table text-right">
                                     <tbody>
+                                        <?php
+$total_qty = 0;
+
+if (isset($estimate->items)) {
+    foreach ($estimate->items as $item) {
+        $total_qty += (float)$item['qty'];
+    }
+}
+?>
+<tr id="product_total_qty">
+    <td>
+        <span class="bold tw-text-neutral-700">
+            Total Product Qty
+        </span>
+    </td>
+    <td></td>
+    <td class="product_total_qty">
+        <?php echo $total_qty; ?>
+    </td>
+</tr>
+
                                         <tr id="subtotal">
                                             <td>
                                                 <span class="bold tw-text-neutral-700">
@@ -456,7 +478,7 @@ if ((int)$estimate->offer_discount_percent != 0) {
 
 ?>
 
-                                        <?php if ((int)$estimate->adjustment != 0) { ?>
+                                        <?php if ($estimate->adjustment != 0) { ?>
                                         <tr>
                                             <td>
                                                 <span class="bold tw-text-neutral-700">
@@ -482,6 +504,7 @@ if ((int)$estimate->offer_discount_percent != 0) {
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
                             </div>
                             <?php if (count($estimate->attachments) > 0) { ?>
                             <div class="clearfix"></div>

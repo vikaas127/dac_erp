@@ -407,13 +407,33 @@
                             <div class=" pull-right">
                                 <table class="table text-right">
                                     <tbody>
+                                          <?php
+$total_qty = 0;
+
+if (isset($proposal->items)) {
+    foreach ($proposal->items as $item) {
+        $total_qty += (float)$item['qty'];
+    }
+}
+?>
+<tr id="product_total_qty">
+    <td>
+        <span class="bold tw-text-neutral-700">
+            Total Product Qty
+        </span>
+    </td>
+
+    <td class="product_total_qty">
+        <?php echo $total_qty; ?>
+    </td>
+</tr>
                                         <tr id="subtotal">
                                             <td>
                                                 <span class="bold tw-text-neutral-700">
                                                     <?php echo _l('proposal_subtotal'); ?>
                                                 </span>
                                             </td>
-                                            <td></td>
+                                 
                                             <td class="subtotal">
                                                 <?php echo e(app_format_money($proposal->subtotal, $proposal->currency_name)); ?>
                                             </td>
@@ -435,7 +455,7 @@
                                         <?php } ?>
                                         <?php
                                             foreach ($items->taxes() as $tax) {
-                                                echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td>' . e(app_format_money($tax['total_tax'], $proposal->currency_name)) . '</td></tr>';
+                                                echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)' . e(app_format_money($tax['total_tax'], $proposal->currency_name)) . '</td></tr>';
                                             }
                                         ?><?php
 if ((int)$proposal->quantity_discount_percent != 0) {
@@ -465,14 +485,15 @@ if ((int)$proposal->offer_discount_percent != 0) {
 
 ?>
 
-                                        <?php if ((int)$proposal->adjustment != 0) { ?>
+                                      <?php if ($proposal->adjustment != 0) { ?>
+
                                         <tr>
                                             <td>
                                                 <span class="bold tw-text-neutral-700">
                                                     <?php echo _l('proposal_adjustment'); ?>
                                                 </span>
                                             </td>
-                                            <td></td>
+                                          
                                             <td class="adjustment">
                                                 <?php echo e(app_format_money($proposal->adjustment, $proposal->currency_name)); ?>
                                             </td>
@@ -484,7 +505,7 @@ if ((int)$proposal->offer_discount_percent != 0) {
                                                     <?php echo _l('proposal_total'); ?>
                                                 </span>
                                             </td>
-                                            <td></td>
+                                    
                                             <td class="total">
                                                 <?php echo e(app_format_money($proposal->total, $proposal->currency_name)); ?>
                                             </td>

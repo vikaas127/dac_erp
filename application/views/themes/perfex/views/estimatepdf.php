@@ -81,9 +81,21 @@ $tblhtml = $items->table();
 $pdf->writeHTML($tblhtml, true, false, false, false, '');
 
 $pdf->Ln(8);
+$total_qty = 0;
+
+if (isset($estimate->items)) {
+    foreach ($estimate->items as $item) {
+        $total_qty += (float) $item['qty'];
+    }
+}
+
 $tbltotal = '';
 $tbltotal .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
 $tbltotal .= '
+<tr>
+    <td align="right" width="85%"><strong>' . _l('total_products_qty') . '</strong></td>
+    <td align="right" width="15%">' . app_format_number($total_qty, true) . '</td>
+</tr>
 <tr>
     <td align="right" width="85%"><strong>' . _l('estimate_subtotal') . '</strong></td>
     <td align="right" width="15%">' . app_format_money($estimate->subtotal, $estimate->currency_name) . '</td>
@@ -133,7 +145,7 @@ if ((int)$estimate->offer_discount_percent != 0) {
 }
 
 
-if ((int)$estimate->adjustment != 0) {
+if ($estimate->adjustment != 0) {
     $tbltotal .= '<tr>
     <td align="right" width="85%"><strong>' . _l('estimate_adjustment') . '</strong></td>
     <td align="right" width="15%">' . app_format_money($estimate->adjustment, $estimate->currency_name) . '</td>

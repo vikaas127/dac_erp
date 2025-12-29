@@ -98,8 +98,21 @@ $pdf->writeHTML($tblhtml, true, false, false, false, '');
 $pdf->Ln(8);
 
 $tbltotal = '';
+$total_qty = 0;
+
+if (isset($invoice->items)) {
+    foreach ($invoice->items as $item) {
+        $total_qty += (float) $item['qty'];
+    }
+}
+
+$tbltotal = '';
 $tbltotal .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
 $tbltotal .= '
+<tr>
+    <td align="right" width="85%"><strong>' . _l('total_products_qty') . '</strong></td>
+    <td align="right" width="15%">' . app_format_number($total_qty, true) . '</td>
+</tr>
 <tr>
     <td align="right" width="85%"><strong>' . _l('invoice_subtotal') . '</strong></td>
     <td align="right" width="15%">' . app_format_money($invoice->subtotal, $invoice->currency_name) . '</td>
@@ -148,7 +161,7 @@ if ((int)$invoice->offer_discount_percent != 0) {
     </tr>';
 }
 
-if ((int) $invoice->adjustment != 0) {
+if ($invoice->adjustment != 0) {
     $tbltotal .= '<tr>
     <td align="right" width="85%"><strong>' . _l('invoice_adjustment') . '</strong></td>
     <td align="right" width="15%">' . app_format_money($invoice->adjustment, $invoice->currency_name) . '</td>
