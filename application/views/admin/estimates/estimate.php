@@ -117,14 +117,14 @@ jQuery(function($) {
     };
 
     // 3. Hook into item add
-    const originalAddItemToTable = window.add_item_to_table;
+    // const originalAddItemToTable = window.add_item_to_table;
 
-    window.add_item_to_table = function(itemid, merge_invoice, is_existing) {
-        originalAddItemToTable(itemid, merge_invoice, is_existing);
-        setTimeout(() => {
-            applyGroupDiscountToLastItemRow();
-        }, 100); // Delay to ensure row is rendered
-    };
+    // window.add_item_to_table = function(itemid, merge_invoice, is_existing) {
+    //     originalAddItemToTable(itemid, merge_invoice, is_existing);
+    //     setTimeout(() => {
+    //         applyGroupDiscountToLastItemRow();
+    //     }, 100); // Delay to ensure row is rendered
+    // };
 
     // Trigger customer group fetch on load
     $('#clientid').trigger('change');
