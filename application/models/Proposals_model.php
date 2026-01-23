@@ -101,6 +101,9 @@ class Proposals_model extends App_Model
         if (isset($data['discount_fixed'])) {
                     unset($data['discount_fixed']);
                 }
+                   if (isset($data['item_original_discount_percent'])) {
+            unset($data['item_original_discount_percent']);
+        }
         $hook = hooks()->apply_filters('before_create_proposal', [
             'data'  => $data,
             'items' => $items,
@@ -272,6 +275,9 @@ if (isset($data['discount_fixed'])) {
  }
          if (isset($data['item_basic_discount_percent'])) {
             unset($data['item_basic_discount_percent']);
+        }
+           if (isset($data['item_original_discount_percent'])) {
+            unset($data['item_original_discount_percent']);
         }
         if (isset($data['item_quantity_discount_percent'])) {
             unset($data['item_quantity_discount_percent']);

@@ -7,77 +7,8 @@
         <?php echo _l('create_new_estimate'); ?>
     </a>
     <?php } ?>
-<!-- Estimate Number -->
-<div class="col-md-2">
-    <?php echo render_select(
-        'filter_number',              // FIXED NAME
-        $estimate_numbers,
-        ['id', 'id'],
-        'Estimate Number',
-        [],
-        [
-            'id' => 'filter_number',
-            'multiple' => true,
-            'data-actions-box' => true,
-            'data-live-search' => true,
-            'data-action' => 'filter_estimates'
-        ]
-    ); ?>
-</div>
 
-<!-- Production Assigned To -->
-<div class="col-md-2">
-    <?php echo render_select(
-        'filter_production_assigned',    // FIXED NAME
-        $production_staff,
-        ['value','label'],
-        'Production Assigned To',
-        [],
-        [
-            'id' => 'filter_production_assigned',
-            'multiple' => true,
-            'data-actions-box' => true,
-            'data-live-search' => true,
-            'data-action' => 'filter_estimates'
-        ]
-    ); ?>
-</div>
 
-<!-- Status -->
-<div class="col-md-2">
-    <?php echo render_select(
-        'filter_status',                  // FIXED NAME
-        $estimate_status_render,
-        ['value','label'],
-        'Status',
-        [],
-        [
-            'id' => 'filter_status',
-            'multiple' => true,
-            'data-actions-box' => true,
-            'data-live-search' => true,
-            'data-action' => 'filter_estimates'
-        ]
-    ); ?>
-</div>
-
-<!-- Client -->
-<div class="col-md-2">
-    <?php echo render_select(
-        'filter_client',                // FIXED NAME
-        $clients_list,
-        ['value','label'],
-        'Client',
-        [],
-        [
-            'id' => 'filter_client',
-            'multiple' => true,
-            'data-actions-box' => true,
-            'data-live-search' => true,
-            'data-action' => 'filter_estimates'
-        ]
-    ); ?>
-</div>
 
 
     <a href="<?php echo admin_url('estimates/pipeline/' . $switch_pipeline); ?>"
@@ -105,6 +36,53 @@
                    </div>
     </div>
     <div class="clearfix"></div>
+    <div class="row mbot15">
+    <!-- Estimate Number -->
+  <div class="col-md-3">
+    <?php echo render_select(
+        'filter_number',
+        $estimate_numbers,
+        ['id', 'label'],
+        'Estimate Number',
+        '',
+        ['data-live-search' => true]
+    ); ?>
+</div>
+
+
+    <!-- Production Assigned To -->
+    <div class="col-md-3">
+        <?php echo render_select(
+    'filter_production_assigned_to',
+    $staff,
+    ['id', 'name'],
+    'Production Assigned To'
+); ?>
+
+    </div>
+
+    <!-- Status -->
+    <div class="col-md-3">
+        <?php echo render_select(
+            'filter_status',
+            $estimate_statuses,
+            ['id', 'name'],
+            'Status'
+        ); ?>
+    </div>
+
+    <!-- Customer -->
+    <div class="col-md-3">
+        <?php echo render_select(
+    'filter_customer',
+    $customers,
+    ['id', 'name'],
+    'Customer'
+); ?>
+
+    </div>
+</div>
+
     <div class="row tw-mt-2 sm:tw-mt-4">
         <div class="col-md-12" id="small-table">
             <div class="panel_s">

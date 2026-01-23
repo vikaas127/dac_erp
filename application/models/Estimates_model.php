@@ -588,7 +588,7 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         if (isset($data['customer_group_id'])) {
             unset($data['customer_group_id']);
         }
-
+    
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
@@ -601,6 +601,9 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
             }
         if (isset($data['item_basic_discount_percent'])) {
             unset($data['item_basic_discount_percent']);
+        }
+         if (isset($data['item_original_discount_percent'])) {
+            unset($data['item_original_discount_percent']);
         }
         if (isset($data['item_quantity_discount_percent'])) {
             unset($data['item_quantity_discount_percent']);
@@ -845,9 +848,12 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         }
          if (isset($data['item_type'])) {
      unset($data['item_type']);
- }
+        }
         if (isset($data['item_basic_discount_percent'])) {
             unset($data['item_basic_discount_percent']);
+        }
+           if (isset($data['item_original_discount_percent'])) {
+            unset($data['item_original_discount_percent']);
         }
         if (isset($data['item_quantity_discount_percent'])) {
             unset($data['item_quantity_discount_percent']);
@@ -893,6 +899,11 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
             if (update_sales_item_post($item['itemid'], $item, 'unit')) {
                 $affectedRows++;
             }
+             if (update_sales_item_post($item['itemid'], $item, 'item_discount_percent')) {
+                $affectedRows++;
+            }
+            
+
 
             if (update_sales_item_post($item['itemid'], $item, 'rate')) {
                 $this->log_estimate_activity($id, 'invoice_estimate_activity_updated_item_rate', false, serialize([
@@ -918,6 +929,7 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
                 ]));
                 $affectedRows++;
             }
+
 
             if (update_sales_item_post($item['itemid'], $item, 'long_description')) {
                 $this->log_estimate_activity($id, 'invoice_estimate_activity_updated_item_long_description', false, serialize([
@@ -962,10 +974,10 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         }
 
        foreach ($newitems as $key => $item) {
-    // Log what is being attempted
-    log_message('debug', 'Attempting to add new sales item: ' . print_r($item, true));
+        // Log what is being attempted
+        log_message('debug', 'Attempting to add new sales item: ' . print_r($item, true));
 
-    if ($new_item_added = add_new_sales_item_post($item, $id, 'estimate')) {
+        if ($new_item_added = add_new_sales_item_post($item, $id, 'estimate')) {
         _maybe_insert_post_item_tax($new_item_added, $item, $id, 'estimate');
 
         $this->log_estimate_activity(
@@ -979,11 +991,11 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
 
         // Log success
         log_message('info', 'Successfully added new sales item ID: ' . $new_item_added . ' for Estimate ID: ' . $id);
-    } else {
-        // Log failure
-        log_message('error', 'Failed to add new sales item for Estimate ID: ' . $id . ' | Item Data: ' . print_r($item, true));
-    }
-}
+        } else {
+            // Log failure
+            log_message('error', 'Failed to add new sales item for Estimate ID: ' . $id . ' | Item Data: ' . print_r($item, true));
+        }
+        }
 
 
         if ($affectedRows > 0) {
@@ -1091,6 +1103,7 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
                         'rate'             => $item['rate'],
                         'unit'             => $item['unit'],
                         'item_order'       => $item['item_order'],
+                        
                     ];
                     $this->db->insert(db_prefix() . 'estimate_revision_items', $revisionItem);
                     $revision_item_id = $this->db->insert_id();

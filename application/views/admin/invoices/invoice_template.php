@@ -31,9 +31,10 @@
             } ?>
         <div class="row">
             <div class="col-md-6">
-                <div class="f_client_id">
+            <div class="f_client_id">
                     <div class="form-group select-placeholder">
-                        <label for="clientid" class="control-label"><?php echo _l('invoice_select_customer'); ?></label>
+                        <label for="clientid"
+                            class="control-label"><?php echo _l('estimate_select_customer'); ?></label>
                         <select id="clientid" name="clientid" data-live-search="true" data-width="100%" class="ajax-search<?php if (isset($invoice) && empty($invoice->clientid)) {
                 echo ' customer-removed';
             } ?>" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
@@ -47,6 +48,12 @@
                      echo '<option value="' . $rel_val['id'] . '" selected>' . $rel_val['name'] . '</option>';
                  } ?>
                         </select>
+                    </div>
+                    <div id="customer_group_info" class="tw-mt-2">
+                        <p><strong>Group:</strong> <span id="customer_group_name">—</span></p>
+                        <p><strong>Discount:</strong> <span id="customer_group_discount">0%</span></p>
+                        <input type="hidden" id="customer_group_id" name="customer_group_id" value="">
+                        <input type="hidden" id="quantity_discount_allowed" name="quantity_discount_allowed" value="">
                     </div>
                 </div>
                 <?php

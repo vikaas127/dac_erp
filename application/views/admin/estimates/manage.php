@@ -27,65 +27,14 @@ $(function() {
 
 
 <script>
-$(function() {
-
-    console.log("Estimates Filters JS Loaded");
-
-    // ---------------------------------------------
-    //  FILTER CHANGE HANDLER
-    // ---------------------------------------------
-    $('[data-action="filter_estimates"]').on('change', function() {
-
-        console.log("=== FILTER CHANGE EVENT ===");
-
-        let numberVal      = $('[name="filter_number[]"]').val();
-        let prodVal        = $('[name="filter_production_assigned[]"]').val();
-        let statusVal      = $('[name="filter_status[]"]').val();
-        let clientVal      = $('[name="filter_client[]"]').val();
-
-        console.log("Selected Filters:", {
-            number: numberVal,
-            production: prodVal,
-            status: statusVal,
-            client: clientVal
-        });
-
-        // ---------------------------------------------
-        //  UPDATE HIDDEN INPUTS (Perfex requirement)
-        // ---------------------------------------------
-        $('input[name="filter_number"]').val(numberVal ? numberVal.join(',') : '');
-        $('input[name="filter_production_assigned"]').val(prodVal ? prodVal.join(',') : '');
-        $('input[name="filter_status"]').val(statusVal ? statusVal.join(',') : '');
-        $('input[name="filter_client"]').val(clientVal ? clientVal.join(',') : '');
-
-        console.log("Hidden Inputs Updated:", {
-            number: $('input[name="filter_number"]').val(),
-            production: $('input[name="filter_production_assigned"]').val(),
-            status: $('input[name="filter_status"]').val(),
-            client: $('input[name="filter_client"]').val()
-        });
-
-        // ---------------------------------------------
-        //  RELOAD TABLE
-        // ---------------------------------------------
-        console.log("Reloading Estimates DataTable...");
-        $('.table-estimates').DataTable().ajax.reload();
-    });
-
-
-    // ---------------------------------------------
-    // DEBUG: SHOW POST DATA SENT TO SERVER
-    // ---------------------------------------------
-    $('.table-estimates')
-        .on('preXhr.dt', function (e, settings, data) {
-            console.log("=== POST SENT TO SERVER ===");
-            console.log(data);  // You MUST see your filters here!
-        })
-        .on('xhr.dt', function (e, settings, json) {
-            console.log("=== SERVER RESPONSE ===");
-            console.log(json);
-        });
-
+$('.table-estimates').on('preXhr.dt', function (e, settings, data) {
+    data.filter_number = $('#filter_number').val();
+    data.filter_production_assigned_to = $('#filter_production_assigned_to').val();
+    data.filter_status = $('#filter_status').val();
+    data.filter_customer = $('#filter_customer').val();
+});
+$('#filter_number, #filter_production_assigned_to, #filter_status, #filter_customer').on('change', function() {
+    $('.table-estimates').DataTable().ajax.reload();
 });
 </script>
 

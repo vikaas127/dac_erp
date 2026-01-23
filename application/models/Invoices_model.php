@@ -359,8 +359,30 @@ class Invoices_model extends App_Model
         if (isset($data['item_offer_discount_percent'])) {
             unset($data['item_offer_discount_percent']);
         }
+           if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+         if (isset($data['customer_group_id'])) {
+            unset($data['customer_group_id']);
+        }
+        
+        if (isset($data['quantity_discount_allowed'])) {
+            unset($data['quantity_discount_allowed']);
+        }
+             if (isset($data['item_basic_discount_percent'])) {
+            unset($data['item_basic_discount_percent']);
+        }
+       
+        if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+       
+      
         if (isset($data['item_special_discount_percent'])) {
             unset($data['item_special_discount_percent']);
+        }
+           if (isset($data['item_original_discount_percent'])) {
+            unset($data['item_original_discount_percent']);
         }
         if (isset($data['recurring'])) {
             if ($data['recurring'] == 'custom') {
@@ -752,7 +774,7 @@ class Invoices_model extends App_Model
         if (isset($data['nubmer'])) {
             $data['number'] = trim($data['number']);
         }
-          if (isset($data['item_type'])) {
+        if (isset($data['item_type'])) {
             unset($data['item_type']);
         }
          if (isset($data['item_discount_percent'])) {
@@ -761,8 +783,42 @@ class Invoices_model extends App_Model
         if (isset($data['item_price'])) {
             unset($data['item_price']);
         }
- if (isset($data['discount_fixed'])) {
+         if (isset($data['discount_fixed'])) {
             unset($data['discount_fixed']);
+        }
+        if (isset($data['item_basic_discount_percent'])) {
+            unset($data['item_basic_discount_percent']);
+        }
+        if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+        if (isset($data['item_offer_discount_percent'])) {
+            unset($data['item_offer_discount_percent']);
+        }
+           if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+         if (isset($data['customer_group_id'])) {
+            unset($data['customer_group_id']);
+        }
+        
+        if (isset($data['quantity_discount_allowed'])) {
+            unset($data['quantity_discount_allowed']);
+        }
+             if (isset($data['item_basic_discount_percent'])) {
+            unset($data['item_basic_discount_percent']);
+        }
+       
+        if (isset($data['item_quantity_discount_percent'])) {
+            unset($data['item_quantity_discount_percent']);
+        }
+       
+      
+        if (isset($data['item_special_discount_percent'])) {
+            unset($data['item_special_discount_percent']);
+        }
+           if (isset($data['item_original_discount_percent'])) {
+            unset($data['item_original_discount_percent']);
         }
         $original_number_formatted = format_invoice_number($id);
         $original_number           = $original_invoice->number;
@@ -1087,6 +1143,10 @@ class Invoices_model extends App_Model
             }
 
             if (update_sales_item_post($item['itemid'], $item, 'unit')) {
+                $updated = true;
+            }
+            
+            if (update_sales_item_post($item['itemid'], $item, 'item_discount_percent')) {
                 $updated = true;
             }
 

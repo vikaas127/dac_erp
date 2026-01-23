@@ -43,58 +43,36 @@ return App_table::find('estimates')
             array_push($join, 'LEFT JOIN ' . db_prefix() . 'customfieldsvalues as ctable_' . $key . ' ON ' . db_prefix() . 'estimates.id = ctable_' . $key . '.relid AND ctable_' . $key . '.fieldto="' . $field['fieldto'] . '" AND ctable_' . $key . '.fieldid=' . $field['id']);
         }
 
-        $where  = [];
+
+$where  = [];
+
+$filter_number = $this->ci->input->post('filter_number');
+$filter_production_assigned_to = $this->ci->input->post('filter_production_assigned_to');
+$filter_status = $this->ci->input->post('filter_status');
+$filter_customer = $this->ci->input->post('filter_customer');
+
+
 
         if ($filtersWhere = $this->getWhereFromRules()) {
             $where[] = $filtersWhere;
         }
 
-        // -----------------------------
-// Custom Filters Logging
-// -----------------------------
-$filter_numbers = $this->ci->input->post('filter_number');
-$filter_production = $this->ci->input->post('filter_production_assigned');
-$filter_status = $this->ci->input->post('filter_status');
-$filter_client = $this->ci->input->post('filter_client');
-
-log_message('debug', '[ESTIMATES FILTER] Numbers: ' . json_encode($filter_numbers));
-log_message('debug', '[ESTIMATES FILTER] Production: ' . json_encode($filter_production));
-log_message('debug', '[ESTIMATES FILTER] Status: ' . json_encode($filter_status));
-log_message('debug', '[ESTIMATES FILTER] Client: ' . json_encode($filter_client));
-
-// -----------------------------
-// Apply Filters
-// -----------------------------
-
-// 1️⃣ Estimate Number
-if (is_array($filter_numbers) && !empty($filter_numbers)) {
-    $ids = array_map('intval', $filter_numbers);
-    $where[] = "AND " . db_prefix() . "estimates.id IN (" . implode(',', $ids) . ")";
-    log_message('debug', '[WHERE] Number Filter Applied: ' . implode(',', $ids));
+  if (!empty($filter_number)) {
+    $where[] = 'AND ' . db_prefix() . 'estimates.id = ' . intval($filter_number);
 }
 
-// 2️⃣ Production Assigned To
-if (is_array($filter_production) && !empty($filter_production)) {
-    $p = array_map('intval', $filter_production);
-    $where[] = "AND production_assigned_to IN (" . implode(',', $p) . ")";
-    log_message('debug', '[WHERE] Production Filter Applied: ' . implode(',', $p));
+if (!empty($filter_production_assigned_to)) {
+    $where[] = 'AND ' . db_prefix() . 'estimates.production_assigned_to = ' . intval($filter_production_assigned_to);
 }
 
-// 3️⃣ Status
-if (is_array($filter_status) && !empty($filter_status)) {
-    $s = array_map('intval', $filter_status);
-    $where[] = "AND " . db_prefix() . "estimates.status IN (" . implode(',', $s) . ")";
-    log_message('debug', '[WHERE] Status Filter Applied: ' . implode(',', $s));
+if (!empty($filter_status)) {
+    $where[] = 'AND ' . db_prefix() . 'estimates.status = ' . intval($filter_status);
 }
 
-// 4️⃣ Client
-if (is_array($filter_client) && !empty($filter_client)) {
-    $c = array_map('intval', $filter_client);
-    $where[] = "AND " . db_prefix() . "estimates.clientid IN (" . implode(',', $c) . ")";
-    log_message('debug', '[WHERE] Client Filter Applied: ' . implode(',', $c));
+if (!empty($filter_customer)) {
+    $where[] = 'AND ' . db_prefix() . 'estimates.clientid = ' . intval($filter_customer);
 }
 
-log_message('debug', '[FINAL WHERE CONDITIONS] ' . print_r($where, true));
 
 
         if ($clientid != '') {

@@ -857,6 +857,7 @@ function add_new_sales_item_post($item, $rel_id, $rel_type)
         'item_order'            => $item['order'],
         'unit'                  => $item['unit'],
        // 'item_discount_percent' => $item['item_discount_percent']
+       'item_original_discount_percent' => $item['item_original_discount_percent']
     ];
 
     // Include item_id if provided
@@ -938,7 +939,10 @@ function update_sales_item_post($item_id, $data, $field = '')
             'rate'             => number_format($data['rate'], get_decimal_places(), '.', ''),
             'qty'              => $data['qty'],
             'unit'             => $data['unit'],
+            'item_discount_percent'    => $data['item_discount_percent'],
+            'item_original_discount_percent'    => $data['item_original_discount_percent'],
             'item_discount_variable'    => $discountPriceData,
+            
         ];
     }
 

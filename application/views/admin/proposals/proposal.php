@@ -330,7 +330,7 @@ $(function() {
             $('#customer_group_name').text('-');
             $('#customer_group_discount').text('0%');
             globalCustomerGroupDiscount = 0;
-            $('#basic_discount_percent').val(0).trigger('input');
+            
             $('#customer_group_id').val('');
             $('#quantity_discount_allowed').val(0);
         }
@@ -377,7 +377,7 @@ $(function() {
                         $('#customer_group_name').text(response.group_name || '-');
                         $('#customer_group_discount').text((response.default_discount || 0) + '%');
                         globalCustomerGroupDiscount = parseFloat(response.default_discount) || 0;
-                        $('#basic_discount_percent').val(globalCustomerGroupDiscount).trigger('input');
+                      
                         $('#customer_group_id').val(response.group_id || '');
                           updateSpecialDiscountOptions(response.group_id);
                         $('#quantity_discount_allowed').val(response.quantity_discount_allowed || 0);

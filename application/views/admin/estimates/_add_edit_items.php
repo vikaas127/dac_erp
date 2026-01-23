@@ -64,6 +64,8 @@
             <th width="15%" align="right"><?php echo _l('estimate_table_rate_heading'); ?></th>
 
             <!-- New Discount column -->
+            <th class="hide" align="right"><?php echo _l('original_discount'); ?></th>
+
             <th width="10%" align="right"><?php echo _l('discount'); ?></th>
 
             <th width="15%" align="right"><?php echo _l('estimate_table_price_heading'); ?></th>
@@ -99,6 +101,10 @@
             </td>
 
             <!-- discount input -->
+            <td class="hide">
+                  <input type="number" name="item_original_discount_percent" class="form-control "
+                    placeholder="<?php echo _l('item_original_discount_percent'); ?>" value="0" readonly>
+            </td>
             <td>
                 <input type="number" name="item_discount_percent" class="form-control"
                     placeholder="<?php echo _l('discount'); ?>" value="0" readonly>
@@ -189,10 +195,10 @@
                  $amount = $item['rate'] * $item['qty'];
 
                  // subtract discount if set
-                if (isset($item['item_discount_percent']) && $item['item_discount_percent'] > 0) {
-                    $discount = ($amount * $item['item_discount_percent']) / 100;
-                    $amount -= $discount;
-                }
+                // if (isset($item['item_discount_percent']) && $item['item_discount_percent'] > 0) {
+                //     $discount = ($amount * $item['item_discount_percent']) / 100;
+                //     $amount -= $discount;
+                // }
 
                  $amount = app_format_number($amount);
 
@@ -207,29 +213,25 @@
                  $table_row .= '</td>';
                  $table_row .= '<td class="rate"><input type="number" data-toggle="tooltip" title="' . _l('numbers_not_formatted_while_editing') . '" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][rate]" value="' . $item['rate'] . '" class="form-control"></td>';
 
-                // Discount field per item row
-                $table_row .= '<td class="item_discount_percent">
+                // Discount field per item ro
+                $table_row .= '<td class=" hide item_original_discount_percent">
                     <input type="number" 
-                        onblur="calculate_total();" 
-                        onchange="calculate_total();" 
-                        name="' . $items_indicator . '[' . $i . '][item_discount_percent]" 
-                        value="' .  $item['item_discount_percent'] . '" 
+                        name="' . $items_indicator . '[' . $i . '][item_original_discount_percent]" 
+                        value="' .  $item['item_original_discount_percent'] . '" 
                         class="form-control" 
-                        placeholder="'._l('discount').'" 
+                        placeholder="'._l('item_original_discount_percent').'" 
                         readonly
-                        ' . ($item['item_discount_percent'] && trim($item['item_discount_percent']) != '' 
-                            ? 'data-default-discount="1" data-original-discount="'.$item['item_discount_percent'].'"' 
-                            : 'data-default-discount="0" data-original-discount="0"') . '
-                    >'.
-                    '<input type="hidden" name="' . $items_indicator . '[' . $i . '][item_basic_discount_percent]" class="form-control"
-                        placeholder="'._l('item_basic_discount_percent').'" value="'.$item_discount_variable->basic_discount_percent.'" readonly>
-                    <input type="hidden" name="' . $items_indicator . '[' . $i . '][item_quantity_discount_percent]" class="form-control"
-                        placeholder="'. _l('item_quantity_discount_percent') .'" value="'.$item_discount_variable->quantity_discount_percent.'" readonly>
-                    <input type="hidden" name="' . $items_indicator . '[' . $i . '][item_offer_discount_percent]" class="form-control"
-                        placeholder="'. _l('item_offer_discount_percent') .'" value="'.$item_discount_variable->offer_discount_percent.'" readonly>
-                    <input type="hidden" name="' . $items_indicator . '[' . $i . '][item_special_discount_percent]" class="form-control"
-                        placeholder="'. _l('item_special_discount_percent') .'" value="'.$item_discount_variable->special_discount_percent.'" readonly>'
-                .'</td>';
+                    ></td>';
+                    $table_row .= '<td class="item_discount_percent">
+    <input type="number"
+        name="' . $items_indicator . '[' . $i . '][item_discount_percent]"
+        value="' . (float)$item['item_discount_percent'] . '"
+        class="form-control"
+        placeholder="' . _l('discount') . '"
+        readonly>
+</td>';
+
+
 
                 $table_row .= '<td class="item_price"><input type="number" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][item_price]" value="' . ($item['qty'] > 0 ? $amount / $item['qty'] : $amount) . '" class="form-control" readonly></td>';
 
@@ -314,7 +316,7 @@
                     <td class="discount-total "></td>
                 </tr>
            <!-- BASIC DISCOUNT -->
-<tr id="basic_discount_area" class="hide">
+<!-- <tr id="basic_discount_area" class="hide">
     <td>
         <div class="row">
             <div class="col-md-7">
@@ -346,7 +348,7 @@
         </div>
     </td>
     <td class="discount-total"></td>
-</tr>
+</tr> -->
 
 
 <!-- QUANTITY DISCOUNT -->
@@ -362,7 +364,8 @@
                     value="<?php
                         echo isset($estimate)
                             ? $estimate->quantity_discount_percent
-                            : (isset($proposal) ? $proposal->quantity_discount_percent : 0);
+                            : (isset($proposal) ? $proposal->quantity_discount_percent
+                            : (isset($invoice) ? $invoice->quantity_discount_percent : 0));
                     ?>"
                     class="form-control pull-left input-discount-percent"
                     min="0" max="100"
@@ -375,7 +378,8 @@
                 value="<?php
                     echo isset($estimate)
                         ? $estimate->quantity_discount_total
-                        : (isset($proposal) ? $proposal->quantity_discount_total : 0);
+                        : (isset($proposal) ? $proposal->quantity_discount_total :
+                        (isset($invoice) ? $invoice->quantity_discount_total : 0));
                 ?>"
                 class="form-control pull-left input-discount-percent hidden"
                 id="quantity_discount_total"
@@ -397,7 +401,8 @@
             <?php
 $selectedValue = isset($estimate)
     ? $estimate->special_discount_percent
-    : (isset($proposal) ? $proposal->special_discount_percent : '');
+    : (isset($proposal) ? $proposal->special_discount_percent :
+    (isset($invoice) ? $invoice->special_discount_percent : 0));
 ?>
 <div class="col-md-5">
 
@@ -426,7 +431,8 @@ $selectedValue = isset($estimate)
                 value="<?php
                     echo isset($estimate)
                         ? $estimate->special_discount_total
-                        : (isset($proposal) ? $proposal->special_discount_total : 0);
+                        : (isset($proposal) ? $proposal->special_discount_total :
+                        (isset($invoice) ? $invoice->special_discount_total : 0));
                 ?>"
                 class="form-control pull-left input-discount-percent hidden"
                 id="special_discount_total"
@@ -449,15 +455,20 @@ $selectedValue = isset($estimate)
 
         <div class="col-md-5">
             <select id="offer_discount_percent" name="offer_discount_percent" class="form-control" onchange="calculate_total();">
-                <?php for ($i = 0; $i <= 5; $i++): ?>
-                    <option value="<?= $i; ?>"
-                        <?= (
-                            (isset($estimate) && $estimate->offer_discount_percent == $i) ||
-                            (!isset($estimate) && isset($proposal) && $proposal->offer_discount_percent == $i)
-                        ) ? 'selected' : ''; ?>>
-                        <?= $i; ?>%
-                    </option>
-                <?php endfor; ?>
+               <?php
+$offerValue =
+    $estimate->offer_discount_percent
+    ?? $proposal->offer_discount_percent
+    ?? $invoice->offer_discount_percent
+    ?? 0;
+?>
+
+<?php for ($i = 0; $i <= 5; $i++): ?>
+    <option value="<?= $i; ?>" <?= ($offerValue == $i ? 'selected' : ''); ?>>
+        <?= $i; ?>%
+    </option>
+<?php endfor; ?>
+
             </select>
         </div>
 
