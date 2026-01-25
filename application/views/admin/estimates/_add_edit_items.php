@@ -188,7 +188,7 @@
                      $manual              = true;
                  }
                  $table_row .= form_hidden($items_indicator . '[' . $i . '][itemid]', $item['id']);
-                 $table_row .= form_hidden($items_indicator . '[' . $i . '][item_id]', $item['id']);
+                 $table_row .= form_hidden($items_indicator . '[' . $i . '][item_id]', $item['item_id']);
                  $table_row .= form_hidden($items_indicator . '[' . $i . '][item_type]', $item['item_type']);
 
                  // amount BEFORE discount
@@ -251,7 +251,7 @@
     <div class="col-md-8 col-md-offset-4">
         <table class="table text-right">
             <tbody>
-                <tr id="subtotal">
+                <tr id="subtotal" class="hide">
                     <td><span class="bold tw-text-neutral-700"><?php echo _l('estimate_subtotal'); ?> :</span>
                     </td>
                     <td class="subtotal">

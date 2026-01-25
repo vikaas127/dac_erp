@@ -427,7 +427,7 @@ if (isset($proposal->items)) {
         <?php echo $total_qty; ?>
     </td>
 </tr>
-                                        <tr id="subtotal">
+                                        <tr id="subtotal" class="hide">
                                             <td>
                                                 <span class="bold tw-text-neutral-700">
                                                     <?php echo _l('proposal_subtotal'); ?>

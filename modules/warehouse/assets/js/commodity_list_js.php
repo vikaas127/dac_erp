@@ -612,6 +612,12 @@ warehouse_type_value = warehouse_type;
       data.can_be_inventory = null;
     }  
 
+        // Discount permission flags (default 1)
+    data.allow_quantity_discount = $('input[id="allow_quantity_discount"]').is(':checked') ? 1 : 0;
+    data.allow_special_discount  = $('input[id="allow_special_discount"]').is(':checked') ? 1 : 0;
+    data.allow_offer_discount    = $('input[id="allow_offer_discount"]').is(':checked') ? 1 : 0;
+
+
     /*update*/
     var check_id = $('#commodity_item_id').html();
     if(check_id){
@@ -915,6 +921,29 @@ warehouse_type_value = warehouse_type;
     }else{
       $('#commodity_list-add-edit input[id="can_be_inventory"]').prop("checked", false);
     }
+
+    // Allow quantity discount
+    if ($(invoker).data('allow_quantity_discount') == 1 || $(invoker).data('allow_quantity_discount') === undefined) {
+        $('#commodity_list-add-edit input[id="allow_quantity_discount"]').prop('checked', true);
+    } else {
+        $('#commodity_list-add-edit input[id="allow_quantity_discount"]').prop('checked', false);
+    }
+
+    // Allow special discount
+    if ($(invoker).data('allow_special_discount') == 1 || $(invoker).data('allow_special_discount') === undefined) {
+        $('#commodity_list-add-edit input[id="allow_special_discount"]').prop('checked', true);
+    } else {
+        $('#commodity_list-add-edit input[id="allow_special_discount"]').prop('checked', false);
+    }
+
+    // Allow offer discount
+    if ($(invoker).data('allow_offer_discount') == 1 || $(invoker).data('allow_offer_discount') === undefined) {
+        $('#commodity_list-add-edit input[id="allow_offer_discount"]').prop('checked', true);
+    } else {
+        $('#commodity_list-add-edit input[id="allow_offer_discount"]').prop('checked', false);
+    }
+
+
      // Get the group discounts JSON
     var groupDiscountsRaw = $(invoker).attr('data-group-discounts');
     var groupDiscounts = [];
@@ -1151,6 +1180,11 @@ warehouse_type_value = warehouse_type;
     $('#commodity_list-add-edit input[id="can_be_purchased"]').prop('checked', true);
     $('#commodity_list-add-edit input[id="can_be_manufacturing"]').prop('checked', true);
     $('#commodity_list-add-edit input[id="can_be_inventory"]').prop('checked', true);
+    $('#commodity_list-add-edit input[id="allow_quantity_discount"]').prop('checked', true);
+    $('#commodity_list-add-edit input[id="allow_special_discount"]').prop('checked', true);
+    $('#commodity_list-add-edit input[id="allow_offer_discount"]').prop('checked', true);
+    
+    
 
     $('#tags_value').find('ul li.tagit-choice').remove();
     /*init tags input*/

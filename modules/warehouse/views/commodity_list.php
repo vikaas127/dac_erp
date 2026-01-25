@@ -745,7 +745,48 @@ echo render_select('item_type', $options, ['id', 'name'], 'Item Type', $selected
                             </div>
                           </div>
                         </div>  
-                        </div>  
+                        </div> 
+                        <div class="row">
+    <div class="col-md-4">
+        <div class="checkbox checkbox-primary">
+            <input type="checkbox"
+                   name="allow_quantity_discount"
+                   id="allow_quantity_discount"
+                   value="1"
+                   <?php echo (!isset($item) || $item->allow_quantity_discount == 1) ? 'checked' : ''; ?>>
+            <label for="allow_quantity_discount">
+                Allow Quantity Discount
+            </label>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="checkbox checkbox-primary">
+            <input type="checkbox"
+                   name="allow_special_discount"
+                   id="allow_special_discount"
+                   value="1"
+                   <?php echo (!isset($item) || $item->allow_special_discount == 1) ? 'checked' : ''; ?>>
+            <label for="allow_special_discount">
+                Allow Special Discount
+            </label>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="checkbox checkbox-primary">
+            <input type="checkbox"
+                   name="allow_offer_discount"
+                   id="allow_offer_discount"
+                   value="1"
+                   <?php echo (!isset($item) || $item->allow_offer_discount == 1) ? 'checked' : ''; ?>>
+            <label for="allow_offer_discount">
+                Allow Offer Discount
+            </label>
+        </div>
+    </div>
+</div>
+ 
 
                         
 

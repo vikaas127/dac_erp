@@ -12,7 +12,7 @@ class Settings extends AdminController
     }
 
     /* View all settings */
-    public function index()
+      public function index()
     {
         if (staff_cant('view', 'settings')) {
             access_denied('settings');
@@ -25,6 +25,7 @@ class Settings extends AdminController
                 access_denied('settings');
             }
             $logo_uploaded     = (handle_company_logo_upload() ? true : false);
+                 $letterhead_uploaded = (handle_letterhead_upload() ? true : false);
             $favicon_uploaded  = (handle_favicon_upload() ? true : false);
             $signatureUploaded = (handle_company_signature_upload() ? true : false);
 
@@ -135,6 +136,22 @@ class Settings extends AdminController
 
         $this->load->view('admin/settings/all', $data);
     }
+    public function remove_letterhead()
+{
+    if (staff_cant('delete', 'settings')) {
+        access_denied('settings');
+    }
+
+    $letterhead = get_option('letterhead');
+    $path = get_upload_path_by_type('company') . '/' . $letterhead;
+
+    if (file_exists($path)) {
+        unlink($path);
+    }
+
+    update_option('letterhead', '');
+    redirect($_SERVER['HTTP_REFERER']);
+}
 
     public function delete_tag($id)
     {

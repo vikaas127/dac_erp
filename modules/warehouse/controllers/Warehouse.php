@@ -2564,6 +2564,9 @@ class warehouse extends AdminController {
 							_l('_color')          =>'string',
 							_l('guarantee_month')          =>'string',
 							_l('minimum_inventory')          =>'string',
+							_l('allow_quantity_discount')          =>'string',
+							_l('allow_special_discount')          =>'string',
+							_l('allow_offer_discount')		  =>'string',
 							_l('error')                     =>'string',
 						);
 
@@ -2574,7 +2577,7 @@ class warehouse extends AdminController {
 
                         $writer = new XLSXWriter();
 
-                        $col_style1 =[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+                        $col_style1 =[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26];
                         $style1 = ['widths'=> $widths_arr, 'fill' => '#ff9800',  'font-style'=>'bold', 'color' => '#0a0a0a', 'border'=>'left,right,top,bottom', 'border-color' => '#0a0a0a', 'font-size' => 13 ];
 
                         $writer->writeSheetHeader_v2('Sheet1', $writer_header,  $col_options = ['widths'=> $widths_arr, 'fill' => '#f44336',  'font-style'=>'bold', 'color' => '#0a0a0a', 'border'=>'left,right,top,bottom', 'border-color' => '#0a0a0a', 'font-size' => 13 ], $col_style1, $style1);
@@ -2617,6 +2620,9 @@ class warehouse extends AdminController {
 								$flag_id_model_id;
 								$flag_id_size_id;
 								$flag_id_color_id;
+								$flag_id_allow_quantity_discount;
+								$flag_id_allow_special_discount;
+								$flag_id_allow_offer_discount;
 
 
 								$value_cell_item_type = isset($data[$row][0]) ? $data[$row][0] : '';
@@ -2643,7 +2649,9 @@ class warehouse extends AdminController {
 								$value_cell_color_id = isset($data[$row][21]) ? (int)$data[$row][21] : '';
 								$value_cell_warranty = isset($data[$row][22]) ? $data[$row][22] : null;
 								$value_cell_minimum_inventory = isset($data[$row][23]) ? $data[$row][23] : '';
-
+								$value_cell_allow_quantity_discount = isset($data[$row][24]) ? $data[$row][24] : '';
+								$value_cell_allow_special_discount = isset($data[$row][25]) ? $data[$row][25] : '';
+								$value_cell_allow_offer_discount = isset($data[$row][26]) ? $data[$row][26] : '';
 
 								$pattern = '#^[a-z][a-z0-9\._]{2,31}@[a-z0-9\-]{3,}(\.[a-z]{2,4}){1,2}$#';
 
@@ -2672,6 +2680,38 @@ class warehouse extends AdminController {
 						} else {
 							$flag_id_item_type = $value_cell_item_type;
 						}
+						$val = trim($value_cell_allow_quantity_discount);
+						if ($val === '1') {
+							$flag_id_allow_quantity_discount = 1;
+						} elseif ($val === '0') {
+							$flag_id_allow_quantity_discount = 0;
+						} else {
+							$string_error .= _l('allow_quantity_discount') . ' must be 1 or 0. ';
+							$flag = 1;
+						}
+
+						// Special discount
+						$val = trim($value_cell_allow_special_discount);
+						if ($val === '1') {
+							$flag_id_allow_special_discount = 1;
+						} elseif ($val === '0') {
+							$flag_id_allow_special_discount = 0;
+						} else {
+							$string_error .= _l('allow_special_discount') . ' must be 1 or 0. ';
+							$flag = 1;
+						}
+
+						// Offer discount
+						$val = trim($value_cell_allow_offer_discount);
+						if ($val === '1') {
+							$flag_id_allow_offer_discount = 1;
+						} elseif ($val === '0') {
+							$flag_id_allow_offer_discount = 0;
+						} else {
+							$string_error .= _l('allow_offer_discount') . ' must be 1 or 0. ';
+							$flag = 1;
+						}
+
 
 
 								//check commodity_type exist  (input: id or name contract)

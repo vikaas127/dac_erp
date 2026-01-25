@@ -1108,7 +1108,7 @@ $lang['estimate_subtotal']               = 'MRP Total(w/o discount)';
 $lang['estimate_adjustment']             = 'Adjustment';
 $lang['estimate_discount']               = 'Discount';
 $lang['estimate_basic_discount']         = 'Basic Discount';
-$lang['estimate_total']                  = 'Total';
+$lang['estimate_total']                  = 'Total Payable Amount';
 $lang['estimate_to']                     = 'To';
 $lang['estimate_data_date']              = 'Estimate Date';
 $lang['estimate_data_expiry_date']       = 'Expiry Date';
@@ -1668,7 +1668,7 @@ $lang['proposal_status_declined']               = 'Declined';
 $lang['proposal_status_sent']                   = 'Sent';
 $lang['proposal_expired']                       = 'Expired';
 $lang['proposal_subject']                       = 'Subject';
-$lang['proposal_total']                         = 'Total';
+$lang['proposal_total']                         = 'Total Payable Amount';
 $lang['proposal_subtotal']                      = 'Mrp Total(w/o discount)';
 $lang['proposal_status']                        = 'Status';
 $lang['proposals_list_all']                     = 'All';
@@ -1681,6 +1681,11 @@ $lang['proposal']                               = 'Proposal';
 $lang['proposal_lowercase']                     = 'proposal';
 $lang['proposals']                              = 'Proposals';
 $lang['proposals_lowercase']                    = 'proposals';
+$lang['qty_discount']                          = 'Qty Discount';
+$lang['quantity_discount']                     = 'Qty Discount';
+
+$lang['special_discount']                      = 'Special Discount';
+$lang['offer_discount']='Offer Discount';
 $lang['new_proposal']                           = 'New Proposal';
 $lang['proposal_currency']                      = 'Currency';
 $lang['proposal_allow_comments']                = 'Allow Comments';
@@ -1721,6 +1726,69 @@ $lang['proposal_total_info']   = 'Total %s';
 $lang['proposal_accept_info']  = 'Accept';
 $lang['proposal_decline_info'] = 'Decline';
 $lang['proposal_pdf_info']     = 'PDF';
+$lang['settings_estimate_logo_selection'] = 'Estimate Logo Selection';
+$lang['settings_estimate_logo_selection_help'] = 'Choose which logo should appear on estimate PDFs.';
+
+$lang['select_logo_type'] = 'Select Logo Type';
+$lang['company_logo'] = 'Company Logo';
+$lang['dark_logo'] = 'Dark Logo';
+$lang['letterhead'] = 'Letterhead';
+
+$lang['next_estimate_number'] = 'Next Estimate Number';
+$lang['estimate_due_after'] = 'Estimate Due After (days)';
+
+$lang['delete_estimate_allowed_only_last_invoice'] = 'Delete estimate allowed only on last invoice';
+$lang['decrement_estimate_number_on_delete'] = 'Decrement estimate number on delete';
+
+$lang['allow_staff_view_assigned_sales_order'] = 'Allow staff members to view Sales Order where they are assigned to';
+$lang['require_client_login_view_estimate'] = 'Require client to be logged in to view estimate';
+$lang['show_sale_agent_on_sales_order'] = 'Show Sale Agent on Sales Order';
+$lang['settings_estimate_logo_selection'] = 'Estimate Logo Selection';
+$lang['settings_estimate_logo_selection_help'] = 'Choose which logo should appear on estimate PDFs.';
+$lang['settings_invoice_pdf_format'] = 'Invoice PDF Format';
+$lang['settings_invoice_pdf_format_help'] = 'Select the PDF layout format for invoices.';
+
+$lang['pdf_format_default'] = 'Default';
+$lang['pdf_format_standard'] = 'Standard';
+
+$lang['show_delivery_type_on_invoices'] = 'Show Delivery Type on Invoices';
+$lang['show_transport_name_on_invoices'] = 'Show Transport Name on Invoices';
+$lang['show_payment_terms_on_invoices'] = 'Show Payment Terms on Invoices';
+$lang['show_delivery_type_on_credit_note'] = 'Show Delivery Type on Credit Notes';
+$lang['show_transport_name_on_credit_note'] = 'Show Transport Name on Credit Notes';
+$lang['show_payment_terms_on_credit_note'] = 'Show Payment Terms on Credit Notes';
+
+$lang['select_logo_type'] = 'Select Logo Type';
+$lang['company_logo'] = 'Company Logo';
+$lang['dark_logo'] = 'Dark Logo';
+$lang['letterhead'] = 'Letterhead';
+
+$lang['next_estimate_number'] = 'Next Estimate Number';
+$lang['estimate_due_after'] = 'Estimate Due After (days)';
+
+$lang['delete_estimate_allowed_only_last_invoice'] = 'Delete estimate allowed only on last invoice';
+$lang['decrement_estimate_number_on_delete'] = 'Decrement estimate number on delete';
+
+$lang['allow_staff_view_assigned_sales_order'] = 'Allow staff members to view Sales Order where they are assigned to';
+$lang['require_client_login_view_estimate'] = 'Require client to be logged in to view estimate';
+$lang['show_sale_agent_on_sales_order'] = 'Show Sale Agent on Sales Order';
+$lang['proposal_logo_selection'] = 'Proposal Logo Selection';
+$lang['proposal_logo_selection_help'] = 'Choose which logo should appear on proposal PDFs.';
+
+$lang['proposal_logo_default'] = 'Company Logo';
+$lang['proposal_logo_dark'] = 'Dark Logo';
+$lang['proposal_logo_letterhead'] = 'Letterhead';
+
+$lang['proposal_pdf_format'] = 'Proposal PDF Format';
+$lang['proposal_pdf_format_help'] = 'Select the PDF layout format for proposals.';
+
+$lang['select_pdf_format'] = 'Select PDF Format';
+$lang['pdf_default'] = 'Default';
+$lang['pdf_standard'] = 'Standard';
+
+$lang['show_delivery_type_on_proposals'] = 'Show Delivery Type on Proposals';
+$lang['show_transport_name_on_proposals'] = 'Show Transport Name on Proposals';
+$lang['show_payment_terms_on_proposals'] = 'Show Payment Terms on Proposals';
 
 # Customers Portal
 $lang['customer_reset_action']            = 'Reset';

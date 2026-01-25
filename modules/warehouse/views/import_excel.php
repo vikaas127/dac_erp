@@ -2,6 +2,7 @@
 ?>
 <?php 
 $file_header = array();
+$file_header[] = _l('item_type');
 $file_header[] = _l('commodity_code');
 $file_header[] = _l('commodity_name');
 $file_header[] = _l('commodity_barcode');
@@ -26,6 +27,9 @@ $file_header[] = _l('size_id');
 $file_header[] = _l('_color');
 $file_header[] = _l('guarantee_month');
 $file_header[] = _l('minimum_inventory');
+$file_header[] = _l('allow_quantity_discount');
+$file_header[] = _l('allow_special_discount');	
+$file_header[] = _l('allow_offer_discount');
 
 
 
@@ -50,6 +54,8 @@ $file_header[] = _l('minimum_inventory');
 								<li class="text-danger">2. <?php echo _l('file_xlsx_tax'); ?></li>
 								<li class="text-danger">3. <?php echo _l('file_xlsx_format'); ?></li>
 								<li class="text-danger">4. <?php echo _l('tags_format'); ?></li>
+								<li class="text-danger">5. <?php echo _l('file_xlsx_discount_allowance'); ?></li>
+								
 							</ul>
 							<div class="table-responsive no-dt">
 								<table class="table table-hover table-bordered">
@@ -59,7 +65,7 @@ $file_header[] = _l('minimum_inventory');
 											$total_fields = 0;
 											
 											for($i=0;$i<count($file_header);$i++){
-												if($i == 0  ||$i == 1||$i == 9){
+												if($i == 0  ||$i == 1|| $i == 2 ||$i == 10||$i==24||$i==25||$i==26){
 													?>
 													<th class="bold"><span class="text-danger">*</span> <?php echo new_html_entity_decode($file_header[$i]) ?> </th>
 													<?php 

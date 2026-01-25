@@ -126,6 +126,82 @@ function updateSpecialDiscountOptions(groupId) {
 }
 
 
+
+
+// function calculate_total() {
+//     if ($("body").hasClass("no-calculate-total")) {
+//         return !1
+//     }
+//     var rows = $(".table.has-calculations tbody tr.item");
+//     var subtotal = 0;
+//     var totalBeforeQty = 0;
+//     var totalAfterQty = 0;
+//     var specialDiscountTotal = 0;
+//     var offerDiscountTotal = 0;
+//     var quantityDiscountTotal = 0;
+//     var specialPercent = parseFloat($("#special_discount_percent").val()) || 0;
+//     var offerPercent = parseFloat($("#offer_discount_percent").val()) || 0;
+//     var adjustment = parseFloat($('input[name="adjustment"]').val()) || 0;
+//     $(".tax-area").remove();
+//     rows.each(function() {
+//         var row = $(this);
+//         var qty = parseFloat(row.find("[data-quantity]").val()) || 1;
+//         var rate = parseFloat(row.find("td.rate input").val()) || 0;
+//         var base = qty * rate;
+//         subtotal += base;
+//         var originalPercent = parseFloat(row.find('input[name$="[item_original_discount_percent]"]').val()) || 0;
+//         var afterOriginal = base * (1 - originalPercent / 100);
+//         var specialAmt = afterOriginal * (specialPercent / 100);
+//         var afterSpecial = afterOriginal - specialAmt;
+//         var offerAmt = afterSpecial * (offerPercent / 100);
+//         var afterOffer = afterSpecial - offerAmt;
+//         specialDiscountTotal += specialAmt;
+//         offerDiscountTotal += offerAmt;
+//         totalBeforeQty += afterOffer;
+//         row.data("base", base);
+//         row.data("amountBeforeQty", afterOffer)
+//     });
+//     var quantityPercent = 0;
+//     if ($("#quantity_discount_allowed").val() === "1") {
+//         if (totalBeforeQty > 416800)
+//             quantityPercent = 4;
+//         else if (totalBeforeQty > 309300)
+//             quantityPercent = 3;
+//         else if (totalBeforeQty > 204100)
+//             quantityPercent = 2
+//     }
+//     quantityDiscountTotal = totalBeforeQty * (quantityPercent / 100);
+//     totalAfterQty = totalBeforeQty - quantityDiscountTotal + adjustment;
+//     rows.each(function() {
+//         var row = $(this);
+//         var qty = parseFloat(row.find("[data-quantity]").val()) || 1;
+//         var rate = parseFloat(row.find("td.rate input").val()) || 0;
+//         var base = row.data("base");
+//         var amountBeforeQty = row.data("amountBeforeQty");
+//         var shareRatio = totalBeforeQty > 0 ? amountBeforeQty / totalBeforeQty : 0;
+//         var qtyShare = quantityDiscountTotal * shareRatio;
+//         var finalAmount = amountBeforeQty - qtyShare;
+//         var effectivePercent = base > 0 ? 100 * (1 - finalAmount / base) : 0;
+//         var roundedEffectivePercent = accounting.toFixed(effectivePercent, 2);
+//         row.find('input[name$="[item_discount_percent]"]').val(roundedEffectivePercent);
+//         var unitPrice = rate * (1 - roundedEffectivePercent / 100);
+//         unitPrice = parseFloat(accounting.toFixed(unitPrice, 2));
+//         row.find('input[name$="[item_price]"]').val(unitPrice);
+//         var roundedAmount = parseFloat(accounting.toFixed(unitPrice * qty, 2));
+//         row.find("td.amount").html(format_money(roundedAmount, !0))
+//     });
+//     $(".subtotal").html(format_money(subtotal, !0) + hidden_input("subtotal", accounting.toFixed(subtotal, 2)));
+//     $(".total").html(format_money(totalAfterQty, !0) + hidden_input("total", accounting.toFixed(totalAfterQty, 2)));
+//     $("#special_discount_area .discount-total").html("-" + format_money(specialDiscountTotal || 0, !0));
+//     $("#offer_discount_area .discount-total").html("-" + format_money(offerDiscountTotal || 0, !0));
+//     $("#special_discount_total").val(accounting.toFixed(specialDiscountTotal || 0, 2));
+//     $("#offer_discount_total").val(accounting.toFixed(offerDiscountTotal || 0, 2));
+//     $("#quantity_discount_percent").val(quantityPercent);
+//     $("#quantity_discount_total").val(accounting.toFixed(quantityDiscountTotal || 0, 2));
+//     $("#quantity_discount_area .discount-total").html("-" + format_money(quantityDiscountTotal || 0, !0));
+//     $(".adjustment").html(format_money(adjustment));
+//     $(document).trigger("sales-total-calculated")
+// }
 </script>
 
 </body>

@@ -953,8 +953,6 @@ function update_sales_item_post($item_id, $data, $field = '')
     return $CI->db->affected_rows() > 0 ? true : false;
 }
 
-
-
 /**
  * When item is removed eq from invoice will be stored in removed_items in $_POST
  * With foreach loop this function will remove the item from database and it's taxes

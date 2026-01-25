@@ -40,6 +40,25 @@
 				<input type="file" name="company_logo_dark" class="form-control" value="" data-toggle="tooltip" title="<?php echo _l('settings_general_company_logo_tooltip'); ?>">
 			</div>
 		<?php } ?>
+		<?php $letterhead = get_option('letterhead'); ?>
+<?php if($letterhead != ''){ ?>
+    <div class="row">
+        <div class="col-md-9">
+            <img src="<?php echo base_url('uploads/company/'.$letterhead); ?>" class="img img-responsive">
+        </div>
+        <?php if(has_permission('settings','','delete')){ ?>
+            <div class="col-md-3 text-right">
+                <a href="<?php echo admin_url('settings/remove_letterhead'); ?>" data-toggle="tooltip" title="Remove Letterhead" class="_delete text-danger"><i class="fa fa-remove"></i></a>
+            </div>
+        <?php } ?>
+    </div>
+    <div class="clearfix"></div>
+<?php } else { ?>
+    <div class="form-group">
+        <label for="letterhead" class="control-label">Company Letterhead</label>
+        <input type="file" name="letterhead" class="form-control" value="" data-toggle="tooltip" title="Upload your company letterhead file">
+    </div>
+<?php } ?>
 		<hr />
 		<?php $favicon = get_option('favicon'); ?>
 		<?php if($favicon != ''){ ?>

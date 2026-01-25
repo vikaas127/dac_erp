@@ -85,6 +85,12 @@ $lang['warehouse_code']  = 'Warehouse code';
 $lang['warehouse_name']  = 'Warehouse name';
 $lang['warehouse_address']  = 'Warehouse address';
 $lang['order']  = 'Order';
+$lang['item_type']  = 'Item type';
+$lang['file_xlsx_discount_allowance']  = 'Columns "Allow quantity discount", "Allow special discount", "Allow offer discount" enter "1" (allow) or "0" (not allow)';
+$lang['allow_quantity_discount'] = 'Allow Quantity Discount';
+$lang['allow_special_discount']  = 'Allow Special Discount';
+$lang['allow_offer_discount']    = 'Allow Offer Discount ';
+
 $lang['added_successfully']  = 'Added successfully';
 $lang['Add_commodity_type_false']  = 'Add commodity failed';
 $lang['updated_successfully']  = 'Updated successfully';

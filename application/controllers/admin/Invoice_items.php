@@ -145,6 +145,32 @@ class Invoice_items extends AdminController
         redirect(admin_url('invoice_items?groups_modal=true'));
     }
 
+
+    public function get_discount_allowance($item_id)
+{
+    if (!has_permission('items', '', 'view')) {
+        access_denied('items');
+    }
+
+    $item = $this->db
+        ->select('allow_special_discount, allow_offer_discount, allow_quantity_discount')
+        ->where('id', $item_id)
+        ->get(db_prefix().'items')
+        ->row();
+
+    if (!$item) {
+        echo json_encode([
+            'allow_special_discount'  => 0,
+            'allow_offer_discount'    => 0,
+            'allow_quantity_discount' => 0,
+        ]);
+        die;
+    }
+
+    echo json_encode($item);
+    die;
+}
+
     /* Delete item*/
     public function delete($id)
     {

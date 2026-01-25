@@ -71,15 +71,40 @@ class Proposal_pdf extends App_pdf
         return 'proposal';
     }
 
-    protected function file_path()
-    {
-        $customPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/my_proposalpdf.php';
-        $actualPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/proposalpdf.php';
+    // protected function file_path()
+    // {
+    //     $customPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/my_proposalpdf.php';
+    //     $actualPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/proposalpdf.php';
 
-        if (file_exists($customPath)) {
-            $actualPath = $customPath;
-        }
+    //     if (file_exists($customPath)) {
+    //         $actualPath = $customPath;
+    //     }
 
-        return $actualPath;
+    //     return $actualPath;
+    // }
+
+         protected function file_path()
+{
+    // Get selected PDF format
+    $pdf_format = get_option('proposal_pdf_format');
+
+    // Decide file based on format
+    if ($pdf_format === 'standard') {
+        $file_name = 'proposalpdf_V2.php';
+    } else {
+        // default OR null
+        $file_name = 'proposalpdf.php';
     }
+
+    // Build paths
+    $customPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/' . $file_name;
+    $actualPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/' . $file_name;
+
+    // Use custom theme file if exists
+    if (file_exists($customPath)) {
+        return $customPath;
+    }
+
+    return $actualPath;
+}
 }

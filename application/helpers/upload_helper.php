@@ -112,6 +112,51 @@ function _perfex_upload_error($error)
     return false;
 }
 /**
+ * Handle company letterhead upload
+ * @return boolean
+ */
+if (!function_exists('handle_letterhead_upload')) {
+    function handle_letterhead_upload()
+    {
+        $CI = &get_instance();
+
+        if (isset($_FILES['letterhead']) && _perfex_upload_error($_FILES['letterhead']['error'])) {
+            $CI->session->set_flashdata('message-danger', _perfex_upload_error($_FILES['letterhead']['error']));
+            return false;
+        }
+
+        if (isset($_FILES['letterhead']['name']) && $_FILES['letterhead']['name'] != '') {
+            hooks()->do_action('before_upload_letterhead');
+
+            $path = get_upload_path_by_type('company');
+            $tmpFilePath = $_FILES['letterhead']['tmp_name'];
+
+            if (!empty($tmpFilePath)) {
+                $filename = unique_filename($path, $_FILES['letterhead']['name']);
+                $newFilePath = $path . $filename;
+
+                $allowed_extensions = ['pdf', 'png', 'jpg', 'jpeg'];
+                $ext = strtolower(pathinfo($_FILES['letterhead']['name'], PATHINFO_EXTENSION));
+
+                if (!in_array($ext, $allowed_extensions)) {
+                    $CI->session->set_flashdata('message-danger', 'Invalid file type. Only PDF, JPG, JPEG, PNG allowed.');
+                    return false;
+                }
+
+                _maybe_create_upload_path($path);
+
+                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    update_option('letterhead', $filename);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+}
+
+/**
  * Newsfeed post attachments
  * @param  mixed $postid Post ID to add attachments
  * @return void  - Result values

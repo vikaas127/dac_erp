@@ -119,6 +119,35 @@
                 value="<?php echo get_option('invoice_prefix'); ?>">
         </div>
         <hr />
+        <h4 class="bold"><?php echo _l('settings_invoice_pdf_format'); ?></h4>
+<p class="text-muted"><?php echo _l('settings_invoice_pdf_format_help'); ?></p>
+<?php
+$pdf_format = get_option('invoice_pdf_format');
+
+if ($pdf_format === '' || $pdf_format === null) {
+    $pdf_format = 'default';
+}
+?>
+
+<div class="form-group">
+    <label class="control-label clearfix"><?php echo _l('select_pdf_format'); ?></label>
+
+    <div class="radio radio-primary">
+        <input type="radio" id="invoice_pdf_default"
+               name="settings[invoice_pdf_format]"
+               value="default"
+               <?= $pdf_format === 'default' ? 'checked' : '' ?>>
+        <label for="invoice_pdf_default"><?php echo _l('pdf_default'); ?></label>
+    </div>
+
+    <div class="radio radio-primary">
+        <input type="radio" id="invoice_pdf_standard"
+               name="settings[invoice_pdf_format]"
+               value="standard"
+               <?= $pdf_format === 'standard' ? 'checked' : '' ?>>
+        <label for="invoice_pdf_standard"><?php echo _l('pdf_standard'); ?></label>
+    </div>
+</div>
         <i class="fa-regular fa-circle-question pull-left tw-mt-0.5 tw-mr-1" data-toggle="tooltip"
             data-title="<?php echo _l('settings_sales_next_invoice_number_tooltip'); ?>"></i>
         <?php echo render_input('settings[next_invoice_number]', 'settings_sales_next_invoice_number', get_option('next_invoice_number'), 'number', ['min' => 1]); ?>
@@ -140,6 +169,12 @@
         <?php render_yes_no_option('show_sale_agent_on_invoices', 'settings_show_sale_agent_on_invoices'); ?>
         <hr />
         <?php render_yes_no_option('show_project_on_invoice', 'show_project_on_invoice'); ?>
+        <hr />
+            <?php render_yes_no_option('show_delivery_type_on_invoices', 'show_delivery_type_on_invoices'); ?>
+        <hr />
+        <?php render_yes_no_option('show_transport_name_on_invoices', 'show_transport_name_on_invoices'); ?>
+        <hr />
+        <?php render_yes_no_option('show_payment_terms_on_invoices', 'show_payment_terms_on_invoices'); ?>
         <hr />
         <?php render_yes_no_option('show_total_paid_on_invoice', 'show_total_paid_on_invoice'); ?>
         <hr />
@@ -228,6 +263,12 @@
         <hr />
         <?php render_yes_no_option('show_project_on_credit_note', 'show_project_on_credit_note'); ?>
         <hr />
+            <?php render_yes_no_option('show_delivery_type_on_credit_note', 'show_delivery_type_on_credit_note'); ?>
+        <hr />
+        <?php render_yes_no_option('show_transport_name_on_credit_note', 'show_transport_name_on_credit_note'); ?>
+        <hr />
+        <?php render_yes_no_option('show_payment_terms_on_credit_note', 'show_payment_terms_on_credit_note'); ?>
+        <hr />
         <?php echo render_textarea('settings[predefined_clientnote_credit_note]', 'settings_predefined_clientnote', get_option('predefined_clientnote_credit_note'), ['rows' => 6]); ?>
         <?php echo render_textarea('settings[predefined_terms_credit_note]', 'settings_predefined_predefined_term', get_option('predefined_terms_credit_note'), ['rows' => 6]); ?>
     </div>
@@ -239,6 +280,66 @@
                 value="<?php echo get_option('estimate_prefix'); ?>">
         </div>
         <hr />
+        <h4 class="bold"><?php echo _l('settings_estimate_logo_selection'); ?></h4>
+<p class="text-muted"><?php echo _l('settings_estimate_logo_selection_help'); ?></p>
+
+<div class="form-group">
+ 
+
+    <div class="radio radio-primary">
+        <input type="radio" id="performance_logo_default"
+               name="settings[estimate_logo_type]"
+               value="default"
+               <?= get_option('estimate_logo_type') == 'default' ? 'checked' : '' ?>>
+        <label for="performance_logo_default">Company Logo</label>
+    </div>
+
+    <div class="radio radio-primary">
+        <input type="radio" id="performance_logo_dark"
+               name="settings[estimate_logo_type]"
+               value="dark"
+               <?= get_option('estimate_logo_type') == 'dark' ? 'checked' : '' ?>>
+        <label for="performance_logo_dark">Dark Logo</label>
+    </div>
+
+    <div class="radio radio-primary">
+        <input type="radio" id="performance_logo_letterhead"
+               name="settings[estimate_logo_type]"
+               value="letterhead"
+               <?= get_option('estimate_logo_type') == 'letterhead' ? 'checked' : '' ?>>
+        <label for="performance_logo_letterhead">Letterhead</label>
+    </div>
+</div>
+<h4 class="bold"><?php echo _l('settings_invoice_pdf_format'); ?></h4>
+<p class="text-muted"><?php echo _l('settings_invoice_pdf_format_help'); ?></p>
+<?php
+$pdf_format = get_option('estimate_pdf_format');
+
+if ($pdf_format === '' || $pdf_format === null) {
+    $pdf_format = 'default';
+}
+?>
+
+<div class="form-group">
+  
+
+    <div class="radio radio-primary">
+        <input type="radio" id="estimate_pdf_default"
+               name="settings[estimate_pdf_format]"
+               value="default"
+               <?= $pdf_format === 'default' ? 'checked' : '' ?>>
+        <label for="estimate_pdf_default"><?php echo _l('pdf_default'); ?></label>
+    </div>
+
+    <div class="radio radio-primary">
+        <input type="radio" id="estimate_pdf_standard"
+               name="settings[estimate_pdf_format]"
+               value="standard"
+               <?= $pdf_format === 'standard' ? 'checked' : '' ?>>
+        <label for="estimate_pdf_standard"><?php echo _l('pdf_standard'); ?></label>
+    </div>
+</div>
+
         <i class="fa-regular fa-circle-question pull-left tw-mt-0.5 tw-mr-1" data-toggle="tooltip"
             data-title="<?php echo _l('settings_sales_next_estimate_number_tooltip'); ?>"></i>
         <?php echo render_input('settings[next_estimate_number]', 'settings_sales_next_estimate_number', get_option('next_estimate_number'), 'number', ['min' => 1]); ?>
@@ -260,6 +361,12 @@
         <?php render_yes_no_option('show_sale_agent_on_estimates', 'settings_show_sale_agent_on_estimates'); ?>
         <hr />
         <?php render_yes_no_option('show_project_on_estimate', 'show_project_on_estimate'); ?>
+        <hr />
+        <?php render_yes_no_option('show_delivery_type_on_estimates', 'show_delivery_type_on_estimates'); ?>
+        <hr />
+        <?php render_yes_no_option('show_transport_name_on_estimates', 'show_transport_name_on_estimates'); ?>
+        <hr />
+        <?php render_yes_no_option('show_payment_terms_on_estimates', 'show_payment_terms_on_estimates'); ?>
         <hr />
         <?php render_yes_no_option('estimate_auto_convert_to_invoice_on_client_accept', 'settings_estimate_auto_convert_to_invoice_on_client_accept'); ?>
         <hr />
@@ -347,6 +454,59 @@
     <div role="tabpanel" class="tab-pane" id="proposals">
         <?php echo render_input('settings[proposal_number_prefix]', 'proposal_number_prefix', get_option('proposal_number_prefix')); ?>
         <hr />
+        <h4 class="bold"><?php echo _l('proposal_logo_selection'); ?></h4>
+<p class="text-muted"><?php echo _l('proposal_logo_selection_help'); ?></p>
+
+<div class="form-group">
+    
+
+    <div class="radio radio-primary">
+        <input type="radio" id="quotation_logo_default" name="settings[quotation_logo_type]" value="default"
+            <?php if (get_option('quotation_logo_type') == 'default') { echo 'checked'; } ?>>
+        <label for="quotation_logo_default"><?php echo _l('proposal_logo_default'); ?></label>
+    </div>
+
+    <div class="radio radio-primary">
+        <input type="radio" id="quotation_logo_dark" name="settings[quotation_logo_type]" value="dark"
+            <?php if (get_option('quotation_logo_type') == 'dark') { echo 'checked'; } ?>>
+        <label for="quotation_logo_dark"><?php echo _l('proposal_logo_dark'); ?></label>
+    </div>
+
+    <div class="radio radio-primary">
+        <input type="radio" id="quotation_logo_letterhead" name="settings[quotation_logo_type]" value="letterhead"
+            <?php if (get_option('quotation_logo_type') == 'letterhead') { echo 'checked'; } ?>>
+        <label for="quotation_logo_letterhead"><?php echo _l('proposal_logo_letterhead'); ?></label>
+    </div>
+</div>
+<h4 class="bold"><?php echo _l('proposal_pdf_format'); ?></h4>
+<p class="text-muted"><?php echo _l('proposal_pdf_format_help'); ?></p>
+<?php
+$pdf_format = get_option('proposal_pdf_format');
+
+if ($pdf_format === '' || $pdf_format === null) {
+    $pdf_format = 'default';
+}
+?>
+
+<div class="form-group">
+    
+
+    <div class="radio radio-primary">
+        <input type="radio" id="proposal_pdf_default"
+               name="settings[proposal_pdf_format]"
+               value="default"
+               <?= $pdf_format === 'default' ? 'checked' : '' ?>>
+        <label for="proposal_pdf_default"><?php echo _l('pdf_default'); ?></label>
+    </div>
+
+    <div class="radio radio-primary">
+        <input type="radio" id="proposal_pdf_standard"
+               name="settings[proposal_pdf_format]"
+               value="standard"
+               <?= $pdf_format === 'standard' ? 'checked' : '' ?>>
+        <label for="proposal_pdf_standard"><?php echo _l('pdf_standard'); ?></label>
+    </div>
+</div>
         <i class="fa-regular fa-circle-question pull-left tw-mt-0.5 tw-mr-1" data-toggle="tooltip"
             data-title="<?php echo _l('invoice_due_after_help'); ?>"></i>
         <?php echo render_input('settings[proposal_due_after]', 'proposal_due_after', get_option('proposal_due_after'), 'number'); ?>
@@ -399,9 +559,13 @@
         <hr />
         <?php render_yes_no_option('show_project_on_proposal', 'show_project_on_proposal'); ?>
         <hr />
-        <?php render_yes_no_option('exclude_proposal_from_client_area_with_draft_status', 'exclude_proposal_from_client_area_with_draft_status'); ?>
+            <?php render_yes_no_option('show_delivery_type_on_proposals', 'show_delivery_type_on_proposals'); ?>
         <hr />
-        <?php render_yes_no_option('proposal_auto_convert_to_invoice_on_client_accept', 'proposal_auto_convert_to_invoice_on_client_accept'); ?>
+        <?php render_yes_no_option('show_transport_name_on_proposals', 'show_transport_name_on_proposals'); ?>
+        <hr />
+        <?php render_yes_no_option('show_payment_terms_on_proposals', 'show_payment_terms_on_proposals'); ?>
+        <hr />
+        <?php render_yes_no_option('exclude_proposal_from_client_area_with_draft_status', 'exclude_proposal_from_client_area_with_draft_status'); ?>
         <hr />
         <?php render_yes_no_option('allow_staff_view_proposals_assigned', 'allow_staff_view_proposals_assigned'); ?>
         <hr />

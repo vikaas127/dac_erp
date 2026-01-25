@@ -92,7 +92,7 @@ class Invoice_items_model extends App_Model
         . 'item_type,'
         . 't1.taxrate as taxrate,t1.id as taxid,t1.name as taxname,'
         . 't2.taxrate as taxrate_2,t2.id as taxid_2,t2.name as taxname_2,'
-        . 'description,long_description, items.group_id,'
+        . 'description,long_description, items.group_id,allow_quantity_discount,allow_special_discount,allow_offer_discount,'
         . db_prefix() . 'items_groups.name as group_name,unit'
         . ($customer_group_id ? ', item_group_discounts.discount as item_discount' : ', NULL as item_discount')
         , false);

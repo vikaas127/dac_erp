@@ -44,15 +44,39 @@ class Estimate_pdf extends App_pdf
         return 'estimate';
     }
 
-    protected function file_path()
-    {
-        $customPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/my_estimatepdf.php';
-        $actualPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/estimatepdf.php';
+    // protected function file_path()
+    // {
+    //     $customPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/my_estimatepdf.php';
+    //     $actualPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/estimatepdf.php';
 
-        if (file_exists($customPath)) {
-            $actualPath = $customPath;
-        }
+    //     if (file_exists($customPath)) {
+    //         $actualPath = $customPath;
+    //     }
 
-        return $actualPath;
+    //     return $actualPath;
+    // }
+      protected function file_path()
+{
+    // Get selected PDF format
+    $pdf_format = get_option('estimate_pdf_format');
+
+    // Decide file based on format
+    if ($pdf_format === 'standard') {
+        $file_name = 'estimatepdf_V2.php';
+    } else {
+        // default OR null
+        $file_name = 'estimatepdf.php';
     }
+
+    // Build paths
+    $customPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/' . $file_name;
+    $actualPath = APPPATH . 'views/themes/' . active_clients_theme() . '/views/' . $file_name;
+
+    // Use custom theme file if exists
+    if (file_exists($customPath)) {
+        return $customPath;
+    }
+
+    return $actualPath;
+}
 }
