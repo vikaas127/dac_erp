@@ -566,6 +566,37 @@ $offerValue =
   </td>
 </tr>-->
 
+<tr>
+    <td>
+        <div class="row">
+            <div class="col-md-7">
+                <span class="bold tw-text-neutral-700">
+                    <?php echo _l('additional_discount'); ?>
+                </span>
+            </div>
+            <div class="col-md-5">
+                <input type="number"
+                       data-toggle="tooltip"
+                       data-title="<?php echo _l('numbers_not_formatted_while_editing'); ?>"
+                       value="<?php
+                           if (isset($estimate)) {
+                               echo $estimate->additional_discount;
+                           } elseif (isset($proposal)) {
+                               echo $proposal->additional_discount;
+                           } elseif (isset($invoice)) {
+                               echo $invoice->additional_discount;
+                           } else {
+                               echo 0;
+                           }
+                       ?>"
+                       class="form-control pull-left"
+                       name="additional_discount">
+            </div>
+        </div>
+    </td>
+    <td class="additional-discount"></td>
+</tr>
+
 
 
                 <tr>

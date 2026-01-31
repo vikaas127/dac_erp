@@ -113,10 +113,7 @@ $tbltotal .= '
     <td align="right" width="85%"><strong>' . _l('total_products_qty') . '</strong></td>
     <td align="right" width="15%">' . app_format_number($total_qty, true) . '</td>
 </tr>
-<tr>
-    <td align="right" width="85%"><strong>' . _l('invoice_subtotal') . '</strong></td>
-    <td align="right" width="15%">' . app_format_money($invoice->subtotal, $invoice->currency_name) . '</td>
-</tr>';
+';
 
 if (is_sale_discount_applied($invoice)) {
     $tbltotal .= '
@@ -159,6 +156,12 @@ if ((int)$invoice->offer_discount_percent != 0) {
         <td align="right" width="15%">' . $invoice->offer_discount_percent . '%</td>
         <td align="right" width="15%">' . app_format_money($invoice->offer_discount_total, $invoice->currency_name) . '</td>
     </tr>';
+}
+if ($invoice->additional_discount != 0) {
+    $tbltotal .= '<tr>
+    <td align="right" width="85%"><strong>' . _l('additional_discount') . '</strong></td>
+    <td align="right" width="15%">' .'-'. app_format_money($invoice->additional_discount, $invoice->currency_name) . '</td>
+</tr>';
 }
 
 if ($invoice->adjustment != 0) {

@@ -51,6 +51,7 @@
         $('.discount-total-type.discount-type-fixed').click();
     <?php } ?>
     $('input[name="adjustment"]').val('<?php echo e($proposal->adjustment); ?>');
+     $('input[name="additional_discount"]').val('<?php echo e($proposal->additional_discount); ?>');
     $('input[name="show_quantity_as"][value="<?php echo e($proposal->show_quantity_as); ?>"]').prop('checked',true).change();
     <?php if (!isset($project_id) || !$project_id) { ?>
         $('#convert_to_invoice #clientid').change();

@@ -477,6 +477,23 @@ if ((int)$estimate->offer_discount_percent != 0) {
 
 
 ?>
+                <?php if ($estimate->additional_discount != 0) { ?>
+
+                                        <tr>
+                                            <td>
+                                                <span class="bold tw-text-neutral-700">
+                                                    <?php echo _l('additional_discount'); ?>
+                                                </span>
+                                            </td>
+                                          
+                                           <td class="additional_discount">
+                                            <?php echo $estimate->additional_discount > 0
+                                                ? '-' . app_format_money($estimate->additional_discount, $estimate->currency_name)
+                                                : app_format_money(0, $estimate->currency_name); ?>
+                                        </td>
+
+                                        </tr>
+                                        <?php } ?>
 
                                         <?php if ($estimate->adjustment != 0) { ?>
                                         <tr>

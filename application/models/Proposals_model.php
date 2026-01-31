@@ -1141,6 +1141,7 @@ if (isset($data['discount_fixed'])) {
         $new_invoice_data['subtotal']         = $proposal->subtotal;
         $new_invoice_data['total']            = $proposal->total;
         $new_invoice_data['adjustment']       = $proposal->adjustment;
+        $new_invoice_data['additional_discount']=$proposal->additional_discount;
         $new_invoice_data['offer_discount_percent']=$proposal->offer_discount_percent;
         $new_invoice_data['discount_percent'] = $proposal->discount_percent;
         $new_invoice_data['discount_total']   = $proposal->discount_total;

@@ -492,6 +492,8 @@ function validate_proposal_form() {
         currency: 'required',
     });
 }
+
+
 </script>
 </body>
 

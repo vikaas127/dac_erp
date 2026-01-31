@@ -187,6 +187,8 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         $new_invoice_data['subtotal']         = $_estimate->subtotal;
         $new_invoice_data['total']            = $_estimate->total;
         $new_invoice_data['adjustment']       = $_estimate->adjustment;
+        $new_invoice_data['additional_discount']=$_estimate->additional_discount;
+
         $new_invoice_data['discount_percent'] = $_estimate->discount_percent;
         $new_invoice_data['discount_total']   = $_estimate->discount_total;
         $new_invoice_data['discount_type']    = $_estimate->discount_type;
@@ -364,6 +366,8 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         $new_estimate_data['total']            = $_estimate->total;
         $new_estimate_data['adminnote']        = $_estimate->adminnote;
         $new_estimate_data['adjustment']       = $_estimate->adjustment;
+        $new_estimate_data['additional_discount'] = $_estimate->additional_discount;
+
         $new_estimate_data['discount_percent'] = $_estimate->discount_percent;
         $new_estimate_data['discount_total']   = $_estimate->discount_total;
         $new_estimate_data['discount_type']    = $_estimate->discount_type;

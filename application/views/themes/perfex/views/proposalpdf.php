@@ -71,10 +71,7 @@ $items_html .= '
     <td align="right" width="85%"><strong>' . _l('total_products_qty') . '</strong></td>
     <td align="right" width="15%">' . app_format_number($total_qty, true) . '</td>
 </tr>
-<tr>
-    <td align="right" width="85%"><strong>' . _l('estimate_subtotal') . '</strong></td>
-    <td align="right" width="15%">' . app_format_money($proposal->subtotal, $proposal->currency_name) . '</td>
-</tr>';
+';
 
 if (is_sale_discount_applied($proposal)) {
     $items_html .= '
@@ -99,7 +96,7 @@ if ((int)$proposal->quantity_discount_percent != 0) {
     $items_html .= '<tr>
         <td align="right" width="70%"><strong>' . _l('qty_discount') . '</strong></td>
         <td align="right" width="15%">' . $proposal->quantity_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($proposal->quantity_discount_total, $proposal->currency_name) . '</td>
+        <td align="right" width="15%">' .'-'. app_format_money($proposal->quantity_discount_total, $proposal->currency_name) . '</td>
     </tr>';
 }
 
@@ -107,7 +104,7 @@ if ((int)$proposal->special_discount_percent != 0) {
     $items_html .= '<tr>
         <td align="right" width="70%"><strong>' . _l('special_discount') . '</strong></td>
         <td align="right" width="15%">' . $proposal->special_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($proposal->special_discount_total, $proposal->currency_name) . '</td>
+        <td align="right" width="15%">' .'-'. app_format_money($proposal->special_discount_total, $proposal->currency_name) . '</td>
     </tr>';
 }
 
@@ -115,8 +112,14 @@ if ((int)$proposal->offer_discount_percent != 0) {
     $items_html .= '<tr>
         <td align="right" width="70%"><strong>' . _l('offer_discount') . '</strong></td>
         <td align="right" width="15%">' . $proposal->offer_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($proposal->offer_discount_total, $proposal->currency_name) . '</td>
+        <td align="right" width="15%">' .'-'. app_format_money($proposal->offer_discount_total, $proposal->currency_name) . '</td>
     </tr>';
+}
+if ($proposal->additional_discount != 0) {
+    $items_html .= '<tr>
+    <td align="right" width="85%"><strong>' . _l('additional_discount') . '</strong></td>
+    <td align="right" width="15%">' .'-'. app_format_money($proposal->additional_discount, $proposal->currency_name) . '</td>
+</tr>';
 }
 
 if ($proposal->adjustment != 0) {

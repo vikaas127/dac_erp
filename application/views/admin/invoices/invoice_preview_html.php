@@ -242,7 +242,23 @@ if ((int)$invoice->offer_discount_percent != 0) {
 
 
 ?>
+                <?php if ($invoice->additional_discount != 0) { ?>
 
+                                        <tr>
+                                            <td>
+                                                <span class="bold tw-text-neutral-700">
+                                                    <?php echo _l('additional_discount'); ?>
+                                                </span>
+                                            </td>
+                                          
+                                           <td class="additional_discount">
+                                            <?php echo $invoice->additional_discount > 0
+                                                ? '-' . app_format_money($invoice->additional_discount, $proposal->currency_name)
+                                                : app_format_money(0, $invoice->currency_name); ?>
+                                        </td>
+
+                                        </tr>
+                                        <?php } ?>
                     <?php if ($invoice->adjustment != 0) { ?>
                     <tr>
                         <td>

@@ -95,12 +95,7 @@ $tbltotal .= '
 <tr>
     <td align="right" width="85%"><strong>' . _l('total_products_qty') . '</strong></td>
     <td align="right" width="15%">' . app_format_number($total_qty, true) . '</td>
-</tr>
-<tr>
-    <td align="right" width="85%"><strong>' . _l('estimate_subtotal') . '</strong></td>
-    <td align="right" width="15%">' . app_format_money($estimate->subtotal, $estimate->currency_name) . '</td>
 </tr>';
-
 if (is_sale_discount_applied($estimate)) {
     $tbltotal .= '
     <tr>
@@ -124,7 +119,7 @@ if ((int)$estimate->quantity_discount_percent != 0) {
     $tbltotal .= '<tr>
         <td align="right" width="70%"><strong>' . _l('qty_discount') . '</strong></td>
         <td align="right" width="15%">' . $estimate->quantity_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($estimate->quantity_discount_total, $estimate->currency_name) . '</td>
+        <td align="right" width="15%">' .'-'. app_format_money($estimate->quantity_discount_total, $estimate->currency_name) . '</td>
     </tr>';
 }
 
@@ -132,7 +127,7 @@ if ((int)$estimate->special_discount_percent != 0) {
     $tbltotal .= '<tr>
         <td align="right" width="70%"><strong>' . _l('special_discount') . '</strong></td>
         <td align="right" width="15%">' . $estimate->special_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($estimate->special_discount_total, $estimate->currency_name) . '</td>
+        <td align="right" width="15%">' .'-'. app_format_money($estimate->special_discount_total, $estimate->currency_name) . '</td>
     </tr>';
 }
 
@@ -140,10 +135,21 @@ if ((int)$estimate->offer_discount_percent != 0) {
     $tbltotal .= '<tr>
         <td align="right" width="70%"><strong>' . _l('offer_discount') . '</strong></td>
         <td align="right" width="15%">' . $estimate->offer_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($estimate->offer_discount_total, $estimate->currency_name) . '</td>
+        <td align="right" width="15%">' .'-'. app_format_money($estimate->offer_discount_total, $estimate->currency_name) . '</td>
     </tr>';
 }
-
+if ($estimate->additional_discount != 0) {
+    $tbltotal .= '<tr>
+    <td align="right" width="85%"><strong>' . _l('additional_discount') . '</strong></td>
+    <td align="right" width="15%">' .'-'. app_format_money($estimate->additional_discount, $estimate->currency_name) . '</td>
+</tr>';
+}
+if ($estimate->additional_discount != 0) {
+    $tbltotal .= '<tr>
+    <td align="right" width="85%"><strong>' . _l('additional_discount') . '</strong></td>
+    <td align="right" width="15%">' .'-'. app_format_money($estimate->additional_discount, $estimate->currency_name) . '</td>
+</tr>';
+}
 
 if ($estimate->adjustment != 0) {
     $tbltotal .= '<tr>
