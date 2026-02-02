@@ -144,12 +144,7 @@ if ($estimate->additional_discount != 0) {
     <td align="right" width="15%">' .'-'. app_format_money($estimate->additional_discount, $estimate->currency_name) . '</td>
 </tr>';
 }
-if ($estimate->additional_discount != 0) {
-    $tbltotal .= '<tr>
-    <td align="right" width="85%"><strong>' . _l('additional_discount') . '</strong></td>
-    <td align="right" width="15%">' .'-'. app_format_money($estimate->additional_discount, $estimate->currency_name) . '</td>
-</tr>';
-}
+
 
 if ($estimate->adjustment != 0) {
     $tbltotal .= '<tr>

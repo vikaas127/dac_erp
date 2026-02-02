@@ -395,7 +395,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class=" pull-right">
+                                <div class=" pull-right mright10">
                                 <table class="table text-right">
                                     <tbody>
                                         <?php
@@ -485,7 +485,7 @@ if ((int)$estimate->offer_discount_percent != 0) {
                                                     <?php echo _l('additional_discount'); ?>
                                                 </span>
                                             </td>
-                                          
+                                          <td></td>
                                            <td class="additional_discount">
                                             <?php echo $estimate->additional_discount > 0
                                                 ? '-' . app_format_money($estimate->additional_discount, $estimate->currency_name)

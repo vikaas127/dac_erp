@@ -404,7 +404,7 @@
                           
                         </div>
                         <div class="row">
-                            <div class=" pull-right">
+                            <div class=" pull-right mright10">
                                 <table class="table text-right">
                                     <tbody>
                                           <?php
@@ -422,7 +422,7 @@ if (isset($proposal->items)) {
             Total Product Qty
         </span>
     </td>
-
+   <td></td>
     <td class="product_total_qty">
         <?php echo $total_qty; ?>
     </td>
@@ -493,6 +493,7 @@ if ((int)$proposal->offer_discount_percent != 0) {
                                                     <?php echo _l('additional_discount'); ?>
                                                 </span>
                                             </td>
+                                            <td></td>
                                           
                                            <td class="additional_discount">
                                             <?php echo $proposal->additional_discount > 0
@@ -511,7 +512,7 @@ if ((int)$proposal->offer_discount_percent != 0) {
                                                     <?php echo _l('proposal_adjustment'); ?>
                                                 </span>
                                             </td>
-                                          
+                                             <td></td>
                                             <td class="adjustment">
                                                 <?php echo e(app_format_money($proposal->adjustment, $proposal->currency_name)); ?>
                                             </td>
@@ -523,7 +524,7 @@ if ((int)$proposal->offer_discount_percent != 0) {
                                                     <?php echo _l('proposal_total'); ?>
                                                 </span>
                                             </td>
-                                    
+                                       <td></td>
                                             <td class="total">
                                                 <?php echo e(app_format_money($proposal->total, $proposal->currency_name)); ?>
                                             </td>
