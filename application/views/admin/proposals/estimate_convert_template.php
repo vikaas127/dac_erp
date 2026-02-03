@@ -84,7 +84,7 @@
                     updateSpecialDiscountOptions(data.group_id);
 
                     $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
-                      $('#additional_discount_allowed').val(data.additional_discount_allowed);
+                    applyAdditionalDiscountPermission(data.additional_discount_allowed);
                 },
                 error: function() {
                     $('#customer_group_name').text('—');
@@ -94,7 +94,7 @@
                     $('#basic_discount_percent').val(0).trigger('input');
                     $('#customer_group_id').val(null);
                     $('#quantity_discount_allowed').val(0);
-                        $('#additional_discount_allowed').val(0);
+                       applyAdditionalDiscountPermission(0);
                 }
             });
 
@@ -103,6 +103,19 @@
     }, 200); // delay so ajax-search/selectpicker is ready
 
 });
+function applyAdditionalDiscountPermission(isAllowed) {
+    var $input = $('input[name="additional_discount"]');
+
+    if (parseInt(isAllowed) === 1) {
+        $input.prop('readonly', false);
+        $('#additional_discount_allowed').val(1);
+    } else {
+        $input.val(0).prop('readonly', true);
+        $('#additional_discount_allowed').val(0);
+    }
+
+    calculate_total();
+}
 
 function updateSpecialDiscountOptions(groupId) {
 
@@ -144,6 +157,25 @@ function updateSpecialDiscountOptions(groupId) {
         calculate_total();
     }
 }
+
+$('body').on('change', '#clientid', function () {
+
+    var customerId = $(this).val();
+    if (!customerId) {
+        applyAdditionalDiscountPermission(0);
+        return;
+    }
+
+    $.get(
+        admin_url + 'estimates/get_customer_group_info/' + customerId,
+        function (data) {
+            applyAdditionalDiscountPermission(data.additional_discount_allowed);
+        },
+        'json'
+    ).fail(function () {
+        applyAdditionalDiscountPermission(0);
+    });
+});
 
 
 </script>
