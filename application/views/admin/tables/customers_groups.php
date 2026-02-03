@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-$aColumns = ['name', 'default_discount', 'default_profit_margin', 'override_allowed', 'quantity_discount_allowed'];
+$aColumns = ['name', 'default_discount', 'default_profit_margin', 'override_allowed', 'quantity_discount_allowed','additional_discount_allowed'];
 
 $sIndexColumn = 'id';
 $sTable       = db_prefix() . 'customers_groups';
@@ -22,6 +22,7 @@ foreach ($rResult as $aRow) {
                 data-margin="' . $aRow['default_profit_margin'] . '"
                 data-override="' . $aRow['override_allowed'] . '"
                 data-quantity_discount_allowed="' . $aRow['quantity_discount_allowed'] . '"
+                data-additional_discount_allowed="' . $aRow['additional_discount_allowed'] . '"
               >' . e($aRow['name']) . '</a>';
 
     // Default discount
@@ -35,6 +36,7 @@ foreach ($rResult as $aRow) {
 
     // Quantity discount allowed
     $row[] = $aRow['quantity_discount_allowed'] ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>';
+     $row[] = $aRow['additional_discount_allowed'] ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>';
 
     // Options column
     $options = '<div class="tw-flex tw-items-center tw-space-x-3">';
@@ -45,7 +47,7 @@ foreach ($rResult as $aRow) {
                     data-discount="' . $aRow['default_discount'] . '"
                     data-margin="' . $aRow['default_profit_margin'] . '"
                     data-override="' . $aRow['override_allowed'] . '"
-                    data-quantity_discount_allowed="' . $aRow['quantity_discount_allowed'] . '">
+                    data-quantity_discount_allowed="' . $aRow['quantity_discount_allowed'] . '"    data-additional_discount_allowed="' . $aRow['additional_discount_allowed'] . '">
                     <i class="fa-regular fa-pen-to-square fa-lg"></i>
                 </a>';
 

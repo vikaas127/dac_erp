@@ -84,6 +84,7 @@
                     updateSpecialDiscountOptions(data.group_id);
 
                     $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
+                      $('#additional_discount_allowed').val(data.additional_discount_allowed);
                 },
                 error: function() {
                     $('#customer_group_name').text('—');
@@ -93,6 +94,7 @@
                     $('#basic_discount_percent').val(0).trigger('input');
                     $('#customer_group_id').val(null);
                     $('#quantity_discount_allowed').val(0);
+                        $('#additional_discount_allowed').val(0);
                 }
             });
 

@@ -1757,6 +1757,7 @@ $lang['show_payment_terms_on_invoices'] = 'Show Payment Terms on Invoices';
 $lang['show_delivery_type_on_credit_note'] = 'Show Delivery Type on Credit Notes';
 $lang['show_transport_name_on_credit_note'] = 'Show Transport Name on Credit Notes';
 $lang['show_payment_terms_on_credit_note'] = 'Show Payment Terms on Credit Notes';
+$lang['estimate_before_additional_discount_subtotal']='Subtotal';
 
 $lang['select_logo_type'] = 'Select Logo Type';
 $lang['company_logo'] = 'Company Logo';

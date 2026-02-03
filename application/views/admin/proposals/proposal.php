@@ -83,6 +83,7 @@
                                     <p><strong>Discount:</strong> <span id="customer_group_discount">0%</span></p>
                                     <input type="hidden" id="customer_group_id" name="customer_group_id" value="">
                                     <input type="hidden" id="quantity_discount_allowed" name="quantity_discount_allowed" value="">
+                                    <input type="hidden" id="additional_discount_allowed"  value="" name="additional_discount_allowed">
                                 </div>
                                 <div
                                     class="form-group select-placeholder projects-wrapper <?php echo ((!isset($proposal)) || (isset($proposal) && $proposal->rel_type !== 'customer')) ? 'hide' : '' ?>">
@@ -316,126 +317,131 @@ var _rel_id = $('#rel_id'),
     data = {};
 var globalCustomerGroupDiscount = 0;
 
-$(function() {
+$(function () {
+
     <?php if (isset($proposal) && $proposal->rel_type === 'customer') { ?>
-    init_proposal_project_select('select#project_id')
+        init_proposal_project_select('select#project_id');
     <?php } ?>
-    $('body').on('change', '#rel_type', function() {
-        if (_rel_type.val() != 'customer') {
-            _project_wrapper.addClass('hide')
-            $('#customer_group_info').addClass('hide');
+
+    /* =============================
+       ADDITIONAL DISCOUNT CONTROLLER
+    ============================= */
+    function applyAdditionalDiscountPermission(isAllowed) {
+        const $input = $('#additional_discount_input');
+
+        if (String(isAllowed) === '1') {
+            $input.prop('readonly', false);
+            $('#additional_discount_allowed').val(1);
         } else {
-            $('#customer_group_info').removeClass('hide');
+            $input.val(0).prop('readonly', true);
+            $('#additional_discount_allowed').val(0);
+        }
+
+        calculate_total();
+    }
+
+    /* =============================
+       REL TYPE CHANGE
+    ============================= */
+    $('body').on('change', '#rel_type', function () {
+
+        if (_rel_type.val() !== 'customer') {
+
+            _project_wrapper.addClass('hide');
+            $('#customer_group_info').addClass('hide');
 
             $('#customer_group_name').text('-');
             $('#customer_group_discount').text('0%');
             globalCustomerGroupDiscount = 0;
-            
+
             $('#customer_group_id').val('');
             $('#quantity_discount_allowed').val(0);
+
+            applyAdditionalDiscountPermission(0);
         }
     });
 
-    $('body').on('change', '#rel_id', function() {
-        if (_rel_type.val() == 'customer') {
-            console.log('working')
-            var projectAjax = $('select#project_id');
-            var clonedProjectsAjaxSearchSelect = projectAjax.html('').clone();
-            projectAjax.selectpicker('destroy').remove();
-            projectAjax = clonedProjectsAjaxSearchSelect;
-            $('#project_ajax_search_wrapper').append(clonedProjectsAjaxSearchSelect);
-            init_proposal_project_select(projectAjax);
-            _project_wrapper.removeClass('hide')
-            $('#customer_group_info').removeClass('hide');
+    /* =============================
+       REL ID CHANGE (SINGLE HANDLER)
+    ============================= */
+    $('body').on('change', '#rel_id', function () {
+
+        if (_rel_type.val() !== 'customer' || !this.value) {
+            applyAdditionalDiscountPermission(0);
+            return;
         }
+
+        /* ---- Project init ---- */
+        var projectAjax = $('select#project_id');
+        var cloned = projectAjax.html('').clone();
+        projectAjax.selectpicker('destroy').remove();
+        $('#project_ajax_search_wrapper').append(cloned);
+        init_proposal_project_select(cloned);
+
+        _project_wrapper.removeClass('hide');
+        $('#customer_group_info').removeClass('hide');
+
+        /* ---- Fetch customer data ---- */
+        $.get(
+            admin_url + 'proposals/get_relation_data_values/' + this.value + '/customer',
+            function (response) {
+
+                $('#customer_group_name').text(response.group_name || '-');
+                $('#customer_group_discount').text((response.default_discount || 0) + '%');
+                globalCustomerGroupDiscount = parseFloat(response.default_discount) || 0;
+
+                $('#customer_group_id').val(response.group_id || '');
+                $('#quantity_discount_allowed').val(response.quantity_discount_allowed || 0);
+
+                updateSpecialDiscountOptions(response.group_id);
+
+                applyAdditionalDiscountPermission(response.additional_discount_allowed);
+            },
+            'json'
+        );
     });
 
+    /* =============================
+       INIT
+    ============================= */
     init_currency();
-    // Maybe items ajax search
     init_ajax_search('items', '#item_select.ajax-search', undefined, admin_url + 'items/search');
     validate_proposal_form();
-    $('body').on('change', '#rel_id', function() {
 
-        if ($(this).val() != '') {
-            $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type
-                .val(),
-                function(response) {
-                    $('input[name="proposal_to"]').val(response.to);
-                    $('textarea[name="address"]').val(response.address);
-                    $('input[name="email"]').val(response.email);
-                    $('input[name="phone"]').val(response.phone);
-                    $('input[name="city"]').val(response.city);
-                    $('input[name="state"]').val(response.state);
-                    $('input[name="zip"]').val(response.zip);
-                    $('select[name="country"]').selectpicker('val', response.country);
-                    var currency_selector = $('#currency');
-                    if (_rel_type.val() == 'customer') {
-                        if (typeof(currency_selector.attr('multi-currency')) == 'undefined') {
-                            currency_selector.attr('disabled', true);
-                        }
-
-                        $('#customer_group_name').text(response.group_name || '-');
-                        $('#customer_group_discount').text((response.default_discount || 0) + '%');
-                        globalCustomerGroupDiscount = parseFloat(response.default_discount) || 0;
-                      
-                        $('#customer_group_id').val(response.group_id || '');
-                          updateSpecialDiscountOptions(response.group_id);
-                        $('#quantity_discount_allowed').val(response.quantity_discount_allowed || 0);
-
-                    } else {
-                        currency_selector.attr('disabled', false);
-                    }
-                    var proposal_to_wrapper = $('[app-field-wrapper="proposal_to"]');
-                    if (response.is_using_company == false && !empty(response.company)) {
-                        proposal_to_wrapper.find('#use_company_name').remove();
-                        proposal_to_wrapper.find('#use_company_help').remove();
-                        proposal_to_wrapper.append('<div id="use_company_help" class="hide">' +
-                            response.company + '</div>');
-                        proposal_to_wrapper.find('label')
-                            .prepend(
-                                "<a href=\"#\" id=\"use_company_name\" data-toggle=\"tooltip\" data-title=\"<?php echo _l('use_company_name_instead'); ?>\" onclick='document.getElementById(\"proposal_to\").value = document.getElementById(\"use_company_help\").innerHTML.trim(); this.remove();'><i class=\"fa fa-building-o\"></i></a> "
-                            );
-                    } else {
-                        proposal_to_wrapper.find('label #use_company_name').remove();
-                        proposal_to_wrapper.find('label #use_company_help').remove();
-                    }
-                    /* Check if customer default currency is passed */
-                    if (response.currency) {
-                        currency_selector.selectpicker('val', response.currency);
-                    } else {
-                        /* Revert back to base currency */
-                        currency_selector.selectpicker('val', currency_selector.data('base'));
-                    }
-                    currency_selector.selectpicker('refresh');
-                    currency_selector.change();
-                }, 'json');
-        }
-    });
     $('.rel_id_label').html(_rel_type.find('option:selected').text());
-    _rel_type.on('change', function() {
+
+    _rel_type.on('change', function () {
+
         var clonedSelect = _rel_id.html('').clone();
         _rel_id.selectpicker('destroy').remove();
         _rel_id = clonedSelect;
         $('#rel_id_select').append(clonedSelect);
+
         proposal_rel_id_select();
-        if ($(this).val() != '') {
+
+        if ($(this).val() !== '') {
             _rel_id_wrapper.removeClass('hide');
         } else {
             _rel_id_wrapper.addClass('hide');
         }
+
         $('.rel_id_label').html(_rel_type.find('option:selected').text());
     });
+
     proposal_rel_id_select();
+
     <?php if (!isset($proposal) && $rel_id != '') { ?>
-    _rel_id.change();
-    
+        _rel_id.trigger('change');
     <?php } ?>
+
     <?php if (isset($proposal) && $proposal->rel_type === 'customer' && $proposal->rel_id != '') { ?>
-    $(document).ready(function() {
-        $('#rel_id').trigger('change');
-    });
-<?php } ?>
+        $(document).ready(function () {
+            $('#rel_id').trigger('change');
+        });
+    <?php } ?>
+
 });
+
 
 function init_proposal_project_select(selector) {
     init_ajax_search('project', selector, {

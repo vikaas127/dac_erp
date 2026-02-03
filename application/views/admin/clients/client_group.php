@@ -33,6 +33,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" id="additional_discount_allowed" name="additional_discount_allowed" value="1" <?= (isset($group) && $group->additional_discount_allowed == 1) ? 'checked' : '' ?>>
+                                    <label for="additional_discount_allowed"><?php echo _l('allow_additional_discount'); ?></label>
+                                </div>
+                            </div>
+                        </div>
 
                         <?php echo form_hidden('id'); ?>
                     </div>
@@ -67,6 +75,7 @@
     $('#customer_group_modal input[name="default_profit_margin"]').val('');
     $('#customer_group_modal input[name="override_allowed"]').prop('checked', false);
     $('#customer_group_modal input[name="quantity_discount_allowed"]').prop('checked', false);
+     $('#customer_group_modal input[name="additional_discount_allowed"]').prop('checked', false);
 
     if (typeof group_id !== 'undefined') {
         $('#customer_group_modal input[name="id"]').val(group_id);
@@ -78,6 +87,8 @@
         $('#customer_group_modal input[name="default_profit_margin"]').val(invoker.data('margin'));
         $('#customer_group_modal input[name="override_allowed"]').prop('checked', invoker.data('override') == 1);
         $('#customer_group_modal input[name="quantity_discount_allowed"]').prop('checked', invoker.data('quantity_discount_allowed') == 1);
+        $('#customer_group_modal input[name="additional_discount_allowed"]').prop('checked', invoker.data('additional_discount_allowed') == 1);
+
     }
 });
 

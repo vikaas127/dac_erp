@@ -53,7 +53,8 @@ class Clients_model extends App_Model
     }
 public function get_customer_group_discount($customer_id)
 {
-    $this->db->select('g.name as group_name, g.default_discount, g.override_allowed, g.id as group_id, g.quantity_discount_allowed as quantity_discount_allowed');
+    $this->db->select('g.name as group_name, g.default_discount, g.override_allowed, g.id as group_id, g.quantity_discount_allowed as quantity_discount_allowed,
+    g.additional_discount_allowed as additional_discount_allowed');
     $this->db->from(db_prefix().'customer_groups cg');
     $this->db->join(db_prefix().'customers_groups g', 'cg.groupid = g.id');
     $this->db->where('cg.customer_id', $customer_id);
@@ -64,7 +65,8 @@ public function get_customer_group_discount($customer_id)
         'default_discount'          => 0,
         'override_allowed'          => 1,
         'group_id'                  => null,
-        'quantity_discount_allowed' => 0
+        'quantity_discount_allowed' => 0,
+        'additional_discount_allowed' => 0
     ];
 }
     /**

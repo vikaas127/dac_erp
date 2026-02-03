@@ -185,6 +185,7 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         $new_invoice_data['show_quantity_as'] = $_estimate->show_quantity_as;
         $new_invoice_data['currency']         = $_estimate->currency;
         $new_invoice_data['subtotal']         = $_estimate->subtotal;
+        $new_invoice_data['before_additional_discount_subtotal']         = $_estimate->before_additional_discount_subtotal;
         $new_invoice_data['total']            = $_estimate->total;
         $new_invoice_data['adjustment']       = $_estimate->adjustment;
         $new_invoice_data['additional_discount']=$_estimate->additional_discount;
@@ -363,6 +364,8 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         $new_estimate_data['show_quantity_as'] = $_estimate->show_quantity_as;
         $new_estimate_data['currency']         = $_estimate->currency;
         $new_estimate_data['subtotal']         = $_estimate->subtotal;
+        $new_estimate_data['before_additional_discount_subtotal']         = $_estimate->before_additional_discount_subtotal;
+
         $new_estimate_data['total']            = $_estimate->total;
         $new_estimate_data['adminnote']        = $_estimate->adminnote;
         $new_estimate_data['adjustment']       = $_estimate->adjustment;
@@ -595,6 +598,9 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
     
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
+        }
+          if (isset($data['additional_discount_allowed'])) {
+            unset($data['additional_discount_allowed']);
         }
 
         if (isset($data['item_price'])) {
@@ -846,6 +852,9 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
+ if (isset($data['additional_discount_allowed'])) {
+            unset($data['additional_discount_allowed']);
+        }
 
         if (isset($data['item_price'])) {
             unset($data['item_price']);
@@ -1038,6 +1047,7 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
                     'clientid'      => $estimateRow['clientid'],
                     'date'          => _d(date('Y-m-d')),
                     'subtotal'      => $estimateRow['subtotal'],
+                    'before_additional_discount_subtotal'=>$estimateRow['before_additional_discount_subtotal'],
                     'total'         => $estimateRow['total'],
                     'total_tax'     => $estimateRow['total_tax'],
                     'expirydate'    => $estimateRow['expirydate'],
@@ -1059,6 +1069,7 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
                         'clientid'      => $estimateRow['clientid'],
                         'date'          => _d(date('Y-m-d')),
                         'subtotal'      => $estimateRow['subtotal'],
+                        'before_additional_discount_subtotal'=>$estimateRow['before_additional_discount_subtotal'],
                         'total'         => $estimateRow['total'],
                         'total_tax'     => $estimateRow['total_tax'],
                         'expirydate'    => $estimateRow['expirydate'],

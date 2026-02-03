@@ -63,4 +63,43 @@
     $('#convert_to_invoice').on('shown.bs.modal', function(){
         $('#item_select').trigger('change')
     })
+    setTimeout(function () {
+
+        var customerId = $('#clientid').val();
+
+        if (customerId) {
+
+            $.ajax({
+                url: admin_url + 'estimates/get_customer_group_info/' + customerId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#customer_group_name').text(data.group_name);
+                    $('#customer_group_discount').text(data.default_discount + '%');
+
+                    globalCustomerGroupDiscount = parseFloat(data.default_discount) || 0;
+                    $('#basic_discount_percent').val(globalCustomerGroupDiscount).trigger('input');
+
+                    $('#customer_group_id').val(data.group_id);
+
+                    updateSpecialDiscountOptions(data.group_id);
+
+                    $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
+                      $('#additional_discount_allowed').val(data.additional_discount_allowed);
+                },
+                error: function() {
+                    $('#customer_group_name').text('—');
+                    $('#customer_group_discount').text('0%');
+                    globalCustomerGroupDiscount = 0;
+
+                    $('#basic_discount_percent').val(0).trigger('input');
+                    $('#customer_group_id').val(null);
+                    $('#quantity_discount_allowed').val(0);
+                        $('#additional_discount_allowed').val(0);
+                }
+            });
+
+        }
+
+    }, 200);
 </script>

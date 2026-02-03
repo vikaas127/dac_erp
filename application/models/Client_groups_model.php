@@ -58,7 +58,7 @@ class Client_groups_model extends App_Model
     // }
     public function get_groups($id = '')
 {
-    $this->db->select('id, name, default_discount, override_allowed');
+    $this->db->select('id, name, default_discount, override_allowed,  additional_discount_allowed,quantity_discount_allowed');
 
     if (is_numeric($id)) {
         $this->db->where('id', $id);
@@ -83,6 +83,9 @@ class Client_groups_model extends App_Model
         'default_discount' => $data['default_discount'],
         'default_profit_margin' => $data['default_profit_margin'],
         'override_allowed' => isset($data['override_allowed']) ? 1 : 0,
+        'quantity_discount_allowed' => isset($data['quantity_discount_allowed']) ? 1 : 0,
+
+        'additional_discount_allowed' => isset($data['additional_discount_allowed']) ? 1 : 0,
     ]);
 
     if ($this->db->affected_rows() > 0) {

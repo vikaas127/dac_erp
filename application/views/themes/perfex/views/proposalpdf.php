@@ -115,6 +115,15 @@ if ((int)$proposal->offer_discount_percent != 0) {
         <td align="right" width="15%">' .'-'. app_format_money($proposal->offer_discount_total, $proposal->currency_name) . '</td>
     </tr>';
 }
+$items_html .= '
+<tr style="background-color:#f0f0f0;">
+    <td align="right" width="85%"><strong>' . _l('estimate_before_additional_discount_subtotal') . '</strong></td>
+    <td align="right" width="15%">' . app_format_money($proposal->before_additional_discount_subtotal, $proposal->currency_name) . '</td>
+</tr>';
+
+
+
+
 if ($proposal->additional_discount != 0) {
     $items_html .= '<tr>
     <td align="right" width="85%"><strong>' . _l('additional_discount') . '</strong></td>

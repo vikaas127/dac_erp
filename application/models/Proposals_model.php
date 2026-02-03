@@ -123,6 +123,9 @@ class Proposals_model extends App_Model
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
+         if (isset($data['additional_discount_allowed'])) {
+            unset($data['additional_discount_allowed']);
+        }
         if (isset($data['item_price'])) {
             unset($data['item_price']);
         }
@@ -325,6 +328,9 @@ if (isset($data['discount_fixed'])) {
  }
  if (isset($data['quantity_discount_allowed'])) {
      unset($data['quantity_discount_allowed']);
+ }
+  if (isset($data['additional_discount_allowed'])) {
+     unset($data['additional_discount_allowed']);
  }
  if (isset($data['item_price'])) {
      unset($data['item_price']);
@@ -968,7 +974,7 @@ if (isset($data['discount_fixed'])) {
     {
         $data = new StdClass();
         if ($rel_type == 'customer') {
-            $this->db->select('c.*, g.name as group_name, g.default_discount, g.override_allowed, g.id as group_id, g.quantity_discount_allowed');
+            $this->db->select('c.*, g.name as group_name, g.default_discount, g.override_allowed, g.id as group_id, g.quantity_discount_allowed,g.additional_discount_allowed');
             $this->db->from(db_prefix() . 'clients c');
             $this->db->join(db_prefix() . 'customer_groups cg', 'c.userid = cg.customer_id', 'left');
             $this->db->join(db_prefix() . 'customers_groups g', 'cg.groupid = g.id', 'left');
@@ -1011,6 +1017,9 @@ if (isset($data['discount_fixed'])) {
             $data->override_allowed          = $_data->override_allowed ?? 1;
             $data->group_id                  = $_data->group_id;
             $data->quantity_discount_allowed = $_data->quantity_discount_allowed ?: 0;
+            $data->additional_discount_allowed = $_data->additional_discount_allowed ?: 0;
+
+
 
         } elseif ($rel_type = 'lead') {
             $this->db->where('id', $rel_id);
@@ -1139,6 +1148,7 @@ if (isset($data['discount_fixed'])) {
         $new_invoice_data['show_quantity_as'] = $proposal->show_quantity_as;
         $new_invoice_data['currency']         = $proposal->currency;
         $new_invoice_data['subtotal']         = $proposal->subtotal;
+        $new_invoice_data['before_additionl_discount_subtotal']         = $proposal->before_additionl_discount_subtotal;
         $new_invoice_data['total']            = $proposal->total;
         $new_invoice_data['adjustment']       = $proposal->adjustment;
         $new_invoice_data['additional_discount']=$proposal->additional_discount;

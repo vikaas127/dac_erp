@@ -462,7 +462,7 @@ if ((int)$proposal->quantity_discount_percent != 0) {
     echo '<tr>
         <td align="right" width="70%"><strong>' . _l('qty_discount') . '</strong></td>
         <td align="right" width="15%">' . $proposal->quantity_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($proposal->quantity_discount_total, $proposal->currency_name) . '</td>
+        <td align="right" width="15%">'.'-' . app_format_money($proposal->quantity_discount_total, $proposal->currency_name) . '</td>
     </tr>';
 }
 
@@ -470,7 +470,7 @@ if ((int)$proposal->special_discount_percent != 0) {
     echo '<tr>
         <td align="right" width="70%"><strong>' . _l('special_discount') . '</strong></td>
         <td align="right" width="15%">' . $proposal->special_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($proposal->special_discount_total, $proposal->currency_name) . '</td>
+        <td align="right" width="15%">'.'-' . app_format_money($proposal->special_discount_total, $proposal->currency_name) . '</td>
     </tr>';
 }
 
@@ -478,12 +478,23 @@ if ((int)$proposal->offer_discount_percent != 0) {
     echo '<tr>
         <td align="right" width="70%"><strong>' . _l('offer_discount') . '</strong></td>
         <td align="right" width="15%">' . $proposal->offer_discount_percent . '%</td>
-        <td align="right" width="15%">' . app_format_money($proposal->offer_discount_total, $proposal->currency_name) . '</td>
+        <td align="right" width="15%">'.'-' . app_format_money($proposal->offer_discount_total, $proposal->currency_name) . '</td>
     </tr>';
 }
 
 
 ?>
+      <tr id="before_additional_discount_subtotal" >
+                                            <td>
+                                                <span class="bold tw-text-neutral-700">
+                                                    <?php echo _l('estimate_before_additional_discount_subtotal'); ?>
+                                                </span>
+                                            </td>
+                                            <td></td>
+                                            <td align="right" width="15%" class="before_additional_discount_subtotal ">
+                                                <?php echo e(app_format_money($proposal->before_additional_discount_subtotal, $estimate->currency_name)); ?>
+                                            </td>
+                                        </tr>
 
                                       <?php if ($proposal->additional_discount != 0) { ?>
 
