@@ -66,30 +66,50 @@ jQuery(function($) {
                     $('#customer_group_name').text(data.group_name);
                     $('#customer_group_discount').text(data.default_discount + '%');
                     globalCustomerGroupDiscount = parseFloat(data.default_discount) || 0;
-                  
+
                     $('#customer_group_id').val(data.group_id);
                     updateSpecialDiscountOptions(data.group_id);
 
                     $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
+                    $('#additional_discount_allowed').val(data.additional_discount_allowed);
+
+                    const $additionalInput = $('#additional_discount_input');
+
+                    if (data.additional_discount_allowed == 1) {
+                        // ✅ allow editing
+                        $additionalInput.prop('readonly', false);
+                    } else {
+                        // ❌ not allowed → clear & lock
+                        $additionalInput.val(0).prop('readonly', true);
+                        calculate_total();
+                    }
                 },
+
                 error: function() {
                     $('#customer_group_name').text('—');
                     $('#customer_group_discount').text('0%');
                     globalCustomerGroupDiscount = 0;
                     $('#customer_group_id').val(null);
                     $('#quantity_discount_allowed').val(0);
+                    $('#additional_discount_allowed').val(0);
                 }
             });
-        } else {
+        }  else {
             $('#customer_group_name').text('—');
             $('#customer_group_discount').text('0%');
             globalCustomerGroupDiscount = 0;
-          
+
             $('#customer_group_id').val(null);
             $('#quantity_discount_allowed').val(0);
+            $('#additional_discount_allowed').val(0);
+
+            $('#additional_discount_input')
+                .val(0)
+                .prop('readonly', true);
 
             calculate_total();
         }
+
     });
     // Trigger customer group fetch on load
     $('#clientid').trigger('change');
