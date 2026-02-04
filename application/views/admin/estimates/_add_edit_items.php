@@ -565,9 +565,9 @@ $offerValue =
     ?>
   </td>
 </tr>-->
- <tr id="before_additional_discount_subtotal" class="hide">
+ <tr id="before_additional_discount_subtotal">
                     <td>
-                        <div class="col-md-7"><span class="bold tw-text-neutral-700"><?php echo _l('estimate_subtotal_without_additional_discount'); ?> :</span></div>
+                        <div class="col-md-7"><span class="bold tw-text-neutral-700"><?php echo _l('estimate_before_additional_discount_subtotal'); ?> :</span></div>
 <div class="col-md-5">-</div>
                     </td>
                     <td class="before_additional_discount_subtotal">

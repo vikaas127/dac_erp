@@ -117,9 +117,7 @@ class Proposals_model extends App_Model
         if(isset($data['discount_fixed'])) {
             unset($data['discount_fixed']);
         }
-        if (isset($data['customer_group_id'])) {
-            unset($data['customer_group_id']);
-        }
+        
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
@@ -323,9 +321,7 @@ if (isset($data['discount_fixed'])) {
  if(isset($data['discount_fixed'])) {
      unset($data['discount_fixed']);
  }
- if (isset($data['customer_group_id'])) {
-     unset($data['customer_group_id']);
- }
+
  if (isset($data['quantity_discount_allowed'])) {
      unset($data['quantity_discount_allowed']);
  }

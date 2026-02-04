@@ -45,6 +45,7 @@
     $('select[name="discount_type"]').selectpicker('val','<?php echo e($proposal->discount_type); ?>');
     $('input[name="discount_percent"]').val('<?php echo e($proposal->discount_percent); ?>');
     $('input[name="discount_total"]').val('<?php echo e($proposal->discount_total); ?>');
+     $('input[name="customer_group_id"]').val('<?php echo e($proposal->customer_group_id); ?>');
     <?php if (is_sale_discount($proposal, 'fixed')) { ?>
         $('.discount-total-type.discount-type-fixed').click();
     <?php } ?>
@@ -79,7 +80,7 @@
                     globalCustomerGroupDiscount = parseFloat(data.default_discount) || 0;
                     $('#basic_discount_percent').val(globalCustomerGroupDiscount).trigger('input');
 
-                    $('#customer_group_id').val(data.group_id);
+                    
 
                     updateSpecialDiscountOptions(data.group_id);
 
@@ -92,7 +93,7 @@
                     globalCustomerGroupDiscount = 0;
 
                     $('#basic_discount_percent').val(0).trigger('input');
-                    $('#customer_group_id').val(null);
+                 
                     $('#quantity_discount_allowed').val(0);
                        applyAdditionalDiscountPermission(0);
                 }
