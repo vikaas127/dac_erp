@@ -86,4 +86,9 @@ hooks()->add_action('admin_init', function () {
             ->relatedTo($proposalsTable->id())
             ->setRules($proposalsTable->rules())
     );
+      App_table::register(
+    App_table::new('sales_orders_dashboard')
+        ->setDbTableName(db_prefix() . 'estimates')
+        ->setPrimaryKeyName('id')
+);
 });

@@ -17,6 +17,34 @@ class Estimates extends AdminController
     {
         $this->list_estimates($id);
     }
+
+public function sales_orders_dashboard()
+{
+    // Permission check FIRST (same as estimates)
+    if (
+        staff_cant('view', 'estimates')
+        && staff_cant('view_own', 'estimates')
+        && get_option('allow_staff_view_estimates_assigned') == '0'
+    ) {
+        ajax_access_denied();
+    }
+
+    // AJAX request → DataTable output
+    if ($this->input->is_ajax_request()) {
+        App_table::find('sales_orders_dashboard')->output();
+        return;
+    }
+    $this->load->model('invoice_items_model');
+    $data['items'] = $this->invoice_items_model->get();
+    $this->load->model('staff_model');
+    $data['staff'] = $this->staff_model->get();
+
+
+    // Normal page load
+    $data['title'] = 'Sales Order Dashboard';
+    $this->load->view('admin/estimates/sales_orders_dashboard', $data);
+}
+
 public function get_customer_group_info($customer_id)
     {
         $this->load->model('clients_model'); // or your model where function is

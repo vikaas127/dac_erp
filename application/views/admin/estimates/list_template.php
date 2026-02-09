@@ -7,7 +7,12 @@
         <?php echo _l('create_new_estimate'); ?>
     </a>
     <?php } ?>
-
+                            <a href="<?= admin_url('estimates/sales_orders_dashboard'); ?>"
+   class="btn btn-info mright5">
+   <i class="fa fa-line-chart"></i>
+   Sales Orders Dashboard
+</a>
+      
 
 
 
