@@ -26,6 +26,7 @@ function init_admin_auth_assets()
     add_favicon_link_asset($groupName);
 
     $CI->app_css->add('reset-css', 'assets/css/reset.min.css', $groupName, ['inter-font']);
+
     $CI->app_css->add('inter-font', 'assets/plugins/inter/inter.css', $groupName);
     $CI->app_css->add('bootstrap-css', 'assets/plugins/bootstrap/css/bootstrap.min.css', $groupName);
 
@@ -90,7 +91,14 @@ function _init_admin_assets()
 
     $CI->app_css->add('tailwind-css', base_url($CI->app_css->core_file('assets/builds', 'tailwind.css')) . '?v=' . $CI->app_css->core_version());
 
-    $CI->app_css->add('app-css', base_url($CI->app_css->core_file('assets/css', 'style.css')) . '?v=' . $CI->app_css->core_version(), 'admin', ['tailwind-css']);
+    // $CI->app_css->add('app-css', base_url($CI->app_css->core_file('assets/css', 'style.css')) . '?v=' . $CI->app_css->core_version(), 'admin', ['tailwind-css']);
+    $CI->app_css->add(
+            'app-css',
+            base_url($CI->app_css->core_file('assets/css', 'style.css')) . '?v=' . time(),
+            'admin',
+            ['tailwind-css']
+        );
+
 
     if (file_exists(FCPATH . 'assets/css/custom.css')) {
         $CI->app_css->add('custom-css', base_url('assets/css/custom.css'), 'admin', ['app-css']);

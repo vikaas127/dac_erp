@@ -596,6 +596,12 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
+                   if (isset($data['special_discount_allowed'])) {
+            unset($data['special_discount_allowed']);
+        }
+            if (isset($data['offer_discount_allowed'])) {
+            unset($data['offer_discount_allowed']);
+        }
           if (isset($data['additional_discount_allowed'])) {
             unset($data['additional_discount_allowed']);
         }
@@ -846,6 +852,12 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         }
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
+        }
+            if (isset($data['special_discount_allowed'])) {
+            unset($data['special_discount_allowed']);
+        }
+            if (isset($data['offer_discount_allowed'])) {
+            unset($data['offer_discount_allowed']);
         }
  if (isset($data['additional_discount_allowed'])) {
             unset($data['additional_discount_allowed']);

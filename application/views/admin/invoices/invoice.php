@@ -58,6 +58,36 @@ jQuery(function($) {
                     updateSpecialDiscountOptions(data.group_id);
 
                     $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
+                    $('#special_discount_allowed').val(data.special_discount_allowed || 0);
+                    $('#offer_discount_allowed').val(data.offer_discount_allowed || 0);
+                    applyAdditionalDiscountPermission(data.additional_discount_allowed);
+                    // =============================
+                    // SPECIAL DISCOUNT CONTROL
+                    // =============================
+                    const $special = $('#special_discount_percent');
+
+                    if (data.special_discount_allowed == 1) {
+                        $special.prop('disabled', false);
+                        $('#special_discount_area').removeClass('row-disabled');
+                    } else {
+                        $special.val(0).prop('disabled', true);
+                        $('#special_discount_area').addClass('row-disabled');
+                    }
+
+                    // =============================
+                    // OFFER DISCOUNT CONTROL
+                    // =============================
+                    const $offer = $('#offer_discount_input');
+
+                    if (data.offer_discount_allowed == 1) {
+                        $offer.prop('readonly', false);
+                        $('#offer_discount_area').removeClass('row-disabled');
+                    } else {
+                        $offer.val(0).prop('readonly', true);
+                        $('#offer_discount_area').addClass('row-disabled');
+                    }
+
+                    calculate_total();
                 },
                 error: function() {
                     $('#customer_group_name').text('—');
@@ -65,6 +95,22 @@ jQuery(function($) {
                     globalCustomerGroupDiscount = 0;
                     $('#customer_group_id').val(null);
                     $('#quantity_discount_allowed').val(0);
+                    $('#special_discount_allowed').val(0);
+                    $('#offer_discount_allowed').val(0);
+                    applyAdditionalDiscountPermission(0);
+                    // Disable special
+                    $('#special_discount_percent')
+                        .val(0)
+                        .prop('disabled', true);
+                    $('#special_discount_area').addClass('row-disabled');
+
+                    // Disable offer
+                    $('#offer_discount_input')
+                        .val(0)
+                        .prop('readonly', true);
+                    $('#offer_discount_area').addClass('row-disabled');
+                    calculate_total();
+
                 }
             });
         } else {
@@ -75,8 +121,22 @@ jQuery(function($) {
             $('#customer_group_id').val(null);
             $('#quantity_discount_allowed').val(0);
 
-            calculate_total();
-        }
+                $('#special_discount_allowed').val(0);
+                    $('#offer_discount_allowed').val(0);
+                    applyAdditionalDiscountPermission(0);
+                    // Disable special
+                    $('#special_discount_percent')
+                        .val(0)
+                        .prop('disabled', true);
+                    $('#special_discount_area').addClass('row-disabled');
+
+                    // Disable offer
+                    $('#offer_discount_input')
+                        .val(0)
+                        .prop('readonly', true);
+                    $('#offer_discount_area').addClass('row-disabled');
+
+                    calculate_total();        }
     });
     // Trigger customer group fetch on load
     $('#clientid').trigger('change');
@@ -111,7 +171,19 @@ function updateSpecialDiscountOptions(groupId) {
         calculate_total();
     }
 }
+function applyAdditionalDiscountPermission(isAllowed) {
+    var $input = $('input[name="additional_discount"]');
 
+    if (parseInt(isAllowed) === 1) {
+        $input.prop('readonly', false);
+        $('#additional_discount_allowed').val(1);
+    } else {
+        $input.val(0).prop('readonly', true);
+        $('#additional_discount_allowed').val(0);
+    }
+
+    calculate_total();
+}
 </script>
 </body>
 

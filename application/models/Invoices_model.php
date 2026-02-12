@@ -369,6 +369,16 @@ class Invoices_model extends App_Model
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
+                       if (isset($data['special_discount_allowed'])) {
+            unset($data['special_discount_allowed']);
+        }
+            if (isset($data['offer_discount_allowed'])) {
+            unset($data['offer_discount_allowed']);
+        }
+          if (isset($data['additional_discount_allowed'])) {
+            unset($data['additional_discount_allowed']);
+        }
+
              if (isset($data['item_basic_discount_percent'])) {
             unset($data['item_basic_discount_percent']);
         }
@@ -805,6 +815,16 @@ class Invoices_model extends App_Model
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
+                       if (isset($data['special_discount_allowed'])) {
+            unset($data['special_discount_allowed']);
+        }
+            if (isset($data['offer_discount_allowed'])) {
+            unset($data['offer_discount_allowed']);
+        }
+          if (isset($data['additional_discount_allowed'])) {
+            unset($data['additional_discount_allowed']);
+        }
+
              if (isset($data['item_basic_discount_percent'])) {
             unset($data['item_basic_discount_percent']);
         }

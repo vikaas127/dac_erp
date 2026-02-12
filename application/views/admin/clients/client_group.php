@@ -33,6 +33,22 @@
                                 </div>
                             </div>
                         </div>
+                             <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" id="special_discount_allowed" name="special_discount_allowed" value="1" <?= (isset($group) && $group->special_discount_allowed == 1) ? 'checked' : '' ?>>
+                                    <label for="special_discount_allowed"><?php echo _l('allow_special_discount'); ?></label>
+                                </div>
+                            </div>
+                        </div>
+                             <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" id="offer_discount_allowed" name="offer_discount_allowed" value="1" <?= (isset($group) && $group->offer_discount_allowed == 1) ? 'checked' : '' ?>>
+                                    <label for="offer_discount_allowed"><?php echo _l('allow_offer_discount'); ?></label>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="checkbox checkbox-primary">
@@ -75,6 +91,10 @@
     $('#customer_group_modal input[name="default_profit_margin"]').val('');
     $('#customer_group_modal input[name="override_allowed"]').prop('checked', false);
     $('#customer_group_modal input[name="quantity_discount_allowed"]').prop('checked', false);
+    $('#customer_group_modal input[name="offer_discount_allowed"]').prop('checked', false);
+
+    $('#customer_group_modal input[name="special_discount_allowed"]').prop('checked', false);
+
      $('#customer_group_modal input[name="additional_discount_allowed"]').prop('checked', false);
 
     if (typeof group_id !== 'undefined') {
@@ -87,6 +107,8 @@
         $('#customer_group_modal input[name="default_profit_margin"]').val(invoker.data('margin'));
         $('#customer_group_modal input[name="override_allowed"]').prop('checked', invoker.data('override') == 1);
         $('#customer_group_modal input[name="quantity_discount_allowed"]').prop('checked', invoker.data('quantity_discount_allowed') == 1);
+             $('#customer_group_modal input[name="special_discount_allowed"]').prop('checked', invoker.data('special_discount_allowed') == 1);
+                  $('#customer_group_modal input[name="offer_discount_allowed"]').prop('checked', invoker.data('offer_discount_allowed') == 1);
         $('#customer_group_modal input[name="additional_discount_allowed"]').prop('checked', invoker.data('additional_discount_allowed') == 1);
 
     }

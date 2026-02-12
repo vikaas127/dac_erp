@@ -19,6 +19,10 @@
     _l('default_profit_margin'),
     _l('allow_item_level_override'),
     _l('allow_quantity_discount'),
+        _l('allow_special_discount'),
+
+            _l('allow_offer_discount'),
+
     _l('allow_additional_discount'),
     _l('options'),
 ], 'customer-groups'); ?>
@@ -33,7 +37,7 @@
 <?php init_tail(); ?>
 <script>
 $(function() {
-    initDataTable('.table-customer-groups', window.location.href, [6], [6]);
+    initDataTable('.table-customer-groups', window.location.href, [8], [8]);
 });
 </script>
 </body>

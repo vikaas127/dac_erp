@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content">
@@ -71,6 +72,10 @@ jQuery(function($) {
                     updateSpecialDiscountOptions(data.group_id);
 
                     $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
+                    $('#special_discount_allowed').val(data.special_discount_allowed);
+
+                    $('#offer_discount_allowed').val(data.offer_discount_allowed);
+
                     $('#additional_discount_allowed').val(data.additional_discount_allowed);
 
                     const $additionalInput = $('#additional_discount_input');
@@ -83,6 +88,37 @@ jQuery(function($) {
                         $additionalInput.val(0).prop('readonly', true);
                         calculate_total();
                     }
+
+                    // =============================
+                    // SPECIAL DISCOUNT CONTROL
+                    // =============================
+                    const $specialDropdown = $('#special_discount_percent');
+
+                    if (data.special_discount_allowed == 1) {
+                        $specialDropdown.prop('disabled', false);
+                        $('#special_discount_area').removeClass('row-disabled');
+                    } else {
+                        $specialDropdown.val(0).prop('disabled', true);
+                        $('#special_discount_area').addClass('row-disabled');
+                    }
+
+
+                    // =============================
+                    // OFFER DISCOUNT CONTROL
+                    // =============================
+                    const $offerInput = $('#offer_discount_input');
+
+                    if (data.offer_discount_allowed == 1) {
+                        $offerInput.prop('readonly', false);
+                        $('#offer_discount_area').removeClass('row-disabled');
+                    } else {
+                        $offerInput.val(0).prop('readonly', true);
+                        $('#offer_discount_area').addClass('row-disabled');
+                    }
+
+                    // Always recalculate after applying restrictions
+                    calculate_total();
+
                 },
 
                 error: function() {
@@ -92,6 +128,17 @@ jQuery(function($) {
                     $('#customer_group_id').val(null);
                     $('#quantity_discount_allowed').val(0);
                     $('#additional_discount_allowed').val(0);
+                    $('#special_discount_percent').val(0).prop('disabled', true);
+                    $('#special_discount_area').addClass('row-disabled');
+
+                    // Disable offer
+                    $('#offer_discount_input').val(0).prop('readonly', true);
+                    $('#offer_discount_area').addClass('row-disabled');
+
+                    calculate_total();
+
+
+
                 }
             });
         }  else {
@@ -101,7 +148,19 @@ jQuery(function($) {
 
             $('#customer_group_id').val(null);
             $('#quantity_discount_allowed').val(0);
-            $('#additional_discount_allowed').val(0);
+
+            // Disable special discount
+            $('#special_discount_percent')
+                .val(0)
+                .prop('disabled', true);
+            $('#special_discount_area').addClass('row-disabled');
+
+            // Disable offer discount
+            $('#offer_discount_input')
+                .val(0)
+                .prop('readonly', true);
+            $('#offer_discount_area').addClass('row-disabled');
+
 
             $('#additional_discount_input')
                 .val(0)

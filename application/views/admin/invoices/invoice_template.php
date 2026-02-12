@@ -53,7 +53,10 @@
                         <p><strong>Group:</strong> <span id="customer_group_name">—</span></p>
                         <p><strong>Discount:</strong> <span id="customer_group_discount">0%</span></p>
                         <input type="hidden" id="customer_group_id" name="customer_group_id" value="">
+                                 <input type="hidden" id="special_discount_allowed" name="special_discount_allowed" value="">
+                                            <input type="hidden" id="offer_discount_allowed" name="offer_discount_allowed" value="">
                         <input type="hidden" id="quantity_discount_allowed" name="quantity_discount_allowed" value="">
+                             <input type="hidden" id="additional_discount_allowed"  value="" name="additional_discount_allowed">
                     </div>
                 </div>
                 <?php

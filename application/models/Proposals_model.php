@@ -121,6 +121,12 @@ class Proposals_model extends App_Model
         if (isset($data['quantity_discount_allowed'])) {
             unset($data['quantity_discount_allowed']);
         }
+                   if (isset($data['special_discount_allowed'])) {
+            unset($data['special_discount_allowed']);
+        }
+            if (isset($data['offer_discount_allowed'])) {
+            unset($data['offer_discount_allowed']);
+        }
          if (isset($data['additional_discount_allowed'])) {
             unset($data['additional_discount_allowed']);
         }
@@ -325,6 +331,12 @@ if (isset($data['discount_fixed'])) {
  if (isset($data['quantity_discount_allowed'])) {
      unset($data['quantity_discount_allowed']);
  }
+            if (isset($data['special_discount_allowed'])) {
+            unset($data['special_discount_allowed']);
+        }
+            if (isset($data['offer_discount_allowed'])) {
+            unset($data['offer_discount_allowed']);
+        }
   if (isset($data['additional_discount_allowed'])) {
      unset($data['additional_discount_allowed']);
  }
@@ -970,7 +982,7 @@ if (isset($data['discount_fixed'])) {
     {
         $data = new StdClass();
         if ($rel_type == 'customer') {
-            $this->db->select('c.*, g.name as group_name, g.default_discount, g.override_allowed, g.id as group_id, g.quantity_discount_allowed,g.additional_discount_allowed');
+            $this->db->select('c.*, g.name as group_name, g.default_discount, g.override_allowed, g.id as group_id, g.quantity_discount_allowed,g.special_discount_allowed,g.offer_discount_allowed,g.additional_discount_allowed');
             $this->db->from(db_prefix() . 'clients c');
             $this->db->join(db_prefix() . 'customer_groups cg', 'c.userid = cg.customer_id', 'left');
             $this->db->join(db_prefix() . 'customers_groups g', 'cg.groupid = g.id', 'left');
@@ -1013,6 +1025,10 @@ if (isset($data['discount_fixed'])) {
             $data->override_allowed          = $_data->override_allowed ?? 1;
             $data->group_id                  = $_data->group_id;
             $data->quantity_discount_allowed = $_data->quantity_discount_allowed ?: 0;
+            $data->special_discount_allowed = $_data->special_discount_allowed ?: 0;
+
+            $data->offer_discount_allowed = $_data->offer_discount_allowed ?: 0;
+
             $data->additional_discount_allowed = $_data->additional_discount_allowed ?: 0;
 
 
