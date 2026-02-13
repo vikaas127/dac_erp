@@ -1033,17 +1033,28 @@ if (isset($data['discount_fixed'])) {
 
 
 
-        } elseif ($rel_type = 'lead') {
-            $this->db->where('id', $rel_id);
-            $_data       = $this->db->get(db_prefix() . 'leads')->row();
-            $data->phone = $_data->phonenumber;
+        }  elseif ($rel_type == 'lead') {
 
+            $this->db->select('l.*, g.name as group_name, g.default_discount, 
+                g.override_allowed, g.id as group_id, 
+                g.quantity_discount_allowed,
+                g.special_discount_allowed,
+                g.offer_discount_allowed,
+                g.additional_discount_allowed');
+
+            $this->db->from(db_prefix() . 'leads l');
+            $this->db->join(db_prefix() . 'customers_groups g', 'l.groupid = g.id', 'left');
+            $this->db->where('l.id', $rel_id);
+
+            $_data = $this->db->get()->row();
+
+            $data->phone = $_data->phonenumber;
             $data->is_using_company = false;
 
             if (empty($_data->company)) {
                 $data->to = $_data->name;
             } else {
-                $data->to               = $_data->company;
+                $data->to = $_data->company;
                 $data->is_using_company = true;
             }
 
@@ -1054,7 +1065,18 @@ if (isset($data['discount_fixed'])) {
             $data->country = $_data->country;
             $data->state   = $_data->state;
             $data->city    = $_data->city;
+
+            // ===== GROUP DATA =====
+            $data->group_name                = $_data->group_name ?: 'No Group';
+            $data->default_discount          = $_data->default_discount ?: 0;
+            $data->override_allowed          = $_data->override_allowed ?? 1;
+            $data->group_id                  = $_data->group_id ?? 0;
+            $data->quantity_discount_allowed = $_data->quantity_discount_allowed ?: 0;
+            $data->special_discount_allowed  = $_data->special_discount_allowed ?: 0;
+            $data->offer_discount_allowed    = $_data->offer_discount_allowed ?: 0;
+            $data->additional_discount_allowed = $_data->additional_discount_allowed ?: 0;
         }
+
 
         return $data;
     }

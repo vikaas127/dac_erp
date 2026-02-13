@@ -319,6 +319,180 @@ var _rel_id = $('#rel_id'),
     data = {};
 var globalCustomerGroupDiscount = 0;
 
+// $(function () {
+
+//     <?php if (isset($proposal) && $proposal->rel_type === 'customer') { ?>
+//         init_proposal_project_select('select#project_id');
+//     <?php } ?>
+
+//     /* =============================
+//        ADDITIONAL DISCOUNT CONTROLLER
+//     ============================= */
+//     function applyAdditionalDiscountPermission(isAllowed) {
+//         const $input = $('#additional_discount_input');
+
+//         if (String(isAllowed) === '1') {
+//             $input.prop('readonly', false);
+//             $('#additional_discount_allowed').val(1);
+//         } else {
+//             $input.val(0).prop('readonly', true);
+//             $('#additional_discount_allowed').val(0);
+//         }
+
+//         calculate_total();
+//     }
+
+//     /* =============================
+//        REL TYPE CHANGE
+//     ============================= */
+//     $('body').on('change', '#rel_type', function () {
+
+//         if (_rel_type.val() !== 'customer') {
+
+//             _project_wrapper.addClass('hide');
+//             $('#customer_group_info').addClass('hide');
+
+//             $('#customer_group_name').text('-');
+//             $('#customer_group_discount').text('0%');
+//             globalCustomerGroupDiscount = 0;
+
+//             $('#customer_group_id').val('');
+//             $('#quantity_discount_allowed').val(0);
+//             $('#special_discount_allowed').val(0);
+//             $('#offer_discount_allowed').val(0);
+
+//             // Disable special
+//             $('#special_discount_percent')
+//                 .val(0)
+//                 .prop('disabled', true);
+//             $('#special_discount_area').addClass('row-disabled');
+
+//             // Disable offer
+//             $('#offer_discount_input')
+//                 .val(0)
+//                 .prop('readonly', true);
+//             $('#offer_discount_area').addClass('row-disabled');
+
+
+//             applyAdditionalDiscountPermission(0);
+
+            
+
+//             calculate_total();
+
+//         }
+//     });
+
+//     /* =============================
+//        REL ID CHANGE (SINGLE HANDLER)
+//     ============================= */
+//     $('body').on('change', '#rel_id', function () {
+
+//         if (_rel_type.val() !== 'customer' || !this.value) {
+//             applyAdditionalDiscountPermission(0);
+//             return;
+//         }
+
+//         /* ---- Project init ---- */
+//         var projectAjax = $('select#project_id');
+//         var cloned = projectAjax.html('').clone();
+//         projectAjax.selectpicker('destroy').remove();
+//         $('#project_ajax_search_wrapper').append(cloned);
+//         init_proposal_project_select(cloned);
+
+//         _project_wrapper.removeClass('hide');
+//         $('#customer_group_info').removeClass('hide');
+
+//         /* ---- Fetch customer data ---- */
+//         $.get(
+//             admin_url + 'proposals/get_relation_data_values/' + this.value + '/customer',
+//             function (response) {
+
+//                 $('#customer_group_name').text(response.group_name || '-');
+//                 $('#customer_group_discount').text((response.default_discount || 0) + '%');
+//                 globalCustomerGroupDiscount = parseFloat(response.default_discount) || 0;
+
+//                 $('#customer_group_id').val(response.group_id || '');
+//                 $('#quantity_discount_allowed').val(response.quantity_discount_allowed || 0);
+
+//                 updateSpecialDiscountOptions(response.group_id);
+
+//                 applyAdditionalDiscountPermission(response.additional_discount_allowed);
+            
+//                 // Store permissions
+//                 $('#special_discount_allowed').val(response.special_discount_allowed || 0);
+//                 $('#offer_discount_allowed').val(response.offer_discount_allowed || 0);
+
+//                 // ===== SPECIAL =====
+//                 const $specialDropdown = $('#special_discount_percent');
+
+//                 if (response.special_discount_allowed == 1) {
+//                     $specialDropdown.prop('disabled', false);
+//                     $('#special_discount_area').removeClass('row-disabled');
+//                 } else {
+//                     $specialDropdown.val(0).prop('disabled', true);
+//                     $('#special_discount_area').addClass('row-disabled');
+//                 }
+
+//                 // ===== OFFER =====
+//                 const $offerInput = $('#offer_discount_input');
+
+//                 if (response.offer_discount_allowed == 1) {
+//                     $offerInput.prop('readonly', false);
+//                     $('#offer_discount_area').removeClass('row-disabled');
+//                 } else {
+//                     $offerInput.val(0).prop('readonly', true);
+//                     $('#offer_discount_area').addClass('row-disabled');
+//                 }
+
+//                 calculate_total();
+
+
+//                             },
+//                             'json'
+//                         );
+//     });
+
+//     /* =============================
+//        INIT
+//     ============================= */
+//     init_currency();
+//     init_ajax_search('items', '#item_select.ajax-search', undefined, admin_url + 'items/search');
+//     validate_proposal_form();
+
+//     $('.rel_id_label').html(_rel_type.find('option:selected').text());
+
+//     _rel_type.on('change', function () {
+
+//         var clonedSelect = _rel_id.html('').clone();
+//         _rel_id.selectpicker('destroy').remove();
+//         _rel_id = clonedSelect;
+//         $('#rel_id_select').append(clonedSelect);
+
+//         proposal_rel_id_select();
+
+//         if ($(this).val() !== '') {
+//             _rel_id_wrapper.removeClass('hide');
+//         } else {
+//             _rel_id_wrapper.addClass('hide');
+//         }
+
+//         $('.rel_id_label').html(_rel_type.find('option:selected').text());
+//     });
+
+//     proposal_rel_id_select();
+
+//     <?php if (!isset($proposal) && $rel_id != '') { ?>
+//         _rel_id.trigger('change');
+//     <?php } ?>
+
+//     <?php if (isset($proposal) && $proposal->rel_type === 'customer' && $proposal->rel_id != '') { ?>
+//         $(document).ready(function () {
+//             $('#rel_id').trigger('change');
+//         });
+//     <?php } ?>
+
+// });
 $(function () {
 
     <?php if (isset($proposal) && $proposal->rel_type === 'customer') { ?>
@@ -347,68 +521,71 @@ $(function () {
     ============================= */
     $('body').on('change', '#rel_type', function () {
 
-        if (_rel_type.val() !== 'customer') {
+        var relType = $(this).val();
 
+        // Reset everything
+        $('#customer_group_info').addClass('hide');
+        $('#customer_group_name').text('-');
+        $('#customer_group_discount').text('0%');
+        globalCustomerGroupDiscount = 0;
+
+        $('#customer_group_id').val('');
+        $('#quantity_discount_allowed').val(0);
+        $('#special_discount_allowed').val(0);
+        $('#offer_discount_allowed').val(0);
+
+        $('#special_discount_percent').val(0).prop('disabled', true);
+        $('#special_discount_area').addClass('row-disabled');
+
+        $('#offer_discount_input').val(0).prop('readonly', true);
+        $('#offer_discount_area').addClass('row-disabled');
+
+        applyAdditionalDiscountPermission(0);
+
+        // Project only for customer
+        if (relType === 'customer') {
+            _project_wrapper.removeClass('hide');
+        } else {
             _project_wrapper.addClass('hide');
-            $('#customer_group_info').addClass('hide');
-
-            $('#customer_group_name').text('-');
-            $('#customer_group_discount').text('0%');
-            globalCustomerGroupDiscount = 0;
-
-            $('#customer_group_id').val('');
-            $('#quantity_discount_allowed').val(0);
-            $('#special_discount_allowed').val(0);
-            $('#offer_discount_allowed').val(0);
-
-            // Disable special
-            $('#special_discount_percent')
-                .val(0)
-                .prop('disabled', true);
-            $('#special_discount_area').addClass('row-disabled');
-
-            // Disable offer
-            $('#offer_discount_input')
-                .val(0)
-                .prop('readonly', true);
-            $('#offer_discount_area').addClass('row-disabled');
-
-
-            applyAdditionalDiscountPermission(0);
-
-            
-
-            calculate_total();
-
         }
+
+        calculate_total();
     });
 
     /* =============================
-       REL ID CHANGE (SINGLE HANDLER)
+       REL ID CHANGE
     ============================= */
     $('body').on('change', '#rel_id', function () {
 
-        if (_rel_type.val() !== 'customer' || !this.value) {
+        var relType = _rel_type.val();
+
+        if (!this.value || (relType !== 'customer' && relType !== 'lead')) {
             applyAdditionalDiscountPermission(0);
             return;
         }
 
-        /* ---- Project init ---- */
-        var projectAjax = $('select#project_id');
-        var cloned = projectAjax.html('').clone();
-        projectAjax.selectpicker('destroy').remove();
-        $('#project_ajax_search_wrapper').append(cloned);
-        init_proposal_project_select(cloned);
+        /* ---- Project init ONLY for customer ---- */
+        if (relType === 'customer') {
 
-        _project_wrapper.removeClass('hide');
+            var projectAjax = $('select#project_id');
+            var cloned = projectAjax.html('').clone();
+            projectAjax.selectpicker('destroy').remove();
+            $('#project_ajax_search_wrapper').append(cloned);
+            init_proposal_project_select(cloned);
+
+            _project_wrapper.removeClass('hide');
+        } else {
+            _project_wrapper.addClass('hide');
+        }
+
         $('#customer_group_info').removeClass('hide');
 
-        /* ---- Fetch customer data ---- */
+        /* ---- Fetch relation data ---- */
         $.get(
-            admin_url + 'proposals/get_relation_data_values/' + this.value + '/customer',
+            admin_url + 'proposals/get_relation_data_values/' + this.value + '/' + relType,
             function (response) {
 
-                $('#customer_group_name').text(response.group_name || '-');
+                $('#customer_group_name').text(response.group_name || 'No Group');
                 $('#customer_group_discount').text((response.default_discount || 0) + '%');
                 globalCustomerGroupDiscount = parseFloat(response.default_discount) || 0;
 
@@ -418,7 +595,7 @@ $(function () {
                 updateSpecialDiscountOptions(response.group_id);
 
                 applyAdditionalDiscountPermission(response.additional_discount_allowed);
-            
+
                 // Store permissions
                 $('#special_discount_allowed').val(response.special_discount_allowed || 0);
                 $('#offer_discount_allowed').val(response.offer_discount_allowed || 0);
@@ -446,11 +623,9 @@ $(function () {
                 }
 
                 calculate_total();
-
-
-                            },
-                            'json'
-                        );
+            },
+            'json'
+        );
     });
 
     /* =============================
@@ -486,7 +661,7 @@ $(function () {
         _rel_id.trigger('change');
     <?php } ?>
 
-    <?php if (isset($proposal) && $proposal->rel_type === 'customer' && $proposal->rel_id != '') { ?>
+    <?php if (isset($proposal) && $proposal->rel_id != '') { ?>
         $(document).ready(function () {
             $('#rel_id').trigger('change');
         });

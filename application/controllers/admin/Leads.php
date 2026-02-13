@@ -185,11 +185,14 @@ class Leads extends AdminController
             $data['total_attachments'] = $leadProfileBadges->getCount('attachments');
             $data['total_tasks']       = $leadProfileBadges->getCount('tasks');
             $data['total_proposals']   = $leadProfileBadges->getCount('proposals');
+            
         }
 
 
         $data['statuses'] = $this->leads_model->get_status();
         $data['sources']  = $this->leads_model->get_source();
+        $data['lead_groups']  = $this->client_groups_model->get_groups();
+
 
         $data = hooks()->apply_filters('lead_view_data', $data);
 
@@ -438,6 +441,20 @@ class Leads extends AdminController
             $data['is_primary'] = 1;
             $id                 = $this->clients_model->add($data, true);
             if ($id) {
+
+            // Get lead groupid
+            $this->db->where('id', $data['leadid']);
+            $lead = $this->db->get(db_prefix() . 'leads')->row();
+
+            if ($lead && !empty($lead->groupid)) {
+
+                // Insert into customer_groups table
+                $this->db->insert(db_prefix() . 'customer_groups', [
+                    'customer_id' => $id,
+                    'groupid'     => $lead->groupid
+                ]);
+            }
+
                 $primary_contact_id = get_primary_contact_user_id($id);
 
                 if (isset($notes)) {

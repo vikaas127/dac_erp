@@ -443,6 +443,19 @@
             
             </div>
             <div class="col-md-6">
+        <?php
+// Assume $lead->group_id contains selected group (if editing)
+$selected_group = isset($lead) ? $lead->groupid : '';
+
+echo render_select(
+    'groupid',          // field name
+    $lead_groups,        // options array
+    ['id', 'name'],      // value and label keys
+    'Lead Group',        // label
+    $selected_group      // selected value
+);
+?>
+
                 <?php $value = (isset($lead) ? $lead->address : ''); ?>
                 <?php echo render_textarea('address', 'lead_address', $value, ['rows' => 1, 'style' => 'height:36px;font-size:100%;']); ?>
                 <?php $value = (isset($lead) ? $lead->city : ''); ?>
