@@ -58,9 +58,9 @@ function render_custom_fields($belongs_to, $rel_id = false, $where = [], $items_
             if (!$items_add_edit_preview && !$items_applied) {
                 $fields_html .= '<div class="col-md-' . $field['bs_column'] . '">';
             } elseif ($items_add_edit_preview) {
-                $fields_html .= '<td class="custom_field" data-id="' . $field['id'] . '">';
+                $fields_html .= '<td class="custom_field td50" data-id="' . $field['id'] . '">';
             } elseif ($items_applied) {
-                $fields_html .= '<td class="custom_field">';
+                $fields_html .= '<td class="custom_field td50">';
             }
 
             if ($is_admin

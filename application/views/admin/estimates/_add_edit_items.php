@@ -3,6 +3,22 @@
     .d-done{
         display: none;
     }
+
+    @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+    .s_table .table.items tbody>tr>td:not(:first-child) {
+        display: inline-block;
+        width: 100%;
+    }
+   .s_table .table.items tbody > tr > td.td50 {
+    display: inline-block;
+    width: 49%;
+}
+table.items tr.main td {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+}
 </style>
 <div class="panel-body">
     <div class="row">
@@ -80,22 +96,24 @@
                 <input type="hidden" name="item_type" value="">
             </td>
             <td>
-                <textarea name="description" rows="4" class="form-control"
+                <textarea name="description" rows="2" class="form-control"
                     placeholder="<?php echo _l('item_description_placeholder'); ?>"></textarea>
             </td>
             <td>
-                <textarea name="long_description" rows="4" class="form-control"
+                <textarea name="long_description" rows="2" class="form-control"
                     placeholder="<?php echo _l('item_long_description_placeholder'); ?>"></textarea>
             </td>
+
             <?php echo render_custom_fields_items_table_add_edit_preview(); ?>
-            <td>
+            
+            <td class="td50">
                 <input type="number" name="quantity" min="0" value="1" class="form-control"
                     placeholder="<?php echo _l('item_quantity_placeholder'); ?>">
                 <input type="text" placeholder="<?php echo _l('unit'); ?>" data-toggle="tooltip"
                     data-title="e.q kg, lots, packs" name="unit"
                     class="form-control input-transparent text-right">
             </td>
-            <td>
+            <td class="td50">
                 <input type="number" name="rate" class="form-control"
                     placeholder="<?php echo _l('item_rate_placeholder'); ?>">
             </td>
@@ -105,7 +123,7 @@
                   <input type="number" name="item_original_discount_percent" class="form-control "
                     placeholder="<?php echo _l('item_original_discount_percent'); ?>" value="0" readonly>
             </td>
-            <td>
+            <td class="td50">
                 <input type="number" name="item_discount_percent" class="form-control"
                     placeholder="<?php echo _l('discount'); ?>" value="0" readonly>
 
@@ -119,7 +137,7 @@
                     placeholder="<?php echo _l('item_special_discount_percent'); ?>" value="0" readonly>
             </td>
 
-            <td>
+            <td class="">
                 <input type="number" name="item_price" class="form-control"
                     placeholder="<?php echo _l('item_price'); ?>" value="0" readonly>
             </td>
@@ -204,14 +222,14 @@
 
                  $table_row .= '<input type="hidden" class="order" name="' . $items_indicator . '[' . $i . '][order]">';
                  $table_row .= '</td>';
-                 $table_row .= '<td class="bold description"><textarea name="' . $items_indicator . '[' . $i . '][description]" class="form-control" rows="5">' . clear_textarea_breaks($item['description']) . '</textarea></td>';
-                 $table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="5">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';
+                 $table_row .= '<td class="bold description"><textarea name="' . $items_indicator . '[' . $i . '][description]" class="form-control" rows="2">' . clear_textarea_breaks($item['description']) . '</textarea></td>';
+                 $table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="2">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';
                  $table_row .= render_custom_fields_items_table_in($item, $items_indicator . '[' . $i . ']');
-                 $table_row .= '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="' . $items_indicator . '[' . $i . '][qty]" value="' . $item['qty'] . '" class="form-control">';
+                 $table_row .= '<td class="td50"><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="' . $items_indicator . '[' . $i . '][qty]" value="' . $item['qty'] . '" class="form-control">';
                  $unit_placeholder = !$item['unit'] ? _l('unit') : '';
                  $table_row .= '<input type="text" placeholder="' . $unit_placeholder . '" name="' . $items_indicator . '[' . $i . '][unit]" class="form-control input-transparent text-right" value="' . $item['unit'] . '">';
                  $table_row .= '</td>';
-                 $table_row .= '<td class="rate"><input type="number" data-toggle="tooltip" title="' . _l('numbers_not_formatted_while_editing') . '" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][rate]" value="' . $item['rate'] . '" class="form-control"></td>';
+                 $table_row .= '<td class="rate td50"><input type="number" data-toggle="tooltip" title="' . _l('numbers_not_formatted_while_editing') . '" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][rate]" value="' . $item['rate'] . '" class="form-control"></td>';
 
                 // Discount field per item ro
                 $table_row .= '<td class=" hide item_original_discount_percent">
@@ -222,7 +240,7 @@
                         placeholder="'._l('item_original_discount_percent').'" 
                         readonly
                     ></td>';
-                    $table_row .= '<td class="item_discount_percent">
+                    $table_row .= '<td class="item_discount_percent td50">
     <input type="number"
         name="' . $items_indicator . '[' . $i . '][item_discount_percent]"
         value="' . (float)$item['item_discount_percent'] . '"
