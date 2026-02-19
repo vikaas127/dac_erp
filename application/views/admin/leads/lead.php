@@ -338,9 +338,11 @@ if (isset($lead)) {
                     <?php echo form_close(); ?>
                     <div class="clearfix"></div>
                     <hr />
+
                     <?php
                      $len = count($notes);
                      $i   = 0;
+
                      foreach ($notes as $note) { ?>
                     <div class="media lead-note">
                         <a href="<?php echo admin_url('profile/' . $note['addedfrom']); ?>" target="_blank">
@@ -370,6 +372,12 @@ if (isset($lead)) {
                                     <span class="tw-text-sm tw-text-neutral-500">
                                         <?php echo e(_l('lead_note_date_added', _dt($note['dateadded']))); ?>
                                     </span>
+                                    <?php if (!empty($note['date_contacted'])) { ?>
+                                        <br>
+                                        <span class="tw-text-sm text-success">
+                                            <?php echo 'Date contacted: ' . _dt($note['date_contacted']); ?>
+                                        </span>
+                                    <?php } ?>
                                 </a>
 
                                 <div data-note-description="<?php echo e($note['id']); ?>" class="text-muted mtop10"><?php echo process_text_content_for_display($note['description']); ?></div>
