@@ -148,9 +148,9 @@ class Invoice_items extends AdminController
 
     public function get_discount_allowance($item_id)
 {
-    if (!has_permission('items', '', 'view')) {
-        access_denied('items');
-    }
+    // if (!has_permission('items', '', 'view')) {
+    //     access_denied('items');
+    // }
 
     $item = $this->db
         ->select('allow_special_discount, allow_offer_discount, allow_quantity_discount')
