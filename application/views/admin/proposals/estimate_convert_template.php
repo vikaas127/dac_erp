@@ -235,30 +235,28 @@ $(document).ready(function () {
         $('#shipping_country').val($('#billing_country').val()).change();
     }
 
-    // When checkbox is checked
     $('#same_as_billing').on('change', function () {
 
         if ($(this).is(':checked')) {
 
             copyBillingToShipping();
 
-            // Disable shipping fields
-            $('#shipping_details')
-                .find('input, textarea, select')
-                .not('#same_as_billing, #show_shipping_on_estimate')
-                .prop('readonly', true)
-                .prop('disabled', true);
+            // Make shipping fields readonly (NOT disabled)
+            $('#shipping_street, #shipping_city, #shipping_state, #shipping_zip')
+                .prop('readonly', true);
+
+            $('#shipping_country')
+                .prop('readonly', true); // for select, readonly works visually
 
         } else {
 
-            // Enable shipping fields
-            $('#shipping_details')
-                .find('input, textarea, select')
-                .not('#same_as_billing, #show_shipping_on_estimate')
-                .prop('readonly', false)
-                .prop('disabled', false);
-        }
+            // Enable editing again
+            $('#shipping_street, #shipping_city, #shipping_state, #shipping_zip')
+                .prop('readonly', false);
 
+            $('#shipping_country')
+                .prop('readonly', false);
+        }
     });
 
 });
