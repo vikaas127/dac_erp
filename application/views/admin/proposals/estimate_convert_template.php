@@ -224,3 +224,42 @@ $('body').on('change', '#clientid', function () {
 
 
 </script>
+<script>
+$(document).ready(function () {
+
+    function copyBillingToShipping() {
+        $('#shipping_street').val($('#billing_street').val());
+        $('#shipping_city').val($('#billing_city').val());
+        $('#shipping_state').val($('#billing_state').val());
+        $('#shipping_zip').val($('#billing_zip').val());
+        $('#shipping_country').val($('#billing_country').val()).change();
+    }
+
+    // When checkbox is checked
+    $('#same_as_billing').on('change', function () {
+
+        if ($(this).is(':checked')) {
+
+            copyBillingToShipping();
+
+            // Disable shipping fields
+            $('#shipping_details')
+                .find('input, textarea, select')
+                .not('#same_as_billing, #show_shipping_on_estimate')
+                .prop('readonly', true)
+                .prop('disabled', true);
+
+        } else {
+
+            // Enable shipping fields
+            $('#shipping_details')
+                .find('input, textarea, select')
+                .not('#same_as_billing, #show_shipping_on_estimate')
+                .prop('readonly', false)
+                .prop('disabled', false);
+        }
+
+    });
+
+});
+</script>

@@ -42,6 +42,12 @@
                                 <label for="show_shipping_on_estimate"><?php echo _l('show_shipping_on_estimate'); ?></label>
                             </div>
                         </div>
+                        <div class="form-group">
+    <div class="checkbox checkbox-primary checkbox-inline">
+        <input type="checkbox" id="same_as_billing">
+        <label for="same_as_billing">Same as Billing Address</label>
+    </div>
+</div>
                             <?php $value = (isset($estimate) ? $estimate->shipping_street : ''); ?>
                             <?php echo render_textarea('shipping_street', 'shipping_street', $value); ?>
                             <?php $value = (isset($estimate) ? $estimate->shipping_city : ''); ?>
