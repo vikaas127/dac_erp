@@ -53,126 +53,126 @@ $(function() {
 <script>
 let globalCustomerGroupDiscount = 0;
 
-jQuery(function($) {
+// jQuery(function($) {
 
-    // 1. Fetch customer group discount and store globally
-    $('#clientid').on('change', function() {
-        var customerId = $(this).val();
-        if (customerId) {
-            $.ajax({
-                url: admin_url + 'estimates/get_customer_group_info/' + customerId,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    $('#customer_group_name').text(data.group_name);
-                    $('#customer_group_discount').text(data.default_discount + '%');
-                    globalCustomerGroupDiscount = parseFloat(data.default_discount) || 0;
+//     // 1. Fetch customer group discount and store globally
+//     $('#clientid').on('change', function() {
+//         var customerId = $(this).val();
+//         if (customerId) {
+//             $.ajax({
+//                 url: admin_url + 'estimates/get_customer_group_info/' + customerId,
+//                 type: 'GET',
+//                 dataType: 'json',
+//                 success: function(data) {
+//                     $('#customer_group_name').text(data.group_name);
+//                     $('#customer_group_discount').text(data.default_discount + '%');
+//                     globalCustomerGroupDiscount = parseFloat(data.default_discount) || 0;
 
-                    $('#customer_group_id').val(data.group_id);
-                    updateSpecialDiscountOptions(data.group_id);
+//                     $('#customer_group_id').val(data.group_id);
+//                     updateSpecialDiscountOptions(data.group_id);
 
-                    $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
-                    $('#special_discount_allowed').val(data.special_discount_allowed);
+//                     $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
+//                     $('#special_discount_allowed').val(data.special_discount_allowed);
 
-                    $('#offer_discount_allowed').val(data.offer_discount_allowed);
+//                     $('#offer_discount_allowed').val(data.offer_discount_allowed);
 
-                    $('#additional_discount_allowed').val(data.additional_discount_allowed);
+//                     $('#additional_discount_allowed').val(data.additional_discount_allowed);
 
-                    const $additionalInput = $('#additional_discount_input');
+//                     const $additionalInput = $('#additional_discount_input');
 
-                    if (data.additional_discount_allowed == 1) {
-                        // ✅ allow editing
-                        $additionalInput.prop('readonly', false);
-                    } else {
-                        // ❌ not allowed → clear & lock
-                        $additionalInput.val(0).prop('readonly', true);
-                        calculate_total();
-                    }
+//                     if (data.additional_discount_allowed == 1) {
+//                         // ✅ allow editing
+//                         $additionalInput.prop('readonly', false);
+//                     } else {
+//                         // ❌ not allowed → clear & lock
+//                         $additionalInput.val(0).prop('readonly', true);
+//                         calculate_total();
+//                     }
 
-                    // =============================
-                    // SPECIAL DISCOUNT CONTROL
-                    // =============================
-                    const $specialDropdown = $('#special_discount_percent');
+//                     // =============================
+//                     // SPECIAL DISCOUNT CONTROL
+//                     // =============================
+//                     const $specialDropdown = $('#special_discount_percent');
 
-                    if (data.special_discount_allowed == 1) {
-                        $specialDropdown.prop('disabled', false);
-                        $('#special_discount_area').removeClass('row-disabled');
-                    } else {
-                        $specialDropdown.val(0).prop('disabled', true);
-                        $('#special_discount_area').addClass('row-disabled');
-                    }
-
-
-                    // =============================
-                    // OFFER DISCOUNT CONTROL
-                    // =============================
-                    const $offerInput = $('#offer_discount_input');
-
-                    if (data.offer_discount_allowed == 1) {
-                        $offerInput.prop('readonly', false);
-                        $('#offer_discount_area').removeClass('row-disabled');
-                    } else {
-                        $offerInput.val(0).prop('readonly', true);
-                        $('#offer_discount_area').addClass('row-disabled');
-                    }
-
-                    // Always recalculate after applying restrictions
-                    calculate_total();
-
-                },
-
-                error: function() {
-                    $('#customer_group_name').text('—');
-                    $('#customer_group_discount').text('0%');
-                    globalCustomerGroupDiscount = 0;
-                    $('#customer_group_id').val(null);
-                    $('#quantity_discount_allowed').val(0);
-                    $('#additional_discount_allowed').val(0);
-                    $('#special_discount_percent').val(0).prop('disabled', true);
-                    $('#special_discount_area').addClass('row-disabled');
-
-                    // Disable offer
-                    $('#offer_discount_input').val(0).prop('readonly', true);
-                    $('#offer_discount_area').addClass('row-disabled');
-
-                    calculate_total();
+//                     if (data.special_discount_allowed == 1) {
+//                         $specialDropdown.prop('disabled', false);
+//                         $('#special_discount_area').removeClass('row-disabled');
+//                     } else {
+//                         $specialDropdown.val(0).prop('disabled', true);
+//                         $('#special_discount_area').addClass('row-disabled');
+//                     }
 
 
+//                     // =============================
+//                     // OFFER DISCOUNT CONTROL
+//                     // =============================
+//                     const $offerInput = $('#offer_discount_input');
 
-                }
-            });
-        }  else {
-            $('#customer_group_name').text('—');
-            $('#customer_group_discount').text('0%');
-            globalCustomerGroupDiscount = 0;
+//                     if (data.offer_discount_allowed == 1) {
+//                         $offerInput.prop('readonly', false);
+//                         $('#offer_discount_area').removeClass('row-disabled');
+//                     } else {
+//                         $offerInput.val(0).prop('readonly', true);
+//                         $('#offer_discount_area').addClass('row-disabled');
+//                     }
 
-            $('#customer_group_id').val(null);
-            $('#quantity_discount_allowed').val(0);
+//                     // Always recalculate after applying restrictions
+//                     calculate_total();
 
-            // Disable special discount
-            $('#special_discount_percent')
-                .val(0)
-                .prop('disabled', true);
-            $('#special_discount_area').addClass('row-disabled');
+//                 },
 
-            // Disable offer discount
-            $('#offer_discount_input')
-                .val(0)
-                .prop('readonly', true);
-            $('#offer_discount_area').addClass('row-disabled');
+//                 error: function() {
+//                     $('#customer_group_name').text('—');
+//                     $('#customer_group_discount').text('0%');
+//                     globalCustomerGroupDiscount = 0;
+//                     $('#customer_group_id').val(null);
+//                     $('#quantity_discount_allowed').val(0);
+//                     $('#additional_discount_allowed').val(0);
+//                     $('#special_discount_percent').val(0).prop('disabled', true);
+//                     $('#special_discount_area').addClass('row-disabled');
+
+//                     // Disable offer
+//                     $('#offer_discount_input').val(0).prop('readonly', true);
+//                     $('#offer_discount_area').addClass('row-disabled');
+
+//                     calculate_total();
 
 
-            $('#additional_discount_input')
-                .val(0)
-                .prop('readonly', true);
 
-            calculate_total();
-        }
+//                 }
+//             });
+//         }  else {
+//             $('#customer_group_name').text('—');
+//             $('#customer_group_discount').text('0%');
+//             globalCustomerGroupDiscount = 0;
 
-    });
-    // Trigger customer group fetch on load
-    $('#clientid').trigger('change');
-    });
+//             $('#customer_group_id').val(null);
+//             $('#quantity_discount_allowed').val(0);
+
+//             // Disable special discount
+//             $('#special_discount_percent')
+//                 .val(0)
+//                 .prop('disabled', true);
+//             $('#special_discount_area').addClass('row-disabled');
+
+//             // Disable offer discount
+//             $('#offer_discount_input')
+//                 .val(0)
+//                 .prop('readonly', true);
+//             $('#offer_discount_area').addClass('row-disabled');
+
+
+//             $('#additional_discount_input')
+//                 .val(0)
+//                 .prop('readonly', true);
+
+//             calculate_total();
+//         }
+
+//     });
+//     // Trigger customer group fetch on load
+//     $('#clientid').trigger('change');
+//     });
 function updateSpecialDiscountOptions(groupId) {
     const $dropdown = $('#special_discount_percent');
     const selected = parseInt($dropdown.val()) || '';
@@ -204,9 +204,72 @@ function updateSpecialDiscountOptions(groupId) {
     }
 }
 
+function loadCustomerGroupData(customerId) {
+    if (!customerId) return;
 
+    $.ajax({
+        url: admin_url + 'estimates/get_customer_group_info/' + customerId,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
 
+            $('#customer_group_name').text(data.group_name);
+            $('#customer_group_discount').text(data.default_discount + '%');
+            globalCustomerGroupDiscount = parseFloat(data.default_discount) || 0;
 
+            $('#customer_group_id').val(data.group_id);
+            updateSpecialDiscountOptions(data.group_id);
+
+            $('#quantity_discount_allowed').val(data.quantity_discount_allowed);
+            $('#special_discount_allowed').val(data.special_discount_allowed);
+            $('#offer_discount_allowed').val(data.offer_discount_allowed);
+            $('#additional_discount_allowed').val(data.additional_discount_allowed);
+
+            const $additionalInput = $('#additional_discount_input');
+
+            if (data.additional_discount_allowed == 1) {
+                $additionalInput.prop('readonly', false);
+            } else {
+                $additionalInput.val(0).prop('readonly', true);
+            }
+
+            // Special discount
+            const $specialDropdown = $('#special_discount_percent');
+            if (data.special_discount_allowed == 1) {
+                $specialDropdown.prop('disabled', false);
+                $('#special_discount_area').removeClass('row-disabled');
+            } else {
+                $specialDropdown.val(0).prop('disabled', true);
+                $('#special_discount_area').addClass('row-disabled');
+            }
+
+            // Offer discount
+            const $offerInput = $('#offer_discount_input');
+            if (data.offer_discount_allowed == 1) {
+                $offerInput.prop('readonly', false);
+                $('#offer_discount_area').removeClass('row-disabled');
+            } else {
+                $offerInput.val(0).prop('readonly', true);
+                $('#offer_discount_area').addClass('row-disabled');
+            }
+
+            calculate_total();
+        }
+    });
+}
+$(document).ready(function () {
+
+    var customerId = $('#clientid').val();
+
+    if (customerId) {
+        //  THIS loads discount WITHOUT clearing billing/shipping
+        loadCustomerGroupData(customerId);
+    }
+
+});
+$('#clientid').on('change', function() {
+    loadCustomerGroupData($(this).val());
+});
 // function calculate_total() {
 //     if ($("body").hasClass("no-calculate-total")) {
 //         return !1
