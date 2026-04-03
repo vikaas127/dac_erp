@@ -160,6 +160,32 @@ public function get_customer_group_info($customer_id)
         }
     }
 
+    // Mark as delivered
+public function mark_as_delivered($id)
+{
+    $this->db->where('id', $id);
+    $this->db->update(db_prefix().'estimates', [
+        'delivered' => 1,
+        'delivered_on' => date('Y-m-d H:i:s')
+    ]);
+
+    redirect(admin_url('estimates/list_estimates'));
+}
+
+// Update delivered date
+public function update_delivered_date()
+{
+    $id = $this->input->post('id');
+    $delivered_on = $this->input->post('delivered_on');
+
+    $this->db->where('id', $id);
+    $this->db->update(db_prefix().'estimates', [
+        'delivered_on' => $delivered_on
+    ]);
+
+    echo json_encode(['success' => true]);
+}
+
     public function table($clientid = '')
     {
         if (staff_cant('view', 'estimates') && staff_cant('view_own', 'estimates') && get_option('allow_staff_view_estimates_assigned') == '0') {

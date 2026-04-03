@@ -1160,6 +1160,9 @@ function apply_discounts($rel_type, $rel_id, $subtotal)
         if ($action == 1) {
             $data['sent'] = 0;
         }
+        if ($action == 4) {
+            $data['acceptance_date'] = date('Y-m-d H:i:s');
+        }
 
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'estimates', $data);

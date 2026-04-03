@@ -23,6 +23,8 @@ return App_table::find('estimates')
             'expirydate',
             'reference_no',
             db_prefix() . 'estimates.status',
+            db_prefix() . 'estimates.delivered',
+            db_prefix() . 'estimates.delivered_on',
         ];
 
         $join = [
@@ -165,6 +167,12 @@ if (!empty($filter_customer)) {
             $row[] = e($aRow['reference_no']);
 
             $row[] = format_estimate_status($aRow[db_prefix() . 'estimates.status']);
+            $row[] = $aRow[db_prefix() . 'estimates.delivered'] == 1
+                ? '<span class="label label-success">Yes</span>'
+                : '<span class="label label-default">No</span>';
+            $row[] = !empty($aRow[db_prefix() . 'estimates.delivered_on']) 
+                ? date('d-m-Y', strtotime($aRow[db_prefix() . 'estimates.delivered_on'])) 
+                : '-';
 
             // Custom fields add values
             foreach ($customFieldsColumns as $customFieldColumn) {

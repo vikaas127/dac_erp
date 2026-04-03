@@ -35,7 +35,12 @@ $lang['go_back']              = 'Go Back';
 $lang['error_uploading_file'] = 'Error uploading file';
 $lang['load_more']            = 'Load More';
 $lang['cant_delete_default']  = 'Cant delete default %s';
-
+$lang['mark_as_delivered'] = 'Mark as Delivered';
+$lang['delivered_on'] = 'Delivered On';
+$lang['acceptance_date'] = 'Accepted On';
+$lang['edit_delivered_date'] = 'Edit Delivered Date';
+$lang['estimate_dt_table_heading_delivered']    = 'Delivered';
+$lang['estimate_dt_table_heading_delivered_on'] = 'Delivered On';
 # Invoice General
 $lang['invoice_status_paid']                   = 'Paid';
 $lang['invoice_status_unpaid']                 = 'Unpaid';

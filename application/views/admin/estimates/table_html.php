@@ -19,7 +19,10 @@ $table_data = array(
    _l('estimate_dt_table_heading_date'),
    _l('estimate_dt_table_heading_expirydate'),
    _l('reference_no'),
-   _l('estimate_dt_table_heading_status'));
+   _l('estimate_dt_table_heading_status'),
+   _l('estimate_dt_table_heading_delivered'),
+   _l('estimate_dt_table_heading_delivered_on')
+);
 
 $custom_fields = get_custom_fields('estimate',array('show_on_table'=>1));
 

@@ -90,10 +90,37 @@
                 </div>
             </div>
             <div class="row mtop20">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <?php echo format_estimate_status($estimate->status, 'mtop5 inline-block'); ?>
+                    <?php if ($estimate->status == 4 ) { ?>
+    <div class="mtop10">
+        <strong><?php echo _l('acceptance_date'); ?>:</strong>
+        <span id="acceptance_date_text">
+<?php echo !empty($estimate->acceptance_date) 
+    ? date('d-m-Y', strtotime($estimate->acceptance_date)) 
+    : '-'; ?>        </span>
+
+     
+    </div>
+<?php } ?>
+                                    <?php if ($estimate->status == 4 && $estimate->delivered == 1) { ?>
+    <div class="mtop10">
+        <strong><?php echo _l('delivered_on'); ?>:</strong>
+        <span id="delivered_date_text">
+            <?php echo !empty($estimate->delivered_on) 
+                ? date('d-m-Y', strtotime($estimate->delivered_on)) 
+                : '-'; ?>   
+                     </span>
+
+        <!-- Edit Icon -->
+        <a href="javascript:void(0);" onclick="openDeliveredModal(<?php echo $estimate->id; ?>)">
+            <i class="fa fa-edit"></i>
+        </a>
+    </div>
+<?php } ?>
                 </div>
-                <div class="col-md-9">
+
+                <div class="col-md-8">
                     <div class="visible-xs">
                         <div class="mtop10"></div>
                     </div>
@@ -206,7 +233,14 @@
                                         <?php echo e(_l('estimate_mark_as', format_estimate_status($status, '', false))); ?></a>
                                 </li>
                                 <?php }
-                             } ?>
+                             }
+                                     if ($estimate->status == 4 && !$estimate->delivered) { ?>
+            <li>
+                <a href="<?php echo admin_url('estimates/mark_as_delivered/' . $estimate->id); ?>">
+                    <?php echo _l('mark_as_delivered'); ?>
+                </a>
+            </li>
+        <?php } ?>
                                 <?php } ?>
                                 <?php } ?>
                                 <?php if (staff_can('create', 'estimates')) { ?>
@@ -709,6 +743,25 @@ if ((int)$estimate->offer_discount_percent != 0) {
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="deliveredModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5><?php echo _l('edit_delivered_date'); ?></h5>
+            </div>
+            <div class="modal-body">
+                <input type="datetime-local" id="delivered_on_input" class="form-control">
+                <input type="hidden" id="estimate_id">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveDeliveredDate()">
+                    <?php echo _l('save'); ?>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
 init_items_sortable(true);
 init_btn_with_tooltips();
@@ -722,3 +775,27 @@ schedule_estimate_send(<?php echo e($estimate->id); ?>);
 </script>
 <?php $this->load->view('admin/estimates/estimate_send_to_client'); ?>
 <?php $this->load->view('admin/estimates/estimate_revise_history'); ?>
+
+<script>
+    function openDeliveredModal(id) {
+    $('#estimate_id').val(id);
+
+    // set current date by default
+    let now = new Date().toISOString().slice(0,16);
+    $('#delivered_on_input').val(now);
+
+    $('#deliveredModal').modal('show');
+}
+
+function saveDeliveredDate() {
+    let id = $('#estimate_id').val();
+    let delivered_on = $('#delivered_on_input').val();
+
+    $.post(admin_url + 'estimates/update_delivered_date', {
+        id: id,
+        delivered_on: delivered_on
+    }).done(function(response) {
+        location.reload();
+    });
+}
+</script>
