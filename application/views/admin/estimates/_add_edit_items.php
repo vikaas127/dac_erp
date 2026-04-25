@@ -18,39 +18,111 @@ table.items tr.main td {
     padding-bottom: 15px;
 }
 
-
-.responsive-wrapper {
-    display: flex;
-    flex-direction: column;
 }
-
-/* Default order */
-.responsive-wrapper .row {
-    order: 1;
-}
-
-.responsive-wrapper .s_table {
-    order: 2;
-}
-
-/* When screen < 600px */
-@media (max-width: 600px) {
-    .responsive-wrapper .row {
-        order: 2;
+@media only screen and (max-width: 760px) {
+    .item-select-wrapper {
+        display: none;
     }
-
-    .responsive-wrapper .s_table {
-        order: 1;
+    .add-new-item-btn{
+        display: none !important;
     }
 }
+@media only screen and (max-width: 760px) {
+    .table.items tbody tr.item {
+        position: relative;
+    }
+}
+/* default (desktop) */
+.mobile-cross {
+    display: none;
+}
 
+/* mobile only */
+@media only screen and (max-width: 760px) {
+
+    /* anchor row */
+    .table.items tbody tr.item {
+        position: relative;
+    }
+    .original-delete{
+        display: none !important;
+    }
+
+    /* stop last-child rule affecting cross */
+    .s_table td.delete-cell a.mobile-cross {
+        display: flex !important;
+        width: 20px !important;
+        margin: 0 !important;
+    }
+       .s_table td.delete-cell a.mobile-cross i{
+        font-size: 30px !important;
+       }
+
+    .s_table td.delete-cell a.mobile-cross i.fa-times:before{
+        
+        color:red;
+
+    }
+
+    /* remove spacing from delete cell */
+    .s_table td.delete-cell {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* OPTIONAL: hide the td completely from layout */
+    .s_table td.delete-cell {
+        position: static;
+        height: 0;
+    }
+
+    /* floating cross */
+    .mobile-cross {
+        position: absolute !important;
+        top: -10px;
+        right: 6px;
+        z-index: 9999;
+    }
+}
+
+@media only screen and (max-width: 760px) {
+
+    /* make rows look like cards */
+    .table.items tbody tr.item {
+        display: block;
+        margin-top:15px;
+        margin-bottom: 15px;          /* gap between rows */
+        border: 1px solid #333;      /* dark border */
+        border-radius: 8px;
+        padding: 10px;
+        background: #fff;
+    }
+
+    /* preview row (optional same style) */
+    .table.items tbody tr.main {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border: 1px dashed #999;
+        border-radius: 8px;
+        padding: 10px;
+        background: #fafafa;
+    }
+
+    /* remove default table borders */
+    .table.items tbody tr td {
+        border: none !important;
+    }
+    .s_table.table-responsive
+    {
+        background: none !important;
+        border: none !important;
+    }
 }
 </style>
 <div class="panel-body">
-    <div class="responsive-wrapper">
-    
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 item-select-wrapper">
             <?php $this->load->view('admin/invoice_items/item_select'); ?>
         </div>
         <div class="col-md-8 text-right show_quantity_as_wrapper">
@@ -79,221 +151,240 @@ table.items tr.main td {
             </div>
         </div>
     </div>
-        <div class="table-responsive s_table">
-                <table class="table estimate-items-table items table-main-estimate-edit has-calculations no-mtop">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th width="15%" align="left">
-                                <i class="fa-solid fa-circle-exclamation tw-mr-1" aria-hidden="true"
-                                data-toggle="tooltip"
-                                data-title="<?php echo _l('item_description_new_lines_notice'); ?>"></i>
-                                <?php echo _l('estimate_table_item_heading'); ?>
-                            </th>
-                            <th width="20%" align="left"><?php echo _l('estimate_table_item_description'); ?></th>
-                            <?php
-                            $custom_fields = get_custom_fields('items');
-                            foreach ($custom_fields as $cf) {
-                                echo '<th width="10%" align="left" class="custom_field">' . $cf['name'] . '</th>';
+    <div id="itemSelectModal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h4 class="modal-title">Select Item</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <?php $this->load->view('admin/invoice_items/item_select'); ?>
+      </div>
+
+    </div>
+  </div>
+</div>
+    <div class="table-responsive s_table">
+        <table class="table estimate-items-table items table-main-estimate-edit has-calculations no-mtop">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th width="15%" align="left">
+                        <i class="fa-solid fa-circle-exclamation tw-mr-1" aria-hidden="true"
+                        data-toggle="tooltip"
+                        data-title="<?php echo _l('item_description_new_lines_notice'); ?>"></i>
+                        <?php echo _l('estimate_table_item_heading'); ?>
+                    </th>
+                    <th width="20%" align="left"><?php echo _l('estimate_table_item_description'); ?></th>
+                    <?php
+                    $custom_fields = get_custom_fields('items');
+                    foreach ($custom_fields as $cf) {
+                        echo '<th width="10%" align="left" class="custom_field">' . $cf['name'] . '</th>';
+                    }
+
+                    $qty_heading = _l('estimate_table_quantity_heading');
+                    if (isset($estimate) && $estimate->show_quantity_as == 2) {
+                        $qty_heading = _l('estimate_table_hours_heading');
+                    } elseif (isset($estimate) && $estimate->show_quantity_as == 3) {
+                        $qty_heading = _l('estimate_table_quantity_heading') . '/' . _l('estimate_table_hours_heading');
+                    }
+                    ?>
+                    <th width="10%" class="qty" align="right"><?php echo $qty_heading; ?></th>
+                    <th width="15%" align="right"><?php echo _l('estimate_table_rate_heading'); ?></th>
+
+                    <!-- New Discount column -->
+                    <th class="hide" align="right"><?php echo _l('original_discount'); ?></th>
+
+                    <th width="10%" align="right"><?php echo _l('discount'); ?></th>
+
+                    <th width="15%" align="right"><?php echo _l('estimate_table_price_heading'); ?></th>
+                    <th width="10%" align="right"><?php echo _l('estimate_table_amount_heading'); ?></th>
+                    <th align="center"><i class="fa fa-cog"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="main">
+                    <td>
+                        <input type="hidden" name="item_id" value="">
+                        <input type="hidden" name="item_type" value="">
+                    </td>
+                    <td>
+                        <textarea name="description" rows="2" class="form-control  item-description-click"
+                            placeholder="<?php echo _l('item_description_placeholder'); ?>"></textarea>
+                    </td>
+                    <td>
+                        <textarea name="long_description" rows="2" class="form-control"
+                            placeholder="<?php echo _l('item_long_description_placeholder'); ?>"></textarea>
+                    </td>
+
+                    <?php echo render_custom_fields_items_table_add_edit_preview(); ?>
+                    
+                    <td class="td50">
+                        <input type="number" name="quantity" min="0" value="1" class="form-control"
+                            placeholder="<?php echo _l('item_quantity_placeholder'); ?>">
+                        <input type="text" placeholder="<?php echo _l('unit'); ?>" data-toggle="tooltip"
+                            data-title="e.q kg, lots, packs" name="unit"
+                            class="form-control input-transparent text-right">
+                    </td>
+                    <td class="td50">
+                        <input type="number" name="rate" class="form-control"
+                            placeholder="<?php echo _l('item_rate_placeholder'); ?>">
+                    </td>
+
+                    <!-- discount input -->
+                    <td class="hide">
+                        <input type="number" name="item_original_discount_percent" class="form-control "
+                            placeholder="<?php echo _l('item_original_discount_percent'); ?>" value="0" readonly>
+                    </td>
+                    <td class="td50">
+                        <input type="number" name="item_discount_percent" class="form-control"
+                            placeholder="<?php echo _l('discount'); ?>" value="0" readonly>
+
+                        <input class="hidden" type="number" name="item_basic_discount_percent" class="form-control"
+                            placeholder="<?php echo _l('item_basic_discount_percent'); ?>" value="0" readonly>
+                        <input class="hidden" type="number" name="item_quantity_discount_percent" class="form-control"
+                            placeholder="<?php echo _l('item_quantity_discount_percent'); ?>" value="0" readonly>
+                        <input class="hidden" type="number" name="item_offer_discount_percent" class="form-control"
+                            placeholder="<?php echo _l('item_offer_discount_percent'); ?>" value="0" readonly>
+                        <input class="hidden" type="number" name="item_special_discount_percent" class="form-control"
+                            placeholder="<?php echo _l('item_special_discount_percent'); ?>" value="0" readonly>
+                    </td>
+
+                    <td class="">
+                        <input type="number" name="item_price" class="form-control"
+                            placeholder="<?php echo _l('item_price'); ?>" value="0" readonly>
+                    </td>
+
+                    <td class="hidden">
+                        <?php
+                        $default_tax = unserialize(get_option('default_tax'));
+                        $select      = '<select class="selectpicker display-block tax main-tax" data-width="100%" name="taxname" multiple data-none-selected-text="' . _l('no_tax') . '">';
+                        foreach ($taxes as $tax) {
+                            $selected = '';
+                            if (is_array($default_tax)) {
+                                if (in_array($tax['name'] . '|' . $tax['taxrate'], $default_tax)) {
+                                    $selected = ' selected ';
+                                }
                             }
+                            $select .= '<option value="' . $tax['name'] . '|' . $tax['taxrate'] . '"' . $selected . 'data-taxrate="' . $tax['taxrate'] . '" data-taxname="' . $tax['name'] . '" data-subtext="' . $tax['name'] . '">' . $tax['taxrate'] . '%</option>';
+                        }
+                        $select .= '</select>';
+                        echo $select;
+                        ?>
+                    </td>
+                    <td></td>
+                    <td class="add-new-item-btn">
+                        <?php
+                        $new_item = 'undefined';
+                        if (isset($estimate)) {
+                            $new_item = true;
+                        }
+                        ?>
+                        <button type="button"
+                            onclick="add_item_to_table('undefined','undefined',<?php echo $new_item; ?>); return false;"
+                            class="btn pull-right btn-primary"><i class="fa fa-check"></i></button>
+                    </td>
+                </tr>
 
-                            $qty_heading = _l('estimate_table_quantity_heading');
-                            if (isset($estimate) && $estimate->show_quantity_as == 2) {
-                                $qty_heading = _l('estimate_table_hours_heading');
-                            } elseif (isset($estimate) && $estimate->show_quantity_as == 3) {
-                                $qty_heading = _l('estimate_table_quantity_heading') . '/' . _l('estimate_table_hours_heading');
-                            }
-                            ?>
-                            <th width="10%" class="qty" align="right"><?php echo $qty_heading; ?></th>
-                            <th width="15%" align="right"><?php echo _l('estimate_table_rate_heading'); ?></th>
+                <?php if (isset($estimate) || isset($invoice) || isset($add_items)) {
 
-                            <!-- New Discount column -->
-                            <th class="hide" align="right"><?php echo _l('original_discount'); ?></th>
+                    $i               = 1;
+                    $items_indicator = 'newitems';
+                    if (isset($estimate)) {
+                        $add_items       = $estimate->items;
+                        $items_indicator = 'items';
+                    }
 
-                            <th width="10%" align="right"><?php echo _l('discount'); ?></th>
+                    if (isset($invoice)) {
+                        $add_items       = $invoice->items;
+                        $items_indicator = 'items';
+                    }
 
-                            <th width="15%" align="right"><?php echo _l('estimate_table_price_heading'); ?></th>
-                            <th width="10%" align="right"><?php echo _l('estimate_table_amount_heading'); ?></th>
-                            <th align="center"><i class="fa fa-cog"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="main">
-                            <td>
-                                <input type="hidden" name="item_id" value="">
-                                <input type="hidden" name="item_type" value="">
-                            </td>
-                            <td>
-                                <textarea name="description" rows="2" class="form-control"
-                                    placeholder="<?php echo _l('item_description_placeholder'); ?>"></textarea>
-                            </td>
-                            <td>
-                                <textarea name="long_description" rows="2" class="form-control"
-                                    placeholder="<?php echo _l('item_long_description_placeholder'); ?>"></textarea>
-                            </td>
+                    foreach ($add_items as $item) {
 
-                            <?php echo render_custom_fields_items_table_add_edit_preview(); ?>
-                            
-                            <td class="td50">
-                                <input type="number" name="quantity" min="0" value="1" class="form-control"
-                                    placeholder="<?php echo _l('item_quantity_placeholder'); ?>">
-                                <input type="text" placeholder="<?php echo _l('unit'); ?>" data-toggle="tooltip"
-                                    data-title="e.q kg, lots, packs" name="unit"
-                                    class="form-control input-transparent text-right">
-                            </td>
-                            <td class="td50">
-                                <input type="number" name="rate" class="form-control"
-                                    placeholder="<?php echo _l('item_rate_placeholder'); ?>">
-                            </td>
+                        $item_discount_variable = json_decode($item['item_discount_variable']);
+                        $manual    = false;
+                        $table_row = '<tr class="sortable item">';
+                        $table_row .= '<td class="dragger">';
+                        if ($item['qty'] == '' || $item['qty'] == 0) {
+                            $item['qty'] = 1;
+                        }
+                        if (!isset($is_proposal)) {
+                            $estimate_item_taxes = get_estimate_item_taxes($item['id']);
+                        } else {
+                            $estimate_item_taxes = get_proposal_item_taxes($item['id']);
+                        }
+                        if ($item['id'] == 0) {
+                            $estimate_item_taxes = $item['taxname'];
+                            $manual              = true;
+                        }
+                        $table_row .= form_hidden($items_indicator . '[' . $i . '][itemid]', $item['id']);
+                        $table_row .= form_hidden($items_indicator . '[' . $i . '][item_id]', $item['item_id']);
+                        $table_row .= form_hidden($items_indicator . '[' . $i . '][item_type]', $item['item_type']);
 
-                            <!-- discount input -->
-                            <td class="hide">
-                                <input type="number" name="item_original_discount_percent" class="form-control "
-                                    placeholder="<?php echo _l('item_original_discount_percent'); ?>" value="0" readonly>
-                            </td>
-                            <td class="td50">
-                                <input type="number" name="item_discount_percent" class="form-control"
-                                    placeholder="<?php echo _l('discount'); ?>" value="0" readonly>
+                        // amount BEFORE discount
+                        $amount = $item['rate'] * $item['qty'];
 
-                                <input class="hidden" type="number" name="item_basic_discount_percent" class="form-control"
-                                    placeholder="<?php echo _l('item_basic_discount_percent'); ?>" value="0" readonly>
-                                <input class="hidden" type="number" name="item_quantity_discount_percent" class="form-control"
-                                    placeholder="<?php echo _l('item_quantity_discount_percent'); ?>" value="0" readonly>
-                                <input class="hidden" type="number" name="item_offer_discount_percent" class="form-control"
-                                    placeholder="<?php echo _l('item_offer_discount_percent'); ?>" value="0" readonly>
-                                <input class="hidden" type="number" name="item_special_discount_percent" class="form-control"
-                                    placeholder="<?php echo _l('item_special_discount_percent'); ?>" value="0" readonly>
-                            </td>
+                        // subtract discount if set
+                        // if (isset($item['item_discount_percent']) && $item['item_discount_percent'] > 0) {
+                        //     $discount = ($amount * $item['item_discount_percent']) / 100;
+                        //     $amount -= $discount;
+                        // }
 
-                            <td class="">
-                                <input type="number" name="item_price" class="form-control"
-                                    placeholder="<?php echo _l('item_price'); ?>" value="0" readonly>
-                            </td>
+                        $amount = app_format_number($amount);
 
-                            <td class="hidden">
-                                <?php
-                                $default_tax = unserialize(get_option('default_tax'));
-                                $select      = '<select class="selectpicker display-block tax main-tax" data-width="100%" name="taxname" multiple data-none-selected-text="' . _l('no_tax') . '">';
-                                foreach ($taxes as $tax) {
-                                    $selected = '';
-                                    if (is_array($default_tax)) {
-                                        if (in_array($tax['name'] . '|' . $tax['taxrate'], $default_tax)) {
-                                            $selected = ' selected ';
-                                        }
-                                    }
-                                    $select .= '<option value="' . $tax['name'] . '|' . $tax['taxrate'] . '"' . $selected . 'data-taxrate="' . $tax['taxrate'] . '" data-taxname="' . $tax['name'] . '" data-subtext="' . $tax['name'] . '">' . $tax['taxrate'] . '%</option>';
-                                }
-                                $select .= '</select>';
-                                echo $select;
-                                ?>
-                            </td>
-                            <td></td>
-                            <td>
-                                <?php
-                                $new_item = 'undefined';
-                                if (isset($estimate)) {
-                                    $new_item = true;
-                                }
-                                ?>
-                                <button type="button"
-                                    onclick="add_item_to_table('undefined','undefined',<?php echo $new_item; ?>); return false;"
-                                    class="btn pull-right btn-primary"><i class="fa fa-check"></i></button>
-                            </td>
-                        </tr>
+                        $table_row .= '<input type="hidden" class="order" name="' . $items_indicator . '[' . $i . '][order]">';
+                        $table_row .= '</td>';
+                        $table_row .= '<td class="bold description"><textarea name="' . $items_indicator . '[' . $i . '][description]" class="form-control" rows="2">' . clear_textarea_breaks($item['description']) . '</textarea></td>';
+                        $table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="2">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';
+                        $table_row .= render_custom_fields_items_table_in($item, $items_indicator . '[' . $i . ']');
+                        $table_row .= '<td class="td50"><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="' . $items_indicator . '[' . $i . '][qty]" value="' . $item['qty'] . '" class="form-control">';
+                        $unit_placeholder = !$item['unit'] ? _l('unit') : '';
+                        $table_row .= '<input type="text" placeholder="' . $unit_placeholder . '" name="' . $items_indicator . '[' . $i . '][unit]" class="form-control input-transparent text-right" value="' . $item['unit'] . '">';
+                        $table_row .= '</td>';
+                        $table_row .= '<td class="rate td50"><input type="number" data-toggle="tooltip" title="' . _l('numbers_not_formatted_while_editing') . '" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][rate]" value="' . $item['rate'] . '" class="form-control"></td>';
 
-                        <?php if (isset($estimate) || isset($invoice) || isset($add_items)) {
-
-                            $i               = 1;
-                            $items_indicator = 'newitems';
-                            if (isset($estimate)) {
-                                $add_items       = $estimate->items;
-                                $items_indicator = 'items';
-                            }
-
-                            if (isset($invoice)) {
-                                $add_items       = $invoice->items;
-                                $items_indicator = 'items';
-                            }
-
-                            foreach ($add_items as $item) {
-
-                                $item_discount_variable = json_decode($item['item_discount_variable']);
-                                $manual    = false;
-                                $table_row = '<tr class="sortable item">';
-                                $table_row .= '<td class="dragger">';
-                                if ($item['qty'] == '' || $item['qty'] == 0) {
-                                    $item['qty'] = 1;
-                                }
-                                if (!isset($is_proposal)) {
-                                    $estimate_item_taxes = get_estimate_item_taxes($item['id']);
-                                } else {
-                                    $estimate_item_taxes = get_proposal_item_taxes($item['id']);
-                                }
-                                if ($item['id'] == 0) {
-                                    $estimate_item_taxes = $item['taxname'];
-                                    $manual              = true;
-                                }
-                                $table_row .= form_hidden($items_indicator . '[' . $i . '][itemid]', $item['id']);
-                                $table_row .= form_hidden($items_indicator . '[' . $i . '][item_id]', $item['item_id']);
-                                $table_row .= form_hidden($items_indicator . '[' . $i . '][item_type]', $item['item_type']);
-
-                                // amount BEFORE discount
-                                $amount = $item['rate'] * $item['qty'];
-
-                                // subtract discount if set
-                                // if (isset($item['item_discount_percent']) && $item['item_discount_percent'] > 0) {
-                                //     $discount = ($amount * $item['item_discount_percent']) / 100;
-                                //     $amount -= $discount;
-                                // }
-
-                                $amount = app_format_number($amount);
-
-                                $table_row .= '<input type="hidden" class="order" name="' . $items_indicator . '[' . $i . '][order]">';
-                                $table_row .= '</td>';
-                                $table_row .= '<td class="bold description"><textarea name="' . $items_indicator . '[' . $i . '][description]" class="form-control" rows="2">' . clear_textarea_breaks($item['description']) . '</textarea></td>';
-                                $table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="2">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';
-                                $table_row .= render_custom_fields_items_table_in($item, $items_indicator . '[' . $i . ']');
-                                $table_row .= '<td class="td50"><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="' . $items_indicator . '[' . $i . '][qty]" value="' . $item['qty'] . '" class="form-control">';
-                                $unit_placeholder = !$item['unit'] ? _l('unit') : '';
-                                $table_row .= '<input type="text" placeholder="' . $unit_placeholder . '" name="' . $items_indicator . '[' . $i . '][unit]" class="form-control input-transparent text-right" value="' . $item['unit'] . '">';
-                                $table_row .= '</td>';
-                                $table_row .= '<td class="rate td50"><input type="number" data-toggle="tooltip" title="' . _l('numbers_not_formatted_while_editing') . '" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][rate]" value="' . $item['rate'] . '" class="form-control"></td>';
-
-                                // Discount field per item ro
-                                $table_row .= '<td class=" hide item_original_discount_percent">
-                                    <input type="number" 
-                                        name="' . $items_indicator . '[' . $i . '][item_original_discount_percent]" 
-                                        value="' .  $item['item_original_discount_percent'] . '" 
-                                        class="form-control" 
-                                        placeholder="'._l('item_original_discount_percent').'" 
-                                        readonly
-                                    ></td>';
-                                    $table_row .= '<td class="item_discount_percent td50">
-                    <input type="number"
-                        name="' . $items_indicator . '[' . $i . '][item_discount_percent]"
-                        value="' . (float)$item['item_discount_percent'] . '"
-                        class="form-control"
-                        placeholder="' . _l('discount') . '"
-                        readonly>
-                </td>';
+                        // Discount field per item ro
+                        $table_row .= '<td class=" hide item_original_discount_percent">
+                            <input type="number" 
+                                name="' . $items_indicator . '[' . $i . '][item_original_discount_percent]" 
+                                value="' .  $item['item_original_discount_percent'] . '" 
+                                class="form-control" 
+                                placeholder="'._l('item_original_discount_percent').'" 
+                                readonly
+                            ></td>';
+                            $table_row .= '<td class="item_discount_percent td50">
+            <input type="number"
+                name="' . $items_indicator . '[' . $i . '][item_discount_percent]"
+                value="' . (float)$item['item_discount_percent'] . '"
+                class="form-control"
+                placeholder="' . _l('discount') . '"
+                readonly>
+        </td>';
 
 
 
-                    $table_row .= '<td class="item_price"><input type="number" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][item_price]" value="' . ($item['qty'] > 0 ? $amount / $item['qty'] : $amount) . '" class="form-control" readonly></td>';
+                        $table_row .= '<td class="item_price"><input type="number" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][item_price]" value="' . ($item['qty'] > 0 ? $amount / $item['qty'] : $amount) . '" class="form-control" readonly></td>';
 
-                    $table_row .= '<td class="taxrate hidden">' . $this->misc_model->get_taxes_dropdown_template($items_indicator . '[' . $i . '][taxname][]', $estimate_item_taxes, (isset($is_proposal) ? 'proposal' : 'estimate'), $item['id'], true, $manual) . '</td>';
-                    $table_row .= '<td class="amount" align="right">' . $amount . '</td>';
-                    $table_row .= '<td><a href="#" class="btn btn-danger pull-left" onclick="delete_item(this,' . $item['id'] . '); return false;"><i class="fa fa-times"></i></a></td>';
-                    $table_row .= '</tr>';
-                    echo $table_row;
-                    $i++;
+                        $table_row .= '<td class="taxrate hidden">' . $this->misc_model->get_taxes_dropdown_template($items_indicator . '[' . $i . '][taxname][]', $estimate_item_taxes, (isset($is_proposal) ? 'proposal' : 'estimate'), $item['id'], true, $manual) . '</td>';
+                        $table_row .= '<td class="amount" align="right">' . $amount . '</td>';
+                       $table_row .= '<td class="delete-cell">'
+                        . '<a href="#" class="btn btn-danger pull-left original-delete" onclick="delete_item(this,' . $item['id'] . '); return false;"><i class="fa fa-times"></i></a>'
+                        . '<a href="#" class="mobile-cross" onclick="delete_item(this,' . $item['id'] . '); return false;">'
+                        . '<i class="fa fa-times"></i></a>'
+                        . '</td>';
+                        $table_row .= '</tr>';
+                        echo $table_row;
+                        $i++;
+                    }
                 }
-            }
-            ?>
-                </tbody>
-            </table>
+                ?>
+            </tbody>
+        </table>
 
-        </div>
     </div>
     <div class="col-md-8 col-md-offset-4">
         <table class="table text-right">
