@@ -120,7 +120,7 @@ function render_custom_fields($belongs_to, $rel_id = false, $where = [], $items_
             if ($field['disalow_client_to_edit'] == 1 && is_client_logged_in()) {
                 $_input_attrs['disabled'] = true;
             }
-
+            $_input_attrs['placeholder'] =  $field['name'];
             $_input_attrs['data-fieldto'] = $field['fieldto'];
             $_input_attrs['data-fieldid'] = $field['id'];
 
