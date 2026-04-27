@@ -185,7 +185,7 @@ function multiple_taxes_found_for_item($taxes)
  */
 function ajax_on_total_items()
 {
-    return hooks()->apply_filters('ajax_on_total_items', 200);
+    return hooks()->apply_filters('ajax_on_total_items', 100000);
 }
 
 /**
