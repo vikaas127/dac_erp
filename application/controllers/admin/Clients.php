@@ -346,10 +346,24 @@ class Clients extends AdminController
                     }
                 }
                 $id      = $this->clients_model->add_contact($data, $customer_id);
-                $message = '';
+
                 $success = false;
-                if ($id) {
+                $message = '';
+
+            if ($id === 'duplicate_phone') {
+
+    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Phone number already exists.'
+    ]);
+
+    die;
+
+            } elseif ($id) {
                     handle_contact_profile_image_upload($id);
+
                     $success = true;
                     $message = _l('added_successfully', _l('contact'));
                 }

@@ -551,6 +551,17 @@ public function get_customer_group_discount($customer_id)
 
         $data = hooks()->apply_filters('before_create_contact', $data);
 
+
+        if (!empty($data['phonenumber'])) {
+
+            $this->db->where('phonenumber', trim($data['phonenumber']));
+            $existingContact = $this->db->get(db_prefix() . 'contacts')->row();
+
+            if ($existingContact) {
+                return 'duplicate_phone';
+            }
+        }
+
         $this->db->insert(db_prefix() . 'contacts', $data);
         $contact_id = $this->db->insert_id();
 

@@ -361,8 +361,11 @@ function contactFormHandler(form) {
             $('#contact').modal('hide');
         }
     }).fail(function(error) {
-        alert_float('danger', JSON.parse(error.responseText));
-    });
+
+    var response = JSON.parse(error.responseText);
+
+    alert_float('danger', response.message);
+});
     return false;
 }
 

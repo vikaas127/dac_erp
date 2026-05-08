@@ -91,8 +91,23 @@ class Leads extends AdminController
             }
 
 
-            if ($id == '') {
-                $id      = $this->leads_model->add($this->input->post());
+           if ($id == '') {
+
+                $result = $this->leads_model->add($this->input->post());
+
+                // DUPLICATE PHONE ERROR
+                if (is_array($result) && isset($result['success']) && !$result['success']) {
+
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $result['message'],
+                    ]);
+
+                    die;
+                }
+
+                $id = $result;
+
                 $message = $id ? _l('added_successfully', _l('lead')) : '';
 
                 echo json_encode([
@@ -101,11 +116,26 @@ class Leads extends AdminController
                     'message'  => $message,
                     'leadView' => $id ? $this->_get_lead_data($id) : [],
                 ]);
-            } else {
+            }else {
                 $emailOriginal   = $this->db->select('email')->where('id', $id)->get(db_prefix() . 'leads')->row()->email;
                 $proposalWarning = false;
                 $message         = '';
-                $success         = $this->leads_model->update($this->input->post(), $id);
+
+                $result = $this->leads_model->update($this->input->post(), $id);
+
+                // DUPLICATE PHONE ERROR
+                if (is_array($result) && isset($result['success']) && !$result['success']) {
+
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $result['message'],
+                    ]);
+
+                    die;
+                }
+
+                $success = $result;
+
 
                 if ($success) {
                     $emailNow = $this->db->select('email')->where('id', $id)->get(db_prefix() . 'leads')->row()->email;

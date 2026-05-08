@@ -116,6 +116,24 @@ class Leads_model extends App_Model
         $data['nature_of_work_id'] = isset($data['nature_of_work_id']) ? $data['nature_of_work_id'] : null;
         
         $data['email'] = trim($data['email']);
+
+
+         if (!empty($data['phonenumber'])) {
+
+            $phone = trim($data['phonenumber']);
+
+            $exists = $this->db
+                ->where('phonenumber', $phone)
+                ->count_all_results(db_prefix() . 'leads');
+
+            if ($exists > 0) {
+                return [
+                    'success' => false,
+                    'message' => 'Lead with this phone number already exists.'
+                ];
+            }
+        }
+
         
         $this->db->insert(db_prefix() . 'leads', $data);
         $insert_id = $this->db->insert_id();
@@ -281,6 +299,25 @@ class Leads_model extends App_Model
         $data['address'] = nl2br($data['address']);
 
         $data['email'] = trim($data['email']);
+
+        // CHECK DUPLICATE PHONE NUMBER
+        if (!empty($data['phonenumber'])) {
+
+            $phone = trim($data['phonenumber']);
+
+            $exists = $this->db
+                ->where('phonenumber', $phone)
+                ->where('id !=', $id)
+                ->count_all_results(db_prefix() . 'leads');
+
+            if ($exists > 0) {
+
+                return [
+                    'success' => false,
+                    'message' => 'Lead with this phone number already exists.',
+                ];
+            }
+        }
 
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'leads', $data);
