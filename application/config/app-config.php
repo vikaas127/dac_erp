@@ -17,7 +17,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 * environments.
 *
 */
-define('APP_BASE_URL', 'https://dacfurniture.techdotbit.com/');
+define('APP_BASE_URL', 'https://dacfurniture.techdotbit.in/');
 
 /*
 * --------------------------------------------------------------------------
@@ -43,7 +43,7 @@ define('APP_DB_HOSTNAME', 'localhost');
 /**
  * The username used to connect to the database
  */
-define('APP_DB_USERNAME', 'u686516750_dacfurniture');
+define('APP_DB_USERNAME', 'dacfurniture');
 
 /**
  * The password used to connect to the database
@@ -53,7 +53,7 @@ define('APP_DB_PASSWORD', 'dacfurniture@TDB2024');
 /**
  * The name of the database you want to connect to
  */
-define('APP_DB_NAME', 'u686516750_dacfurniture');
+define('APP_DB_NAME', 'dacfurniture_db');
 
 /**
  * @since  2.3.0
