@@ -9,6 +9,48 @@ if (!function_exists('convertSerializeDataToObject')) {
     }
 }
 
+if (!function_exists('flutex_api_log_db_context')) {
+    /**
+     * Log active DB connection and request host — use to trace which database an API hits.
+     */
+    function flutex_api_log_db_context($tag = 'API')
+    {
+        $CI = &get_instance();
+
+        $ctx = [
+            'tag'         => $tag,
+            'http_host'   => $_SERVER['HTTP_HOST'] ?? '',
+            'request_uri' => $_SERVER['REQUEST_URI'] ?? '',
+            'method'      => $_SERVER['REQUEST_METHOD'] ?? '',
+            'base_url'    => base_url(),
+            'db_host'     => isset($CI->db) ? ($CI->db->hostname ?? '') : '',
+            'db_name'     => isset($CI->db) ? ($CI->db->database ?? '') : '',
+            'db_prefix'   => isset($CI->db) ? ($CI->db->dbprefix ?? '') : '',
+        ];
+
+        if (function_exists('perfex_saas_is_tenant')) {
+            $ctx['is_tenant'] = perfex_saas_is_tenant() ? 'yes' : 'no';
+        }
+
+        foreach (['perfex_saas_tenant_slug', 'perfex_saas_tenant', 'perfex_saas_company'] as $fn) {
+            if (function_exists($fn)) {
+                $val = $fn();
+                if (is_object($val)) {
+                    $ctx[$fn] = [
+                        'id'   => $val->id ?? null,
+                        'slug' => $val->slug ?? null,
+                        'name' => $val->name ?? null,
+                    ];
+                } else {
+                    $ctx[$fn] = $val;
+                }
+            }
+        }
+
+        log_message('error', '[FLUTEX_API] ' . $tag . ' DB context: ' . json_encode($ctx));
+    }
+}
+
 if (!function_exists('isAuthorized')) {
     function isAuthorized()
     {

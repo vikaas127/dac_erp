@@ -24,10 +24,17 @@ class Authentication extends RestController
 
     public function domain_check_post()
 {
-    $post = json_decode($this->input->raw_input_stream, true);
+    log_message('error', '[FLUTEX_API] DOMAIN_CHECK API HIT');
+    flutex_api_log_db_context('DOMAIN_CHECK start');
+
+    $post  = $this->post();
     $input = trim($post['domain'] ?? '');
 
+    log_message('error', '[FLUTEX_API] DOMAIN_CHECK raw post: ' . json_encode($post));
+    log_message('error', '[FLUTEX_API] DOMAIN_CHECK domain input: ' . $input);
+
     if ($input === '') {
+        log_message('error', '[FLUTEX_API] DOMAIN_CHECK failed: domain is empty');
         return $this->response([
             'success' => false,
             'message' => 'Domain is required'
@@ -52,7 +59,10 @@ class Authentication extends RestController
         $domain = $slug . '.' . $baseDomain;
     }
 
+    log_message('error', '[FLUTEX_API] DOMAIN_CHECK normalized domain=' . $domain . ' slug=' . ($slug ?? 'null'));
+
     $table = perfex_saas_table('companies');
+    log_message('error', '[FLUTEX_API] DOMAIN_CHECK querying table: ' . $table);
 
     $this->db->group_start();
 
@@ -66,7 +76,15 @@ class Authentication extends RestController
 
     $company = $this->db->get($table)->row();
 
+    log_message('error', '[FLUTEX_API] DOMAIN_CHECK last_query: ' . $this->db->last_query());
+    log_message('error', '[FLUTEX_API] DOMAIN_CHECK company found: ' . ($company ? json_encode([
+        'id'     => $company->id,
+        'slug'   => $company->slug,
+        'status' => $company->status,
+    ]) : 'null'));
+
     if (!$company) {
+        flutex_api_log_db_context('DOMAIN_CHECK not_found');
         return $this->response([
             'success' => false,
             'message' => 'Company not found'
@@ -74,6 +92,7 @@ class Authentication extends RestController
     }
 
     if (in_array($company->status, ['disabled', 'banned', 'pending-delete'])) {
+        log_message('error', '[FLUTEX_API] DOMAIN_CHECK company inactive status=' . $company->status);
         return $this->response([
             'success' => false,
             'message' => 'Company is not active'
@@ -81,6 +100,9 @@ class Authentication extends RestController
     }
 
     $finalDomain = $company->custom_domain ?: ($company->slug . '.' . $baseDomain);
+
+    log_message('error', '[FLUTEX_API] DOMAIN_CHECK success final_domain=' . $finalDomain);
+    flutex_api_log_db_context('DOMAIN_CHECK success');
 
     return $this->response([
         'success' => true,
@@ -243,10 +265,11 @@ private function _res($success, $message, $data = [], $code = 200)
     // ==================== LOGIN ====================
 public function login_post()
 {
-    log_message('error', 'LOGIN API HIT');
+    log_message('error', '[FLUTEX_API] LOGIN API HIT');
+    flutex_api_log_db_context('LOGIN start');
 
     if (1 != get_option('allow_flutex_admin_login')) {
-        log_message('error', 'Login API disabled');
+        log_message('error', '[FLUTEX_API] LOGIN disabled (allow_flutex_admin_login != 1)');
         $this->response(['message' => _l('login_not_enabled_using_api')], RestController::HTTP_OK);
     }
 
@@ -257,8 +280,9 @@ public function login_post()
     ];
 
     $postData = array_merge($requiredData, $this->post());
-
-    log_message('error', 'Login Request: ' . json_encode($postData));
+    $logPost  = $postData;
+    $logPost['password'] = '***';
+    log_message('error', '[FLUTEX_API] LOGIN request: ' . json_encode($logPost));
 
     $type = strtolower($postData['type']);
 
@@ -269,7 +293,7 @@ public function login_post()
     $this->form_validation->set_rules('password', 'Password', 'required');
 
     if (!$this->form_validation->run()) {
-        log_message('error', 'Validation Failed: ' . validation_errors());
+        log_message('error', '[FLUTEX_API] LOGIN validation failed: ' . validation_errors());
         return $this->response([
             'message' => strip_tags(validation_errors())
         ], 400);
@@ -277,29 +301,36 @@ public function login_post()
 
     try {
 
-        log_message('error', 'Login Type: ' . $type);
+        log_message('error', '[FLUTEX_API] LOGIN type: ' . $type);
 
         // =========================
         // 🔵 STAFF LOGIN
         // =========================
         if ($type === 'staff') {
 
-            log_message('error', 'Staff Login Attempt: ' . $postData['email']);
+            log_message('error', '[FLUTEX_API] LOGIN staff attempt email=' . $postData['email']);
+            flutex_api_log_db_context('LOGIN before staff auth');
+
+            $staffTable = db_prefix() . 'staff';
+            $staffCount = $this->db->count_all($staffTable);
+            $staffByEmail = $this->db->where('email', $postData['email'])->count_all_results($staffTable);
+            log_message('error', '[FLUTEX_API] LOGIN staff table=' . $staffTable . ' total_rows=' . $staffCount . ' email_match=' . $staffByEmail);
 
             $this->load->model('Authentication_model');
-            log_message('error', 'Before Staff Authentication');
             $success = $this->Authentication_model->login(
                 $postData['email'],
                 $postData['password'],
                 true,
                 true
             );
-            log_message('error', 'After Staff Authentication: ' . json_encode($success));
+            log_message('error', '[FLUTEX_API] LOGIN staff auth result: ' . json_encode($success));
             if (is_array($success) && isset($success['memberinactive'])) {
-                log_message('error', 'Staff inactive: ' . $postData['email']);
+                log_message('error', '[FLUTEX_API] LOGIN staff inactive email=' . $postData['email']);
+                flutex_api_log_db_context('LOGIN staff inactive');
                 return $this->response(['message' => _l('admin_auth_inactive_account')], 403);
             } elseif ($success === false) {
-                log_message('error', 'Staff login failed: ' . $postData['email']);
+                log_message('error', '[FLUTEX_API] LOGIN staff failed email=' . $postData['email']);
+                flutex_api_log_db_context('LOGIN staff auth failed');
                 return $this->response(['message' => _l('admin_auth_invalid_email_or_password')], 401);
             }
 
@@ -308,7 +339,8 @@ public function login_post()
                 ->get(db_prefix().'staff')
                 ->row();
 
-            log_message('error', 'Staff Found ID: ' . $staff->staffid);
+            log_message('error', '[FLUTEX_API] LOGIN staff found id=' . ($staff->staffid ?? 'null'));
+            flutex_api_log_db_context('LOGIN staff success');
 
             $data = [
                 'staff_id' => $staff->staffid,
@@ -316,19 +348,15 @@ public function login_post()
                 'type' => 'staff',
                 'API_TIME' => time(),
             ];
-            log_message('error', 'Before Token Generation');
-
             $token = $this->authorization_token->generateToken($data);
 
-            log_message('error', 'Staff Token Generated: ' . $token);
+            log_message('error', '[FLUTEX_API] LOGIN staff token generated');
 
             $this->db->update(db_prefix().'staff', [
                 'flutex_api_key' => $token
             ], [
                 'staffid' => $staff->staffid
             ]);
-
-            log_message('error', 'Before Success Response');
 
             return $this->response([
                 'message' => 'Staff login successful',
@@ -348,7 +376,13 @@ public function login_post()
         // =========================
     if ($type === 'client') {
 
-        log_message('error', 'Client Login Attempt: ' . $postData['email']);
+        log_message('error', '[FLUTEX_API] LOGIN client attempt email=' . $postData['email']);
+        flutex_api_log_db_context('LOGIN before client auth');
+
+        $contactsTable = db_prefix() . 'contacts';
+        $clientCount   = $this->db->count_all($contactsTable);
+        $emailMatch    = $this->db->where('email', $postData['email'])->count_all_results($contactsTable);
+        log_message('error', '[FLUTEX_API] LOGIN contacts table=' . $contactsTable . ' total_rows=' . $clientCount . ' email_match=' . $emailMatch);
 
         $this->load->model('Authentication_model');
 
@@ -360,10 +394,12 @@ public function login_post()
         );
 
         if (is_array($success) && isset($success['memberinactive'])) {
-            log_message('error', 'Client inactive');
+            log_message('error', '[FLUTEX_API] LOGIN client inactive');
+            flutex_api_log_db_context('LOGIN client inactive');
             return $this->response(['message' => 'Inactive account'], 403);
         } elseif ($success === false) {
-            log_message('error', 'Client login failed');
+            log_message('error', '[FLUTEX_API] LOGIN client auth failed');
+            flutex_api_log_db_context('LOGIN client auth failed');
             return $this->response(['message' => 'Invalid email or password'], 401);
         }
 
@@ -380,7 +416,8 @@ public function login_post()
             ->get(db_prefix().'clients')
             ->row();
 
-        log_message('error', 'Client Login Success ID: ' . $client->userid);
+        log_message('error', '[FLUTEX_API] LOGIN client success id=' . $client->userid);
+        flutex_api_log_db_context('LOGIN client success');
 
         // Token
         $data = [
@@ -409,7 +446,7 @@ public function login_post()
                 ], 200);
             }
 
-            log_message('error', 'Invalid login type: ' . $type);
+            log_message('error', '[FLUTEX_API] LOGIN invalid type: ' . $type);
 
             return $this->response([
                 'message' => 'Invalid login type'
@@ -417,11 +454,8 @@ public function login_post()
 
         } catch (\Throwable $th) {
 
-    log_message('error', 'Login Exception: ' . $th->getMessage());
-
-    log_message('error', 'File: ' . $th->getFile());
-
-    log_message('error', 'Line: ' . $th->getLine());
+    log_message('error', '[FLUTEX_API] LOGIN exception: ' . $th->getMessage() . ' in ' . $th->getFile() . ':' . $th->getLine());
+    flutex_api_log_db_context('LOGIN exception');
 
     return $this->response([
         'message' => $th->getMessage()
